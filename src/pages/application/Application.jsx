@@ -155,7 +155,7 @@ const Application = () => {
                             {
                                 !nav ?
                                     <div>
-                                        <div>
+                                        <div className='titles'>
                                             <p className="title">Kabinetga kirish</p>
                                             <p className="subtitle">"Qabul-2025" platformasiga xush kelibsiz!</p>
                                             <p className="desc">Kirish uchun pastdagi formani to’ldiring!</p>

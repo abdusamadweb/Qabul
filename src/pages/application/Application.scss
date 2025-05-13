@@ -35,6 +35,13 @@
   }
   .container {
     padding: 2rem 5rem;
+
+    @include mobile {
+      padding: 2rem;
+    }
+    @include phone {
+      padding: 0 1rem;
+    }
   }
 
   &__content {
@@ -46,10 +53,19 @@
       width: 100%;
       height: 100%;
       display: flex;
-      //grid-template-columns: 1fr 1fr;
       text-align: center;
       border-radius: 30px;
       background: #fff;
+
+      @include breakpoint-down(900px) {
+        .left {
+          display: none;
+        }
+        .right {
+          width: 100%;
+          padding-top: 45px;
+        }
+      }
     }
 
     .left {
@@ -63,14 +79,15 @@
 
       .top {
         position: absolute;
-        top: 10px;
+        top: 1rem;
         left: 20px;
         width: calc(100% - 40px);
+        padding-bottom: 10px;
         border-bottom: 1px dashed $main-color;
 
         .logo {
           font-weight: 600;
-          margin-block: 10px;
+          margin: 0;
         }
 
         .btn {
@@ -81,19 +98,33 @@
         }
       }
 
-      .title {
-        font-weight: 500;
-        font-size: 28px;
-        margin-bottom: 20px;
-      }
-      .subtitle {
-        font-size: 22px;
-        margin-bottom: 1rem;
-        color: $main-color;
-      }
-      .desc {
-        margin-bottom: 2rem;
-        color: #999;
+      .titles {
+        .title {
+          font-weight: 500;
+          font-size: 28px;
+          margin-bottom: 20px;
+        }
+        .subtitle {
+          font-size: 22px;
+          margin-bottom: 1rem;
+          color: $main-color;
+        }
+        .desc {
+          margin-bottom: 2rem;
+          color: #999;
+        }
+
+        @include phone {
+          .title {
+            font-size: 24px;
+          }
+          .subtitle {
+            font-size: 18px;
+          }
+          .desc {
+            font-size: 14px;
+          }
+        }
       }
 
       .form {
