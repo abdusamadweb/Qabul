@@ -84,6 +84,7 @@ const Application2 = () => {
                 <Steps
                     current={nav}
                     labelPlacement="vertical"
+                    responsive={false}
                     items={[
                         {
 

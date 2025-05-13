@@ -171,6 +171,20 @@
         .ant-steps-item-content {
           width: 100%;
         }
+
+        @include phone {
+          .ant-steps-item-tail {
+            margin-inline-start: 36px;
+          }
+          .ant-steps-item-icon {
+            margin-inline-start: 20px;
+          }
+        }
+      }
+
+      .title {
+        font-weight: 500;
+        font-size: 24px;
       }
 
       .search {
