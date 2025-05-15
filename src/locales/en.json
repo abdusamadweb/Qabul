@@ -1,7 +1,41 @@
 {
-  "profile": "Profile",
-  "my_cards": "My Cards",
-  "language": "Language",
-  "theme": "Theme",
+  "title": "Login to Cabinet",
+  "subtitle": "Welcome to the \"Qabul-2025\" platform!",
+  "desc": "Please fill out the form below to log in!",
+
+  "Tasdiqlash": "Confirm",
+
+  "Telefon raqam": "Phone number",
+  "Kodni kiriting": "Enter the code",
+  "SMS ni qayta yuborish": "Resend SMS",
+  "Parolni kiriting": "Enter password",
+  "Parolni tasdiqlang": "Confirm password",
+  "JSHSHIR": "PINFL",
+  "Seriyasi va raqami": "Series and number",
+  "Qidirish": "Search",
+
+  "Shaxsiy ma’lumotlar": "Personal information",
+  "F.I.O": "Full Name",
+  "Seriya va raqami": "Series and number",
+  "Tugilgan yili": "Year of birth",
+
+  "Bakalavriat": "Bachelor's degree",
+  "Oqishni kochirish": "Transfer studies",
+  "Maqsadli qabul": "Targeted admission",
+
+  "Tugatgan talim muasssasangiz turini talnang": "Select the type of institution you graduated from",
+  "Akademik litsey": "Academic lyceum",
+  "Kasb hunar kolleji": "Vocational college",
+  "Profesional talim": "Professional education",
+  "Maktab": "School",
+  "Oliy talim": "Higher education",
+  "Bitirgan yili": "Graduation year",
+  "Sertifikatingiz bormi?": "Do you have a certificate?",
+  "Ha": "Yes",
+  "Yoq": "No",
+
+  "Talim shakli": "Form of education",
+  "Talim tili": "Language of instruction",
+  "Talim yonalishi": "Field of study",
   "sound": "Sound"
 }

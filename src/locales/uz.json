@@ -1,7 +1,42 @@
 {
-  "profile": "Profile",
-  "my_cards": "My Cards",
-  "language": "Language",
-  "theme": "Theme",
+  "title": "Kabinetga kirish",
+  "subtitle": "\"Qabul-2025\" platformasiga xush kelibsiz!",
+  "desc": "Kirish uchun pastdagi formani to’ldiring!",
+
+  "Tasdiqlash": "Tasdiqlash",
+
+  "Telefon raqam": "Telefon raqam",
+  "Kodni kiriting": "Kodni kiriting",
+  "SMS ni qayta yuborish": "SMS ni qayta yuborish",
+  "Parolni kiriting": "Parolni kiriting",
+  "Parolni tasdiqlang": "Parolni tasdiqlang",
+  "JSHSHIR": "JSHSHIR",
+  "Seriyasi va raqami": "Seriyasi va raqami",
+  "Qidirish": "Qidirish",
+
+  "Shaxsiy ma’lumotlar": "Shaxsiy ma’lumotlar",
+  "F.I.O": "F.I.O",
+  "Seriya va raqami": "Seriya va raqami",
+  "Tugilgan yili": "Tugilgan yili",
+
+  "Bakalavriat": "Bakalavriat",
+  "Oqishni kochirish": "Oqishni kochirish",
+  "Maqsadli qabul": "Maqsadli qabul",
+
+  "Tugatgan talim muasssasangiz turini talnang": "Tugatgan talim muasssasangiz turini talnang",
+  "Akademik litsey": "Akademik litsey",
+  "Kasb hunar kolleji": "Kasb hunar kolleji",
+  "Profesional talim": "Profesional talim",
+  "Maktab": "Maktab",
+  "Oliy talim": "Oliy talim",
+  "Bitirgan yili": "Bitirgan yili",
+  "Sertifikatingiz bormi?": "Sertifikatingiz bormi?",
+  "Ha": "Ha",
+  "Yoq": "Yoq",
+
+  "Talim shakli": "Talim shakli",
+  "Talim tili": "Talim tili",
+  "Talim yonalishi": "Talim yonalishi",
+  "sound": "Sound",
   "sound": "Sound"
 }

@@ -1,7 +1,41 @@
 {
-  "profile": "Profile",
-  "my_cards": "My Cards",
-  "language": "Language",
-  "theme": "Theme",
-  "sound": "Sound"
+  "title": "Вход в кабинет",
+  "subtitle": "Добро пожаловать на платформу \"Qabul-2025\"!",
+  "desc": "Заполните форму ниже для входа!",
+
+  "Tasdiqlash": "Подтвердить",
+
+  "Telefon raqam": "Номер телефона",
+  "Kodni kiriting": "Введите код",
+  "SMS ni qayta yuborish": "Отправить СМС повторно",
+  "Parolni kiriting": "Введите пароль",
+  "Parolni tasdiqlang": "Подтвердите пароль",
+  "JSHSHIR": "ПИНФЛ",
+  "Seriyasi va raqami": "Серия и номер",
+  "Qidirish": "Поиск",
+
+  "Shaxsiy ma’lumotlar": "Личные данные",
+  "F.I.O": "Ф.И.О",
+  "Seriya va raqami": "Серия и номер",
+  "Tugilgan yili": "Год рождения",
+
+  "Bakalavriat": "Бакалавриат",
+  "Oqishni kochirish": "Перевод обучения",
+  "Maqsadli qabul": "Целевой приём",
+
+  "Tugatgan talim muasssasangiz turini talnang": "Выберите тип учебного заведения, которое вы окончили",
+  "Akademik litsey": "Академический лицей",
+  "Kasb hunar kolleji": "Профессиональный колледж",
+  "Profesional talim": "Профессиональное образование",
+  "Maktab": "Школа",
+  "Oliy talim": "Высшее образование",
+  "Bitirgan yili": "Год окончания",
+  "Sertifikatingiz bormi?": "У вас есть сертификат?",
+  "Ha": "Да",
+  "Yoq": "Нет",
+
+  "Talim shakli": "Форма обучения",
+  "Talim tili": "Язык обучения",
+  "Talim yonalishi": "Направление обучения",
+  "sound": "Звук"
 }

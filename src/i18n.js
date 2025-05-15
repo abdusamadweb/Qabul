@@ -5,7 +5,7 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 
 import translationEN from './locales/en.json';
 import translationRU from './locales/ru.json';
-import translationUZ from './locales/ru.json';
+import translationUZ from './locales/uz.json';
 
 i18n
     .use(LanguageDetector) // определяет язык из localStorage, navigator и т.д.

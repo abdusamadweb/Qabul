@@ -64,6 +64,8 @@ const JshInput = React.forwardRef(({ value, onChange }, ref) => {
 
 const Application = () => {
 
+    const { t } = useTranslation()
+
     const [form] = Form.useForm()
 
     const [nav, setNav] = useState(false)
@@ -158,7 +160,7 @@ const Application = () => {
 
 
     // lang
-    const { i18n } = useTranslation();
+    const { i18n } = useTranslation()
 
     const items = [
         {
@@ -182,21 +184,21 @@ const Application = () => {
         {
             key: 'uz',
             label: (
-                <button className='top-btn' onClick={() => i18n.changeLanguage('en')}>
+                <button className='top-btn' onClick={() => i18n.changeLanguage('uz')}>
                     <span>Uzbek</span>
                     <img src={uz} alt="flag" />
                 </button>
             ),
         },
-    ];
+    ]
 
     const languageMap = {
         ru: { label: 'Russian', flag: ru },
         en: { label: 'English', flag: us },
         uz: { label: 'Uzbek', flag: uz },
-    };
+    }
 
-    const currentLang = i18n.language || 'uz';
+    const currentLang = i18n.language || 'uz'
 
 
     return (
@@ -223,9 +225,9 @@ const Application = () => {
                                 !nav ?
                                     <div>
                                         <div className='titles'>
-                                            <p className="title">Kabinetga kirish</p>
-                                            <p className="subtitle">"Qabul-2025" platformasiga xush kelibsiz!</p>
-                                            <p className="desc">Kirish uchun pastdagi formani to’ldiring!</p>
+                                            <p className="title">{ t('title') }</p>
+                                            <p className="subtitle">{ t('subtitle') }</p>
+                                            <p className="desc">{ t('desc') }</p>
                                         </div>
                                         <Form
                                             className='form'
@@ -237,7 +239,7 @@ const Application = () => {
                                             {count < 2 && (
                                                 <Form.Item
                                                     name='phone_number'
-                                                    label='Telefon raqam'
+                                                    label={ t('Telefon raqam') }
                                                     rules={[{required: true, message: ''}]}
                                                 >
                                                     <PhoneInput/>
@@ -248,20 +250,19 @@ const Application = () => {
                                                 <div>
                                                     <Form.Item
                                                         name='code'
-                                                        label='Kodni kiriting'
+                                                        label={ t('Kodni kiriting') }
                                                         rules={[{required: true, message: ''}]}
                                                     >
-                                                        <Input type='tel' placeholder='Kodni kiriting'/>
+                                                        <Input type='tel' placeholder={ t('Kodni kiriting') }/>
                                                     </Form.Item>
                                                     <div className='sms-retry'>
-                                                        <p className='txt'>SMS ni qayta yuborish:</p>
+                                                        <p className='txt'>{ t('SMS ni qayta yuborish') }:</p>
                                                         {
                                                             active ?
                                                                 <span className='sms-btn'>{formatTime(timeLeft)}</span>
                                                                 :
                                                                 <button className='sms-btn' onClick={retryOnFinish}
-                                                                        type='button'>Qayta
-                                                                    yuborish</button>
+                                                                        type='button'>{ t('Qayta yuborish') }</button>
                                                         }
                                                     </div>
                                                 </div>
@@ -271,17 +272,17 @@ const Application = () => {
                                                 <div>
                                                     <Form.Item
                                                         name='password'
-                                                        label='Parolni kiriting'
+                                                        label={ t('Parolni kiriting') }
                                                         rules={[{required: true, message: ''}]}
                                                     >
-                                                        <Input type='text' placeholder='Parolni kiriting'/>
+                                                        <Input type='text' placeholder={ t('Parolni kiriting') }/>
                                                     </Form.Item>
                                                     <Form.Item
                                                         name='cPassword'
-                                                        label='Parolni tasdiqlang'
+                                                        label={ t('Parolni tasdiqlang') }
                                                         rules={[{required: true, message: ''}]}
                                                     >
-                                                        <Input type='text' placeholder='Parolni kiriting'/>
+                                                        <Input type='text' placeholder={ t('Parolni kiriting') }/>
                                                     </Form.Item>
                                                 </div>
                                             )}
@@ -290,13 +291,13 @@ const Application = () => {
                                                 <div>
                                                     <Form.Item
                                                         name='jshir'
-                                                        label='JSHSHIR'
+                                                        label={ t('JSHSHIR') }
                                                     >
                                                         <JshInput />
                                                     </Form.Item>
                                                     <Form.Item
                                                         name='passport'
-                                                        label='Seriyasi va raqami'
+                                                        label={ t('Seriyasi va raqami') }
                                                     >
                                                         <PassportInput />
                                                     </Form.Item>
@@ -317,7 +318,7 @@ const Application = () => {
                                                 htmlType="submit"
                                                 type='primary'
                                             >
-                                                Tasdiqlash
+                                                { t('Tasdiqlash') }
                                             </Button>
                                         </Form>
                                     </div>
