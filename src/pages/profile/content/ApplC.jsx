@@ -1,8 +1,23 @@
 import React, {useState} from 'react';
+import geo from '../../../assets/images/geo.png'
+import {Popconfirm} from "antd";
+import {useTranslation} from "react-i18next";
 
 const ApplC = () => {
 
-    const [copy, setCopy] = useState(false)
+    const { t } = useTranslation()
+
+    const [copied, setCopied] = useState(false)
+
+    const handleCopy = async (txt) => {
+        try {
+            await navigator.clipboard.writeText(txt)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 1500) // убираем "Скопировано" через 1.5 сек
+        } catch (err) {
+            console.error('Не удалось скопировать:', err)
+        }
+    }
 
 
     return (
@@ -44,15 +59,23 @@ const ApplC = () => {
                         </ul>
                         <div className="row between">
                             <span/>
-                            <button className='cancel'>Arizani bekor qilish</button>
+                            <Popconfirm
+                                title={ t("Rostan ham arizani bekor qilmoxchimisiz?") }
+                                description={ t('Arizani bekor qilishni tasdiqlaysizmi?') }
+                                // onConfirm={confirm}
+                                okText={ t('Ha') }
+                                cancelText={ t('Yoq') }
+                            >
+                                <button className='cancel'>Arizani bekor qilish</button>
+                            </Popconfirm>
                         </div>
                     </div>
                 </div>
                 <div className="geo">
                     <p className="title">OTM geolokatsiyasi</p>
-                    <img src="" alt="img"/>
-                    <button className='copy row align-center g10'>
-                        { copy ? <i className="fa-regular fa-paste"/> : <i className="fa-solid fa-check"/> }
+                    <img src={geo} alt="img"/>
+                    <button className='copy row align-center g10' onClick={() => handleCopy('NMADR')}>
+                        { !copied ? <i className="fa-regular fa-paste"/> : <i className="fa-solid fa-check"/> }
                         <span>Joylashuvni nusxalash</span>
                     </button>
                 </div>

@@ -188,13 +188,54 @@
         }
 
         img {
-          width: 120px;
-          height: 120px;
+          width: 150px;
+          height: 150px;
           margin-bottom: 3rem;
+          object-fit: cover;
         }
 
         .copy {
+          font-size: 17px;
           margin: 0 auto;
+
+          i {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+
+    .deal-c {
+
+      .empty {
+        padding: 100px 200px;
+        border-radius: 20px;
+        border: 1px dashed #ccc;
+
+        &__title {
+          font-size: 22px;
+          color: #999;
+        }
+      }
+    }
+
+    .cert-c {
+
+      .content__title {
+        margin-bottom: 0;
+      }
+      .titles {
+        margin-bottom: 1rem;
+
+        .btn {
+          font-weight: 500;
+          padding: 12px 22px;
+          border-radius: 20px;
+          background: $secondary-color;
+
+          i {
+            font-size: 20px;
+          }
         }
       }
     }

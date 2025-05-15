@@ -2,9 +2,11 @@ import './Profile.scss'
 import React, {useState} from 'react';
 import {Link} from "react-router-dom";
 import logo from '../../assets/images/big-logo.svg'
-import {Steps} from "antd";
+import {Popconfirm, Steps} from "antd";
 import MainC from "./content/MainC.jsx";
 import ApplC from "./content/ApplC.jsx";
+import DealC from "./content/DealC.jsx";
+import CertC from "./content/CertC.jsx";
 
 const Profile = () => {
 
@@ -72,10 +74,17 @@ const Profile = () => {
                                     <span>Til sertifikatlari</span>
                                 </li>
 
-                                <li className='item logout' onClick={logout}>
-                                    <i className="fa-solid fa-arrow-right-from-bracket"/>
-                                    <span>Chiqish</span>
-                                </li>
+                                <Popconfirm
+                                    title="Tizimdan chiqishni xoxlaysizmi?"
+                                    onConfirm={logout}
+                                    okText="Ha"
+                                    cancelText="Yoq"
+                                >
+                                    <li className='item logout'>
+                                        <i className="fa-solid fa-arrow-right-from-bracket"/>
+                                        <span>Chiqish</span>
+                                    </li>
+                                </Popconfirm>
                             </ul>
                         </div>
                         <div className="content">
@@ -85,6 +94,14 @@ const Profile = () => {
 
                             {nav === 1 && (
                                 <ApplC />
+                            )}
+
+                            {nav === 2 && (
+                                <DealC />
+                            )}
+
+                            {nav === 3 && (
+                                <CertC />
                             )}
                         </div>
                     </div>
