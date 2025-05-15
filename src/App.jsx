@@ -9,6 +9,7 @@ import Application from "./pages/application/Application.jsx";
 import {antdConfig} from "./config/antd/antdConfig.js";
 import {ConfigProvider} from "antd";
 import Application2 from "./pages/application/Application2.jsx";
+import Profile from "./pages/profile/Profile.jsx";
 
 
 const Wrapper = ({ children }) => {
@@ -33,6 +34,8 @@ function App() {
 
                     <Route path='/' element={<Application />} />
                     <Route path='/application' element={<Application2 />} />
+
+                    <Route path='/profile' element={<Profile />} />
 
                 </Routes>
 

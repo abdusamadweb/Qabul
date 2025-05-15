@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Button, Form, Input, Radio, Select, Steps} from "antd";
 import IMask from "imask";
 import {IMaskInput} from "react-imask";
+import {useNavigate} from "react-router-dom";
 
 const BirthDateInput = React.forwardRef(({ value, onChange }, ref) => {
     return (
@@ -27,6 +28,7 @@ const BirthDateInput = React.forwardRef(({ value, onChange }, ref) => {
 
 const Application2 = () => {
 
+    const navigate = useNavigate()
     const [form] = Form.useForm()
 
     const [nav, setNav] = useState(0)
@@ -57,6 +59,14 @@ const Application2 = () => {
 
             setTimeout(() => {
                 setNav(3)
+                setLoading(false)
+            }, 1000)
+
+        } else if (nav === 3) {
+            setLoading(true)
+
+            setTimeout(() => {
+                navigate('/profile')
                 setLoading(false)
             }, 1000)
 

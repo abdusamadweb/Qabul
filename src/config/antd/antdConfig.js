@@ -3,8 +3,9 @@ export const antdConfig = () => {
 
     return {
         token: {
-            fontFamily: "Poppins",
-            colorPrimary: '#0063F2',
+            fontFamily: "Poppins, sans-serif",
+            colorPrimary: '#154576',
+            colorSecondary: '#FFC300',
             colorText: '#222222',
         },
         components: {
