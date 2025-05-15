@@ -8,7 +8,9 @@ import ru from '../../assets/images/ru.png'
 import us from '../../assets/images/us.png'
 import Application2 from "./Application2.jsx";
 import {Link} from "react-router-dom";
-import logo from '../../assets/images/logo.png'
+import logo from '../../assets/images/big-logo.svg'
+import { useTranslation } from 'react-i18next';
+
 
 const PhoneInput = React.forwardRef(({ value, onChange }, ref) => {
     return (
@@ -21,6 +23,41 @@ const PhoneInput = React.forwardRef(({ value, onChange }, ref) => {
             value={value} // Связывает с Form
             onAccept={onChange} // Передает изменения в Form
             inputRef={ref} // Ant Design ожидает, что ref будет передан в Input
+        />
+    );
+});
+
+const PassportInput = React.forwardRef(({ value, onChange }, ref) => {
+    return (
+        <IMaskInput
+            className='inp-mask'
+            mask="aa 0000000" // Две буквы и 7 цифр
+            definitions={{
+                a: /[a-zA-Z]/, // Разрешаем и строчные, и заглавные буквы
+                0: /[0-9]/, // Только цифры
+            }}
+            lazy={false} // Показывает маску сразу
+            unmask={true} // Передает "чистое" значение в Form
+            value={value}
+            onAccept={(val) => onChange(val.toUpperCase())}
+            inputRef={ref}
+        />
+    );
+});
+
+const JshInput = React.forwardRef(({ value, onChange }, ref) => {
+    return (
+        <IMaskInput
+            className='inp-mask'
+            mask="00000000000000" // Две буквы и 14 цифр
+            definitions={{
+                0: /[0-9]/, // Только цифры
+            }}
+            lazy={false} // Показывает маску сразу
+            unmask={true} // Передает "чистое" значение в Form
+            value={value}
+            onAccept={onChange}
+            inputRef={ref}
         />
     );
 });
@@ -64,6 +101,14 @@ const Application = () => {
             setLoading(true)
 
             setTimeout(() => {
+                setCount(3)
+                setLoading(false)
+            }, 1000)
+
+        } else if (count === 3) {
+            setLoading(true)
+
+            setTimeout(() => {
                 setNav(true)
                 setLoading(false)
             }, 1000)
@@ -73,7 +118,6 @@ const Application = () => {
         const body = {
             ...values,
         }
-        console.log(count, '--- count ---')
     }
 
 
@@ -114,32 +158,51 @@ const Application = () => {
 
 
     // lang
+    const { i18n } = useTranslation();
+
     const items = [
         {
-            key: '1',
+            key: 'ru',
             label: (
-                <button className='top-btn'>
+                <button className='top-btn' onClick={() => i18n.changeLanguage('ru')}>
                     <span>Russian</span>
-                    <img src={ru} alt="flag"/>
+                    <img src={ru} alt="flag" />
                 </button>
             ),
         },
         {
-            key: '2',
+            key: 'en',
             label: (
-                <button className='top-btn'>
+                <button className='top-btn' onClick={() => i18n.changeLanguage('en')}>
                     <span>English</span>
-                    <img src={us} alt="flag"/>
+                    <img src={us} alt="flag" />
                 </button>
             ),
         },
-    ]
+        {
+            key: 'uz',
+            label: (
+                <button className='top-btn' onClick={() => i18n.changeLanguage('en')}>
+                    <span>Uzbek</span>
+                    <img src={uz} alt="flag" />
+                </button>
+            ),
+        },
+    ];
+
+    const languageMap = {
+        ru: { label: 'Russian', flag: ru },
+        en: { label: 'English', flag: us },
+        uz: { label: 'Uzbek', flag: uz },
+    };
+
+    const currentLang = i18n.language || 'uz';
 
 
     return (
         <div className='appl'>
             <div className="container h100 grid-center">
-                <div className="appl__content grid">
+                <div className="appl__content grid-center">
                     <div className='wrapper'>
                         <div className='left grid-center'>
                             <img src={img} alt="img"/>
@@ -149,10 +212,10 @@ const Application = () => {
                                 <Link className='logo' to='/'>
                                     <img src={logo} alt="logo"/>
                                 </Link>
-                                <Dropdown menu={{items}} placement="bottomRight">
-                                    <Button className='btn row align-center g10'>
-                                        <span>Uzbek</span>
-                                        <img src={uz} alt="flag"/>
+                                <Dropdown menu={{ items }} placement="bottomRight">
+                                    <Button className="btn row align-center g10">
+                                        <span>{languageMap[currentLang]?.label}</span>
+                                        <img src={languageMap[currentLang]?.flag} alt="flag" />
                                     </Button>
                                 </Dropdown>
                             </div>
@@ -204,7 +267,7 @@ const Application = () => {
                                                 </div>
                                             )}
 
-                                            {count > 1 && (
+                                            {count === 2 && (
                                                 <div>
                                                     <Form.Item
                                                         name='password'
@@ -220,6 +283,30 @@ const Application = () => {
                                                     >
                                                         <Input type='text' placeholder='Parolni kiriting'/>
                                                     </Form.Item>
+                                                </div>
+                                            )}
+
+                                            {count === 3 && (
+                                                <div>
+                                                    <Form.Item
+                                                        name='jshir'
+                                                        label='JSHSHIR'
+                                                    >
+                                                        <JshInput />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name='passport'
+                                                        label='Seriyasi va raqami'
+                                                    >
+                                                        <PassportInput />
+                                                    </Form.Item>
+                                                    <div className="search row between">
+                                                        <span/>
+                                                        <button className="row align-center" type='button'>
+                                                            <span>Qidirish</span>
+                                                            <i className="fa-solid fa-magnifying-glass"/>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             )}
 
