@@ -7,6 +7,8 @@ import uz from '../../assets/images/uz.png'
 import ru from '../../assets/images/ru.png'
 import us from '../../assets/images/us.png'
 import Application2 from "./Application2.jsx";
+import {Link} from "react-router-dom";
+import logo from '../../assets/images/logo.png'
 
 const PhoneInput = React.forwardRef(({ value, onChange }, ref) => {
     return (
@@ -144,7 +146,9 @@ const Application = () => {
                         </div>
                         <div className='right grid-center'>
                             <div className="top row between align-center g1">
-                                <h1 className='logo'>Logo</h1>
+                                <Link className='logo' to='/'>
+                                    <img src={logo} alt="logo"/>
+                                </Link>
                                 <Dropdown menu={{items}} placement="bottomRight">
                                     <Button className='btn row align-center g10'>
                                         <span>Uzbek</span>
@@ -224,6 +228,7 @@ const Application = () => {
                                                 loading={loading}
                                                 size='large'
                                                 htmlType="submit"
+                                                type='primary'
                                             >
                                                 Tasdiqlash
                                             </Button>

@@ -75,7 +75,7 @@
     .right {
       position: relative;
       width: 50%;
-      padding: 35px 20px 20px;
+      padding: 85px 20px 20px;
 
       .top {
         position: absolute;
@@ -85,13 +85,13 @@
         padding-bottom: 10px;
         border-bottom: 1px dashed $main-color;
 
-        .logo {
-          font-weight: 600;
-          margin: 0;
+        .logo img {
+          width: 100px;
+          height: 40px;
+          object-fit: cover;
         }
 
         .btn {
-
           img {
             width: 20px;
           }
@@ -158,6 +158,11 @@
           &:focus {
             border-color: $main-color;
           }
+        }
+
+        .btn {
+          width: 100%;
+          margin-top: 10px;
         }
       }
     }
