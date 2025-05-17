@@ -1,8 +1,14 @@
 import React, {useState} from 'react';
-import {Button, Form, Input, Radio, Select, Steps} from "antd";
+import {Button, Form, Input, Radio, Select, Steps, Upload} from "antd";
 import IMask from "imask";
 import {IMaskInput} from "react-imask";
 import {useNavigate} from "react-router-dom";
+import {$resp} from "../../api/apiResp.js";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import {useTranslation} from "react-i18next";
+import {uploadProps} from "../../assets/scripts/global.js";
+
 
 const BirthDateInput = React.forwardRef(({ value, onChange }, ref) => {
     return (
@@ -24,18 +30,92 @@ const BirthDateInput = React.forwardRef(({ value, onChange }, ref) => {
             inputRef={ref}
         />
     );
-});
+})
+
+
+// fetch
+const fetchTypes = async () => {
+    const { data } = await $resp.get('/ad-type/all')
+    return data
+}
+const chooseType = async (body) => {
+    const { data } = await $resp.post("/admission/choice-type", body)
+    return data
+}
+
+const fetchInst = async () => {
+    const { data } = await $resp.get('/admission/edu-institution')
+    return data
+}
+const chooseInst = async (body) => {
+    const { data } = await $resp.post("/admission/edu-institution-accept", body)
+    return data
+}
+
 
 const Application2 = () => {
+
+    const { i18n, t } = useTranslation()
+    const lang = i18n.language
 
     const navigate = useNavigate()
     const [form] = Form.useForm()
 
-    const [nav, setNav] = useState(0)
+    const user = JSON.parse(localStorage.getItem('user'))
+
+    const [nav, setNav] = useState(2)
     const [loading, setLoading] = useState(false)
-    console.log(nav)
+
+    const [fileOn, setFileOn] = useState(false)
+    const [file, setFile] = useState(null)
 
 
+    // fetch
+    const { data: types } = useQuery({
+        queryKey: ['types'],
+        queryFn: fetchTypes,
+        keepPreviousData: true
+    })
+    const { data: inst } = useQuery({
+        queryKey: ['inst'],
+        queryFn: fetchInst,
+        keepPreviousData: true
+    })
+
+
+    // mutates
+    const muTypes = useMutation({
+        mutationFn: chooseType,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            setNav(2)
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
+    const muInst = useMutation({
+        mutationFn: chooseInst,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            setNav(3)
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
+
+    // submit
     const onFormSubmit = (val) => {
 
         if (nav === 0) {
@@ -49,94 +129,38 @@ const Application2 = () => {
         } else if (nav === 1) {
             setLoading(true)
 
-            setTimeout(() => {
-                setNav(2)
-                setLoading(false)
-            }, 1000)
+            const body = {
+                type_id: val.type_id
+            }
+            muTypes.mutate(body)
 
         } else if (nav === 2) {
             setLoading(true)
 
-            setTimeout(() => {
-                setNav(3)
-                setLoading(false)
-            }, 1000)
+            const body = {
+                edu_ins_id: val.edu_ins_id,
+                end_date: val.end_date,
+                file_id: (file && fileOn) ? file?.file.response.files[0].id : null,
+            }
+            muInst.mutate(body)
 
         } else if (nav === 3) {
             setLoading(true)
 
             setTimeout(() => {
+                toast.success('Muvaffaqiyatli!')
                 navigate('/profile')
                 setLoading(false)
             }, 1000)
 
         }
-
-        const body = {
-            ...val,
-        }
     }
-
-
-    const types = [
-        { label: <div className='row align-center g10'>
-                <i className="fa-solid fa-book-open-reader"/>
-                <span>Bakalavriat</span>
-            </div>,
-            value: 'Bakalavriat'
-        },
-        { label: <div className='row align-center g10'>
-                <i className="fa-solid fa-graduation-cap"/>
-                <span>Oqishni kochirish</span>
-            </div>,
-            value: 'Oqishni kochirish'
-        },
-        { label: <div className='row align-center g10'>
-                <i className="fa-solid fa-arrow-trend-down"/>
-                <span>Maqsadli qabul</span>
-            </div>,
-            value: 'Maqsadli qabul'
-        }
-    ]
-
-    const abouts = [
-        { label: <div className='row align-center g10'>
-                <i className="fa-solid fa-book-bookmark"/>
-                <span>Akademik litsey</span>
-            </div>,
-            value: 'Akademik litsey'
-        },
-        { label: <div className='row align-center g10'>
-                <i className="fa-solid fa-book-bookmark"/>
-                <span>Kasb hunar kolleji</span>
-            </div>,
-            value: 'Kasb hunar kolleji'
-        },
-        { label: <div className='row align-center g10'>
-                <i className="fa-solid fa-book-bookmark"/>
-                <span>Profesional talim</span>
-            </div>,
-            value: 'Profesional talim'
-        },
-        { label: <div className='row align-center g10'>
-                <i className="fa-solid fa-book-bookmark"/>
-                <span>Maktab</span>
-            </div>,
-            value: 'Maktab'
-        },
-        { label: <div className='row align-center g10'>
-                <i className="fa-solid fa-book-bookmark"/>
-                <span>Oliy talim</span>
-            </div>,
-            value: 'Oliy talim'
-        },
-    ]
 
 
     return (
         <div className='appl2'>
             <div>
-                <p className="title">Shaxsiy ma’lumotlar</p>
+                <p className="title">{ t('Shaxsiy ma’lumotlar') }</p>
                 <Steps
                     current={nav}
                     labelPlacement="vertical"
@@ -159,24 +183,24 @@ const Application2 = () => {
                 {nav === 0 && (
                     <ul className='check'>
                         <li className="check__item">
-                            <span className='txt'>F.I.O</span>
+                            <span className='txt'>{ t('F.I.O') }</span>
                             <span className='dots'/>
-                            <span className='txt font'>Malika Tursunova</span>
+                            <span className='txt font'>{ user?.firstName + ' ' + user?.lastName }</span>
                         </li>
                         <li className="check__item">
-                            <span className='txt'>JSHSHIR</span>
+                            <span className='txt'>{ t('JSHSHIR') }</span>
                             <span className='dots'/>
-                            <span className='txt font'>12345678901234</span>
+                            <span className='txt font'>{ user?.pinfl }</span>
                         </li>
                         <li className="check__item">
-                            <span className='txt'>Seriya va raqami</span>
+                            <span className='txt'>{ t('Seriya va raqami') }</span>
                             <span className='dots'/>
-                            <span className='txt font'>XX 1234567</span>
+                            <span className='txt font'>{ user?.serialAndNumber }</span>
                         </li>
                         <li className="check__item">
-                            <span className='txt'>Tugilgan yili</span>
+                            <span className='txt'>{ t('Tugilgan yili') }</span>
                             <span className='dots'/>
-                            <span className='txt font'>2002-02-22</span>
+                            <span className='txt font'>{ user?.birthDate }</span>
                         </li>
                     </ul>
                 )}
@@ -184,13 +208,18 @@ const Application2 = () => {
                 {nav === 1 && (
                     <div className='type'>
                         <Form.Item
-                            name='type'
+                            name='type_id'
                             rules={[{required: true, message: ''}]}
                         >
                             <Radio.Group
                                 block
-                                options={types}
-                                defaultValue="Bakalavriat"
+                                options={types?.map(i => (
+                                    { label: <div className='row align-center g10'>
+                                            <i className="fa-solid fa-book-open-reader"/>
+                                            <span>{ i.name }</span>
+                                        </div>,
+                                        value: i.id }
+                                ))}
                                 optionType="button"
                             />
                         </Form.Item>
@@ -200,35 +229,62 @@ const Application2 = () => {
                 {nav === 2 && (
                     <div className='type about'>
                         <Form.Item
-                            name='talim'
-                            label='Tugatgan talim muasssasangiz turini talnang'
+                            name='edu_ins_id'
+                            label={ t('Tugatgan talim muasssasangiz turini talnang') }
                             rules={[{required: true, message: ''}]}
                         >
                             <Radio.Group
                                 block
-                                options={abouts}
+                                options={inst?.data?.map(i => (
+                                    { label: <div className='row align-center g10'>
+                                            <i className="fa-solid fa-book-open-reader"/>
+                                            <span>{ i[`name_${lang}`] }</span>
+                                        </div>,
+                                        value: i.id }
+                                ))}
                                 optionType="button"
                             />
                         </Form.Item>
                         <Form.Item
-                            name='year'
-                            label='Bitirgan yili'
+                            name='end_date'
+                            label={ t('Bitirgan yili') }
                             rules={[{required: true, message: ''}]}
                         >
-                            <Input placeholder='Bitrgan yili' type='tel' />
+                            <Input placeholder={ t('Bitrgan yili') } type='tel' />
                         </Form.Item>
                         <Form.Item
-                            name='sertification'
-                            label='Sertifikatingiz bormi?'
+                            name='file_on'
+                            label={ t('Sertifikatingiz bormi?') }
                         >
                             <Radio.Group
                                 className='sert'
+                                onChange={(e) => setFileOn(e.target.value)}
                                 options={[
-                                    { label: 'Ha', value: '1' },
-                                    { label: 'Yoq', value: '0' },
+                                    { label: t('Ha'), value: true },
+                                    { label: t('Yoq'), value: false },
                                 ]}
                             />
                         </Form.Item>
+                        {fileOn && (
+                            <Form.Item
+                                className='upload'
+                                name='file_id'
+                                rules={[{required: fileOn, message: ''}]}
+                            >
+                                <Upload
+                                    {...uploadProps}
+                                    onChange={(e) => setFile(e)}
+                                    listType="text"
+                                >
+                                    <Input
+                                        rootClassName={file?.file.percent !== null && 'change-icon'}
+                                        size='large'
+                                        suffix={<i className="fa-solid fa-upload"/>}
+                                        prefix={file ? file?.file.percent?.toFixed(1) + '%' : 'Yuklash'}
+                                    />
+                                </Upload>
+                            </Form.Item>
+                        )}
                     </div>
                 )}
 
@@ -236,12 +292,12 @@ const Application2 = () => {
                     <div className='select'>
                         <Form.Item
                             name='study'
-                            label='Talim shakli'
+                            label={ t('Talim shakli') }
                             rules={[{required: true, message: ''}]}
                         >
                             <Select
                                 size='large'
-                                placeholder='Talim shakli'
+                                placeholder={ t('Talim shakli') }
                                 options={[
                                     { value: 'jack', label: 'Jack' },
                                 ]}
@@ -249,12 +305,12 @@ const Application2 = () => {
                         </Form.Item>
                         <Form.Item
                             name='lang'
-                            label='Talim tili'
+                            label={ t('Talim tili') }
                             rules={[{required: true, message: ''}]}
                         >
                             <Select
                                 size='large'
-                                placeholder='Talim tili'
+                                placeholder={ t('Talim tili') }
                                 options={[
                                     { value: 'jack', label: 'Jack' },
                                 ]}
@@ -262,12 +318,12 @@ const Application2 = () => {
                         </Form.Item>
                         <Form.Item
                             name='direct'
-                            label='Talim yonalishi'
+                            label={ t('Talim yonalishi') }
                             rules={[{required: true, message: ''}]}
                         >
                             <Select
                                 size='large'
-                                placeholder='Talim yonalishi'
+                                placeholder={ t('Talim yonalishi') }
                                 options={[
                                     { value: 'jack', label: 'Jack' },
                                 ]}
@@ -283,7 +339,7 @@ const Application2 = () => {
                     htmlType="submit"
                     type='primary'
                 >
-                    Tasdiqlash
+                    { t('Tasdiqlash') }
                 </Button>
             </Form>
         </div>

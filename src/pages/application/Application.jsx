@@ -10,6 +10,9 @@ import Application2 from "./Application2.jsx";
 import {Link} from "react-router-dom";
 import logo from '../../assets/images/big-logo.svg'
 import { useTranslation } from 'react-i18next';
+import {$resp} from "../../api/apiResp.js";
+import {useMutation} from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 
 const PhoneInput = React.forwardRef(({ value, onChange }, ref) => {
@@ -25,7 +28,7 @@ const PhoneInput = React.forwardRef(({ value, onChange }, ref) => {
             inputRef={ref} // Ant Design ожидает, что ref будет передан в Input
         />
     );
-});
+})
 
 const PassportInput = React.forwardRef(({ value, onChange }, ref) => {
     return (
@@ -43,7 +46,7 @@ const PassportInput = React.forwardRef(({ value, onChange }, ref) => {
             inputRef={ref}
         />
     );
-});
+})
 
 const JshInput = React.forwardRef(({ value, onChange }, ref) => {
     return (
@@ -60,7 +63,15 @@ const JshInput = React.forwardRef(({ value, onChange }, ref) => {
             inputRef={ref}
         />
     );
-});
+})
+
+
+// fetch
+const searchPassport = async (body) => {
+    const { data } = await $resp.post("/admission/check-passport", body)
+    return data
+}
+
 
 const Application = () => {
 
@@ -68,8 +79,8 @@ const Application = () => {
 
     const [form] = Form.useForm()
 
-    const [nav, setNav] = useState(false)
-    const [count, setCount] = useState(0)
+    const [nav, setNav] = useState(true)
+    const [count, setCount] = useState(3)
 
     const [loading, setLoading] = useState(false)
 
@@ -79,7 +90,24 @@ const Application = () => {
 
 
     // submit form
-    const onFormSubmit = (values) => {
+    const mutation = useMutation({
+        mutationFn: searchPassport,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            setNav(true)
+
+            localStorage.setItem('user', JSON.stringify(res))
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
+    const onFormSubmit = (val) => {
 
         if (count === 0) {
             setLoading(true)
@@ -110,15 +138,10 @@ const Application = () => {
         } else if (count === 3) {
             setLoading(true)
 
-            setTimeout(() => {
-                setNav(true)
-                setLoading(false)
-            }, 1000)
-
-        }
-
-        const body = {
-            ...values,
+            const body = {
+                ...val,
+            }
+            mutation.mutate(body)
         }
     }
 
@@ -237,13 +260,15 @@ const Application = () => {
                                         >
 
                                             {count < 2 && (
-                                                <Form.Item
-                                                    name='phone_number'
-                                                    label={ t('Telefon raqam') }
-                                                    rules={[{required: true, message: ''}]}
-                                                >
-                                                    <PhoneInput/>
-                                                </Form.Item>
+                                                <div>
+                                                    <Form.Item
+                                                        name='phone_number'
+                                                        label={ t('Telefon raqam') }
+                                                        rules={[{required: true, message: ''}]}
+                                                    >
+                                                        <PhoneInput/>
+                                                    </Form.Item>
+                                                </div>
                                             )}
 
                                             {count === 1 && (
@@ -290,24 +315,24 @@ const Application = () => {
                                             {count === 3 && (
                                                 <div>
                                                     <Form.Item
-                                                        name='jshir'
+                                                        name='pinfl'
                                                         label={ t('JSHSHIR') }
                                                     >
                                                         <JshInput />
                                                     </Form.Item>
                                                     <Form.Item
-                                                        name='passport'
+                                                        name='serial'
                                                         label={ t('Seriyasi va raqami') }
                                                     >
                                                         <PassportInput />
                                                     </Form.Item>
-                                                    <div className="search row between">
-                                                        <span/>
-                                                        <button className="row align-center" type='button'>
-                                                            <span>Qidirish</span>
-                                                            <i className="fa-solid fa-magnifying-glass"/>
-                                                        </button>
-                                                    </div>
+                                                    {/*<div className="search row between">*/}
+                                                    {/*    <span/>*/}
+                                                    {/*    <button className="row align-center" type='button'>*/}
+                                                    {/*        <span>Qidirish</span>*/}
+                                                    {/*        <i className="fa-solid fa-magnifying-glass"/>*/}
+                                                    {/*    </button>*/}
+                                                    {/*</div>*/}
                                                 </div>
                                             )}
 

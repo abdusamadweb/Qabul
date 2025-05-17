@@ -7,8 +7,13 @@ import MainC from "./content/MainC.jsx";
 import ApplC from "./content/ApplC.jsx";
 import DealC from "./content/DealC.jsx";
 import CertC from "./content/CertC.jsx";
+import {useTranslation} from "react-i18next";
 
 const Profile = () => {
+
+    const { t } = useTranslation()
+
+    const user = JSON.parse(localStorage.getItem('user'))
 
     const [nav, setNav] = useState(0)
 
@@ -23,7 +28,7 @@ const Profile = () => {
                 <div className="container row between align-center">
                     <img src={logo} alt="logo"/>
                     <button className='btn row align-center g10' onClick={() => setNav(0)}>
-                        <span>Abdusamad</span>
+                        <span>{ user?.firstName }</span>
                         <i className="fa-solid fa-circle-user"/>
                     </button>
                 </div>
@@ -38,18 +43,18 @@ const Profile = () => {
                             responsive={false}
                             items={[
                                 {
-                                    title: 'Ariza topshirildi',
+                                    title: t('Ariza topshirildi'),
                                     description: <button className='btn d-flex align-center g10'>
                                         <i className="fa-solid fa-download"/>
-                                        <span>Qayd varaqa</span>
+                                        <span>{ t('Qayd varaqa') }</span>
                                     </button>
                                 },
                                 {
-                                    title: <span className='s-title'>Imtixon topshirilmagan</span>,
-                                    description: <span className='s-title s-desc'>Imtixon vaqti: belgilanmagan</span>
+                                    title: <span className='s-title'>{ t('Imtixon topshirilmagan') }</span>,
+                                    description: <span className='s-title s-desc'>{ t('Imtixon vaqti:') } { t('belgilanmagan') }</span>
                                 },
                                 {
-                                    title: 'Shartnoma mavjud emas',
+                                    title: t('Shartnoma mavjud emas'),
                                 },
                             ]}
                         />
@@ -59,30 +64,30 @@ const Profile = () => {
                             <ul className='nav__list'>
                                 <li className={`item ${nav === 0 && 'active'}`} onClick={() => setNav(0)}>
                                     <i className="fa-solid fa-house"/>
-                                    <span>Asosiy sahifa</span>
+                                    <span>{ t('Asosiy sahifa') }</span>
                                 </li>
                                 <li className={`item ${nav === 1 && 'active'}`} onClick={() => setNav(1)}>
                                     <i className="fa-solid fa-file-circle-check"/>
-                                    <span>Mening arizam</span>
+                                    <span>{ t('Mening arizam') }</span>
                                 </li>
                                 <li className={`item ${nav === 2 && 'active'}`} onClick={() => setNav(2)}>
                                     <i className="fa-solid fa-paste"/>
-                                    <span>Mening shartnomam</span>
+                                    <span>{ t('Mening shartnomam') }</span>
                                 </li>
                                 <li className={`item ${nav === 3 && 'active'}`} onClick={() => setNav(3)}>
                                     <i className="fa-solid fa-scroll"/>
-                                    <span>Til sertifikatlari</span>
+                                    <span>{ t('Til sertifikatlari') }</span>
                                 </li>
 
                                 <Popconfirm
-                                    title="Tizimdan chiqishni xoxlaysizmi?"
+                                    title={ t('Tizimdan chiqishni xoxlaysizmi?') }
                                     onConfirm={logout}
                                     okText="Ha"
                                     cancelText="Yoq"
                                 >
                                     <li className='item logout'>
                                         <i className="fa-solid fa-arrow-right-from-bracket"/>
-                                        <span>Chiqish</span>
+                                        <span>{ t('Chiqish') }</span>
                                     </li>
                                 </Popconfirm>
                             </ul>

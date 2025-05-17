@@ -42,11 +42,12 @@ export const formatPhone = (str) => {
 }
 
 
-// upload files
+// upload files antd
 export const uploadProps = {
     name: 'file',
     maxCount: 1,
-    action: API_TEST + '/upload-file',
+    action: API_TEST + '/attachment/upload',
+    headers: { Authorization: "Bearer " + localStorage.getItem('token') },
     beforeUpload: (file) => {
         const isImageOrPdf = file.type === 'application/pdf' || file.type.startsWith('image/');
         if (!isImageOrPdf) {

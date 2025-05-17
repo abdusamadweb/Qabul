@@ -190,6 +190,29 @@
         }
       }
 
+      .upload {
+        margin-top: -1rem;
+
+        .ant-upload-wrapper, .ant-upload {
+          width: 100%;
+        }
+        .ant-input-affix-wrapper {
+          border-radius: 11px;
+          color: #d9d9d9;
+          background: #fff;
+
+          input {
+            height: 30px;
+            padding: 0;
+            border: none;
+            visibility: hidden;
+          }
+        }
+        .ant-upload-list-item-name {
+          text-align: start;
+        }
+      }
+
       .title {
         font-weight: 500;
         font-size: 24px;

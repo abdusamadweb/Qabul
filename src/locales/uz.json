@@ -19,16 +19,7 @@
   "Seriya va raqami": "Seriya va raqami",
   "Tugilgan yili": "Tugilgan yili",
 
-  "Bakalavriat": "Bakalavriat",
-  "Oqishni kochirish": "Oqishni kochirish",
-  "Maqsadli qabul": "Maqsadli qabul",
-
   "Tugatgan talim muasssasangiz turini talnang": "Tugatgan talim muasssasangiz turini talnang",
-  "Akademik litsey": "Akademik litsey",
-  "Kasb hunar kolleji": "Kasb hunar kolleji",
-  "Profesional talim": "Profesional talim",
-  "Maktab": "Maktab",
-  "Oliy talim": "Oliy talim",
   "Bitirgan yili": "Bitirgan yili",
   "Sertifikatingiz bormi?": "Sertifikatingiz bormi?",
   "Ha": "Ha",
@@ -37,6 +28,62 @@
   "Talim shakli": "Talim shakli",
   "Talim tili": "Talim tili",
   "Talim yonalishi": "Talim yonalishi",
+
+  "Ariza topshirildi": "Ariza topshirildi",
+  "Qayd varaqa": "Qayd varaqa",
+  "Imtixon topshirilmagan": "Imtixon topshirilmagan",
+  "Imtixon vaqti:": "Imtixon vaqti:",
+  "belgilanmagan": "belgilanmagan",
+  "Shartnoma mavjud emas": "Shartnoma mavjud emas",
+
+  "Asosiy sahifa": "Asosiy sahifa",
+  "Mening arizam": "Mening arizam",
+  "Mening shartnomam": "Mening shartnomam",
+  "Til sertifikatlari": "Til sertifikatlari",
+  "Chiqish": "Chiqish",
+  "Tizimdan chiqishni xoxlaysizmi?": "Tizimdan chiqishni xoxlaysizmi?",
+
+  "Xush kelibsiz!": "Xush kelibsiz!",
+  "Shaxsiy malumotlar": "Shaxsiy malumotlar",
+  "Millati": "Millati",
+  "Imtixon turi": "Imtixon turi",
+  "Qayd varaqasi": "Qayd varaqasi",
+  "Yuklash": "Yuklash",
+  "Talaba shartnomasi": "Talaba shartnomasi",
+
+  "Mening arizalarim": "Mening arizalarim",
+  "Ariza": "Ariza",
+  "Tasdiqlangan": "Tasdiqlangan",
+  "Status": "Status",
+  "Imtihon malumotlari": "Imtihon malumotlari",
+  "Manzil": "Manzil",
+  "Sana": "Sana",
+  "Vaqt": "Vaqt",
+  "Fanlar": "Fanlar",
+  "Izoh": "Izoh",
+  "Imtixon vaqti hali belgilanmagan": "Imtixon vaqti hali belgilanmagan",
+
+  "Rostan ham arizani bekor qilmoxchimisiz?": "Rostan ham arizani bekor qilmoxchimisiz?",
+  "Arizani bekor qilishni tasdiqlaysizmi?": "Arizani bekor qilishni tasdiqlaysizmi?",
+  "Arizani bekor qilish": "Arizani bekor qilish",
+  "OTM geolokatsiyasi": "OTM geolokatsiyasi",
+  "Joylashuvni nusxalash": "Joylashuvni nusxalash",
+
+  "Mening shartnomam": "Mening shartnomam",
+  "Shartnoma mavjud emas": "Shartnoma mavjud emas",
+
+  "Mening sertifikatlarim": "Mening sertifikatlarim",
+  "Sertifikat qoshish": "Sertifikat qoshish",
+  "Sertifikatlar mavjud emas": "Sertifikatlar mavjud emas",
+
   "sound": "Sound",
+  "sound": "Sound",
+  "sound": "Sound",
+  "sound": "Sound",
+  "sound": "Sound",
+  "sound": "Sound",
+
+
+
   "sound": "Sound"
 }

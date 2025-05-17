@@ -1,52 +1,59 @@
 import React from 'react';
+import {useTranslation} from "react-i18next";
 
 const MainC = () => {
+
+    const { t } = useTranslation()
+
+    const user = JSON.parse(localStorage.getItem('user'))
+
+
     return (
         <div className="main-c">
-            <p className="content__title">KUAF ga xush kelibsiz!</p>
+            <p className="content__title">KUAF - { t('Xush kelibsiz!') }</p>
             <div className="content__diver">
-                <p className="title">Shaxsiy malumotlar</p>
+                <p className="title">{ t('Shaxsiy malumotlar') }</p>
                 <ul className='check'>
                     <li className="check__item">
-                        <span className='txt'>F.I.O</span>
+                        <span className='txt'>{ t('F.I.O') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>Malika Tursunova</span>
+                        <span className='txt font'>{ user?.firstName + ' ' + user?.lastName }</span>
                     </li>
                     <li className="check__item">
-                        <span className='txt'>JSHSHIR</span>
+                        <span className='txt'>{ t('JSHSHIR') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>12345678901234</span>
+                        <span className='txt font'>{ user?.pinfl }</span>
                     </li>
                     <li className="check__item">
-                        <span className='txt'>Seriya va raqami</span>
+                        <span className='txt'>{ t('Seriya va raqami') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>XX 1234567</span>
+                        <span className='txt font'>{ user?.serialAndNumber }</span>
                     </li>
                     <li className="check__item">
-                        <span className='txt'>Tugilgan yili</span>
+                        <span className='txt'>{ t('Tugilgan yili') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>2002-02-22</span>
+                        <span className='txt font'>{ user?.birthDate }</span>
                     </li>
                     <li className="check__item">
-                        <span className='txt'>Millati</span>
+                        <span className='txt'>{ t('Millati') }</span>
                         <span className='dots'/>
                         <span className='txt font'>Ozbek</span>
                     </li>
                     <li className="check__item">
-                        <span className='txt'>Imtixon turi</span>
+                        <span className='txt'>{ t('Imtixon turi') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>Ofline</span>
+                        <span className='txt font'>Offline</span>
                     </li>
                     <li className="check__item">
-                        <span className='txt'>Qayd varaqasi</span>
+                        <span className='txt'>{ t('Qayd varaqasi') }</span>
                         <span className='dots'/>
                         <button className='txt btn'>
                             <i className="fa-solid fa-download"/>
-                            <span>Yuklash</span>
+                            <span>{ t('Yuklash') }</span>
                         </button>
                     </li>
                     <li className="check__item">
-                        <span className='txt'>Talaba shartnomasi</span>
+                        <span className='txt'>{ t('Talaba shartnomasi') }</span>
                         <span className='dots'/>
                         {/*<span className='txt font'>Ozbek</span>*/}
                     </li>
