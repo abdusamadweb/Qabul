@@ -79,8 +79,8 @@ const Application = () => {
 
     const [form] = Form.useForm()
 
-    const [nav, setNav] = useState(true)
-    const [count, setCount] = useState(3)
+    const [nav, setNav] = useState(false)
+    const [count, setCount] = useState(0)
 
     const [loading, setLoading] = useState(false)
 

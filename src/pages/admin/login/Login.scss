@@ -1,0 +1,32 @@
+@use "/src/scss" as *;
+
+.admin-login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+
+  &__inner {
+    width: 500px;
+
+    @include mobile {
+      width: 333px;
+    }
+  }
+
+  &__title {
+    text-align: center;
+    font-weight: 600;
+    font-size: 28px;
+  }
+
+  .ant-form {
+
+    .ant-form-item {
+      margin-bottom: 1rem;
+    }
+    .ant-form-item-required {
+      font-weight: 500 !important;
+      font-size: 16px !important;
+    }
+  }
+}

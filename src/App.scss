@@ -25,3 +25,314 @@
   }
 }
 
+.admin {
+  max-width: unset;
+
+  .page {
+    padding-left: 250px;
+
+    @include tablet {
+      padding-left: 60px;
+    }
+    @include mobile {
+      padding-left: 40px;
+    }
+  }
+
+  .container {
+    padding-inline: 1rem;
+  }
+
+  .sms {
+    .ant-form-item {
+      margin-bottom: 1rem;
+    }
+    .ant-upload, .ant-upload-wrapper {
+      width: 100%;
+    }
+  }
+
+  .ant-table {
+
+    .korish-btn {
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 10px;
+      color: #4b4646;
+      background: #3e97ff30;
+    }
+
+    &-cell {
+      text-align: center !important;
+    }
+
+    .ant-tag {
+      font-weight: 500;
+      padding: 0 10px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      &__btn {
+        width: 33px;
+        height: 33px;
+        padding: 5px;
+        border-radius: 10px;
+        background: #979da920;
+        transition: opacity 0.3s ease;
+
+        &.view {
+          background: #3e97ff20;
+
+          i {
+            color: #3e97ff;
+          }
+        }
+        &.edit {
+          background: #ffb62c20;
+
+          i {
+            color: #ffb62c;
+          }
+        }
+        &.delete {
+          background: #ed2b4620;
+
+          i {
+            color: #ed2b46;
+          }
+        }
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        i {
+          color: #979da9;
+        }
+      }
+    }
+
+    .green {
+      color: #00c020;
+    }
+    .red {
+      color: #ed2b46;
+    }
+    .yellow {
+      color: #ffb62c;
+    }
+  }
+
+  .ant-pagination {
+    margin-bottom: 0 !important;
+  }
+
+  .ant-select {
+
+    &-item-option-content {
+      font-weight: 500;
+      font-size: 16px;
+    }
+  }
+}
+
+.admin-modal {
+
+  .ant-modal-title {
+    font-weight: 600 !important;
+    font-size: 22px !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .ant-form {
+
+    .ant-col {
+      padding-bottom: 5px !important;
+    }
+
+    .ant-upload-wrapper {
+      width: 100%;
+    }
+    .ant-upload {
+      width: 100%;
+    }
+    .ant-input-prefix {
+      width: 93%;
+      color: #ccc;
+    }
+    .upload-inp {
+      width: 100%;
+
+      input {
+        display: none;
+      }
+    }
+
+    &-item {
+      margin-bottom: 10px;
+
+      &.age {
+        flex: 1;
+      }
+
+      &-required {
+        font-weight: 500;
+      }
+    }
+
+    .select-imgs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      gap: 10px;
+
+      .item {
+        display: inline-flex;
+        flex-flow: column;
+        align-items: center;
+        padding-block: 12px;
+        border-radius: 10px;
+        border: 2px solid #eee;
+        opacity: 0.7;
+        cursor: pointer;
+        transition: opacity 0.2s ease,
+        border-color 0.2s ease;
+
+        &.active {
+          border-color: $main-color;
+          opacity: 1;
+        }
+
+        img {
+          width: 70%;
+        }
+        label {
+          justify-content: center;
+        }
+      }
+    }
+    .ant-form-item-control-input {
+      min-height: unset;
+    }
+  }
+
+  .ant-modal-footer {
+    display: none;
+  }
+}
+
+.main-modal {
+  position: relative;
+  top: 1rem;
+  margin-right: 1rem;
+
+  .main-modal-form {
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+  }
+
+  .edu-add-btn {
+    position: absolute;
+    top: 20px;
+    right: 55px;
+    font-weight: 500;
+    font-size: 16px;
+    padding-block: 18px;
+    border: none;
+    color: #fff;
+    background: $main-color;
+
+    &:hover {
+      color: #fff !important;
+      background: $main-color !important;
+    }
+  }
+
+  .ant-table {
+
+    &-cell {
+      text-align: center !important;
+    }
+
+    .ant-tag {
+      font-weight: 500;
+      padding: 0 10px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      &__btn {
+        width: 33px;
+        height: 33px;
+        padding: 5px;
+        border-radius: 10px;
+        background: #979da920;
+        transition: opacity 0.3s ease;
+
+        &.view {
+          background: #3e97ff20;
+
+          i {
+            color: #3e97ff;
+          }
+        }
+        &.edit {
+          background: #ffb62c20;
+
+          i {
+            color: #ffb62c;
+          }
+        }
+        &.delete {
+          background: #ed2b4620;
+
+          i {
+            color: #ed2b46;
+          }
+        }
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        i {
+          color: #979da9;
+        }
+      }
+    }
+
+    .green {
+      color: #00c020;
+    }
+    .red {
+      color: #ed2b46;
+    }
+    .yellow {
+      color: #ffb62c;
+    }
+  }
+
+  .ant-pagination {
+    margin-bottom: 0 !important;
+  }
+
+  .ant-select {
+
+    &-item-option-content {
+      font-weight: 500;
+      font-size: 16px;
+    }
+  }
+}
+

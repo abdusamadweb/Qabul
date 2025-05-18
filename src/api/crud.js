@@ -1,4 +1,4 @@
-import {$adminResp} from "./apiResp.js";
+import {$adminResp} from "./apiResp.js"
 
 // add or edit item
 export const addOrEdit = async (url, value, id) => {
@@ -13,7 +13,7 @@ export const addOrEdit = async (url, value, id) => {
 // delete item
 export const deleteData = async (url, id) => {
     const res = await $adminResp({
-        url: `${url}/remove/${id}`,
+        url: `${url}/delete/${id}`,
         method: "DELETE",
     })
     return res.data
