@@ -7,7 +7,7 @@ import {useMutation} from "@tanstack/react-query";
 
 
 const fetchLogin = async (body) => {
-    const { data } = await $resp.post('/auth/login', body)
+    const { data } = await $resp.post('/auth/a-login', body)
     return data
 }
 
@@ -25,7 +25,7 @@ const Auth = () => {
             toast.success(res.message)
 
             localStorage.setItem('admin-token', res.token)
-            window.location.href = '/admin/university'
+            window.location.href = '/admin/feeds'
         },
         onError: (err) => {
             toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)

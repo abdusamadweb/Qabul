@@ -52,6 +52,15 @@ const chooseInst = async (body) => {
     return data
 }
 
+const fetchOptions = async () => {
+    const { data } = await $resp.get('/admission/edu-data-select-options')
+    return data
+}
+const chooseOptions = async (body) => {
+    const { data } = await $resp.post("/admission/edu-data-accept", body)
+    return data
+}
+
 
 const Application2 = () => {
 
@@ -63,11 +72,13 @@ const Application2 = () => {
 
     const user = JSON.parse(localStorage.getItem('user'))
 
-    const [nav, setNav] = useState(2)
+    const [nav, setNav] = useState(0)
     const [loading, setLoading] = useState(false)
 
     const [fileOn, setFileOn] = useState(false)
     const [file, setFile] = useState(null)
+
+    const currentLang = i18n.language || 'uz'
 
 
     // fetch
@@ -81,6 +92,35 @@ const Application2 = () => {
         queryFn: fetchInst,
         keepPreviousData: true
     })
+    const { data: options } = useQuery({
+        queryKey: ['options'],
+        queryFn: fetchOptions,
+        keepPreviousData: true
+    })
+
+
+    // selects
+    const [selectedFormId, setSelectedFormId] = useState(null)
+    const [selectedLangId, setSelectedLangId] = useState(null)
+
+    const handleFormChange = (value) => {
+        setSelectedFormId(value)
+        setSelectedLangId(null) // сбрасываем язык при смене формы
+    }
+
+    const handleLangChange = (value) => {
+        setSelectedLangId(value)
+    }
+
+    // Фильтруем языки по выбранной форме
+    const filteredLangs = options?.edu_langs?.filter(lang =>
+        lang.edu_form_ids.includes(selectedFormId)
+    )
+
+    // Фильтруем направления по выбранному языку
+    const filteredDirections = options?.edu_directions?.filter(dir =>
+        dir.edu_lang_ids.includes(selectedLangId)
+    )
 
 
     // mutates
@@ -114,6 +154,21 @@ const Application2 = () => {
         }
     })
 
+    const muOptions = useMutation({
+        mutationFn: chooseOptions,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            navigate('/profile')
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
 
     // submit
     const onFormSubmit = (val) => {
@@ -126,7 +181,8 @@ const Application2 = () => {
                 setLoading(false)
             }, 1000)
 
-        } else if (nav === 1) {
+        }
+        else if (nav === 1) {
             setLoading(true)
 
             const body = {
@@ -134,7 +190,8 @@ const Application2 = () => {
             }
             muTypes.mutate(body)
 
-        } else if (nav === 2) {
+        }
+        else if (nav === 2) {
             setLoading(true)
 
             const body = {
@@ -144,15 +201,16 @@ const Application2 = () => {
             }
             muInst.mutate(body)
 
-        } else if (nav === 3) {
+        }
+        else if (nav === 3) {
             setLoading(true)
 
-            setTimeout(() => {
-                toast.success('Muvaffaqiyatli!')
-                navigate('/profile')
-                setLoading(false)
-            }, 1000)
-
+            const body = {
+                edu_form_id: val.edu_form_id,
+                edu_lang_id: val.edu_lang_id,
+                edu_direction_id: val.edu_direction_id,
+            }
+            muOptions.mutate(body)
         }
     }
 
@@ -291,42 +349,46 @@ const Application2 = () => {
                 {nav === 3 && (
                     <div className='select'>
                         <Form.Item
-                            name='study'
+                            name='edu_form_id'
                             label={ t('Talim shakli') }
                             rules={[{required: true, message: ''}]}
                         >
                             <Select
                                 size='large'
                                 placeholder={ t('Talim shakli') }
-                                options={[
-                                    { value: 'jack', label: 'Jack' },
-                                ]}
+                                onChange={handleFormChange}
+                                options={options?.edu_forms?.map(i => {
+                                    return { label: i[`name_${currentLang}`], value: i.id }
+                                })}
                             />
                         </Form.Item>
                         <Form.Item
-                            name='lang'
+                            name='edu_lang_id'
                             label={ t('Talim tili') }
                             rules={[{required: true, message: ''}]}
                         >
                             <Select
                                 size='large'
                                 placeholder={ t('Talim tili') }
-                                options={[
-                                    { value: 'jack', label: 'Jack' },
-                                ]}
+                                onChange={handleLangChange}
+                                disabled={!selectedFormId}
+                                options={filteredLangs?.map(i => {
+                                    return { label: i[`name_${currentLang}`], value: i.id }
+                                })}
                             />
                         </Form.Item>
                         <Form.Item
-                            name='direct'
+                            name='edu_direction_id'
                             label={ t('Talim yonalishi') }
                             rules={[{required: true, message: ''}]}
                         >
                             <Select
                                 size='large'
                                 placeholder={ t('Talim yonalishi') }
-                                options={[
-                                    { value: 'jack', label: 'Jack' },
-                                ]}
+                                disabled={!selectedLangId}
+                                options={filteredDirections?.map(i => {
+                                    return { label: i[`name_${currentLang}`], value: i.id }
+                                })}
                             />
                         </Form.Item>
                     </div>
@@ -343,7 +405,7 @@ const Application2 = () => {
                 </Button>
             </Form>
         </div>
-    );
+    )
 };
 
 export default Application2;

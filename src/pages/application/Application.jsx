@@ -7,7 +7,7 @@ import uz from '../../assets/images/uz.png'
 import ru from '../../assets/images/ru.png'
 import us from '../../assets/images/us.png'
 import Application2 from "./Application2.jsx";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import logo from '../../assets/images/big-logo.svg'
 import { useTranslation } from 'react-i18next';
 import {$resp} from "../../api/apiResp.js";
@@ -75,16 +75,32 @@ const checkPhone = async (body) => {
     const { data } = await $resp.post("/auth/check-phone", body)
     return data
 }
+const register = async (body) => {
+    const { data } = await $resp.post("/auth/register", body)
+    return data
+}
+const login = async (body) => {
+    const { data } = await $resp.post("/auth/login", body)
+    return data
+}
+const checkSms = async (body) => {
+    const { data } = await $resp.post("/auth/check-sms", body)
+    return data
+}
 
 
 const Application = () => {
 
     const { t } = useTranslation()
 
+    const navigate = useNavigate()
     const [form] = Form.useForm()
 
-    const [nav, setNav] = useState(false)
     const [count, setCount] = useState(0)
+    const [nav, setNav] = useState(false)
+
+    const [exist, setExist] = useState(false)
+    const [smsId, setSmsId] = useState(null)
 
     const [loading, setLoading] = useState(false)
 
@@ -94,6 +110,68 @@ const Application = () => {
 
 
     // submit form
+    const muPhone = useMutation({
+        mutationFn: checkPhone,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            setCount(1)
+            setExist(res.exists)
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
+    const muRegister = useMutation({
+        mutationFn: register,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            setCount(2)
+            setSmsId(res.data.sms_id)
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
+    const muLogin = useMutation({
+        mutationFn: login,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            navigate('/profile')
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
+    const muSms = useMutation({
+        mutationFn: checkSms,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            setCount(3)
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
     const muPassport = useMutation({
         mutationFn: searchPassport,
         onSuccess: (res) => {
@@ -103,21 +181,6 @@ const Application = () => {
             setNav(true)
 
             localStorage.setItem('user', JSON.stringify(res))
-        },
-        onError: (err) => {
-            setLoading(false)
-
-            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
-        }
-    })
-
-    const muPhone = useMutation({
-        mutationFn: checkPhone,
-        onSuccess: (res) => {
-            toast.success(res.message)
-
-            setLoading(false)
-            setCount(1)
         },
         onError: (err) => {
             setLoading(false)
@@ -139,23 +202,37 @@ const Application = () => {
             }
             muPhone.mutate(body)
 
-        } else if (count === 1) {
+        }
+        else if (count === 1) {
             setLoading(true)
 
-            setTimeout(() => {
-                setCount(2)
-                setLoading(false)
-            }, 1000)
+            if (exist === true) {
+                const body = {
+                    phone: '+998' + val.phone_number,
+                    password: val.password,
+                }
+                muLogin.mutate(body)
+            } else {
+                const body = {
+                    phone_number: '+998' + val.phone_number,
+                    password: val.password,
+                }
+                muRegister.mutate(body)
+            }
 
-        } else if (count === 2) {
+        }
+        else if (count === 2) {
             setLoading(true)
 
-            setTimeout(() => {
-                setCount(3)
-                setLoading(false)
-            }, 1000)
+            const body = {
+                phone_number: '+998' + val.phone_number,
+                sms_id: smsId,
+                code: val.code,
+            }
+            muSms.mutate(body)
 
-        } else if (count === 3) {
+        }
+        else if (count === 3) {
             setLoading(true)
 
             const body = {
@@ -279,57 +356,47 @@ const Application = () => {
                                             form={form}
                                         >
 
-                                            {count < 2 && (
-                                                <div>
-                                                    <Form.Item
-                                                        name='phone_number'
-                                                        label={ t('Telefon raqam') }
-                                                        rules={[{required: true, message: ''}]}
-                                                    >
-                                                        <PhoneInput/>
-                                                    </Form.Item>
-                                                </div>
+                                            {count >= 0 && (
+                                                <Form.Item
+                                                    name="phone_number"
+                                                    label={t("Telefon raqam")}
+                                                    rules={[{ required: true, message: "" }]}
+                                                >
+                                                    <PhoneInput />
+                                                </Form.Item>
                                             )}
 
-                                            {count === 1 && (
-                                                <div>
+                                            {count >= 1 && (
+                                                <Form.Item
+                                                    name="password"
+                                                    label={t("Parolni kiriting")}
+                                                    rules={[{ required: true, message: "" }]}
+                                                >
+                                                    <Input type="text" placeholder={t("Parolni kiriting")} />
+                                                </Form.Item>
+                                            )}
+
+                                            {count >= 2 && (
+                                                <>
                                                     <Form.Item
-                                                        name='code'
-                                                        label={ t('Kodni kiriting') }
-                                                        rules={[{required: true, message: ''}]}
+                                                        name="code"
+                                                        label={t("Kodni kiriting")}
+                                                        rules={[{ required: true, message: "" }]}
                                                     >
-                                                        <Input type='tel' placeholder={ t('Kodni kiriting') }/>
+                                                        <Input type="tel" placeholder={t("Kodni kiriting")} />
                                                     </Form.Item>
-                                                    <div className='sms-retry'>
-                                                        <p className='txt'>{ t('SMS ni qayta yuborish') }:</p>
-                                                        {
-                                                            active ?
-                                                                <span className='sms-btn'>{formatTime(timeLeft)}</span>
-                                                                :
-                                                                <button className='sms-btn' onClick={retryOnFinish}
-                                                                        type='button'>{ t('Qayta yuborish') }</button>
-                                                        }
+
+                                                    <div className="sms-retry">
+                                                        <p className="txt">{t("SMS ni qayta yuborish")}:</p>
+                                                        {active ? (
+                                                            <span className="sms-btn">{formatTime(timeLeft)}</span>
+                                                        ) : (
+                                                            <button className="sms-btn" onClick={retryOnFinish} type="button">
+                                                                {t("Qayta yuborish")}
+                                                            </button>
+                                                        )}
                                                     </div>
-                                                </div>
-                                            )}
-
-                                            {count === 2 && (
-                                                <div>
-                                                    <Form.Item
-                                                        name='password'
-                                                        label={ t('Parolni kiriting') }
-                                                        rules={[{required: true, message: ''}]}
-                                                    >
-                                                        <Input type='text' placeholder={ t('Parolni kiriting') }/>
-                                                    </Form.Item>
-                                                    <Form.Item
-                                                        name='cPassword'
-                                                        label={ t('Parolni tasdiqlang') }
-                                                        rules={[{required: true, message: ''}]}
-                                                    >
-                                                        <Input type='text' placeholder={ t('Parolni kiriting') }/>
-                                                    </Form.Item>
-                                                </div>
+                                                </>
                                             )}
 
                                             {count === 3 && (

@@ -9,8 +9,8 @@ const AdminNavBar = ({ openMenu, setOpenMenu }) => {
             link: '/admin/dashboard'
         },
         {
-            name: 'Arizachilar',
-            link: '/admin/users'
+            name: 'Arizalar',
+            link: '/admin/feeds'
         },
         {
             name: 'Talim tili',
