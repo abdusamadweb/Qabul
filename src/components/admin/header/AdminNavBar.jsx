@@ -9,6 +9,10 @@ const AdminNavBar = ({ openMenu, setOpenMenu }) => {
             link: '/admin/dashboard'
         },
         {
+            name: 'Arizachilar',
+            link: '/admin/users'
+        },
+        {
             name: 'Talim tili',
             link: '/admin/edu-lang'
         },
@@ -17,8 +21,8 @@ const AdminNavBar = ({ openMenu, setOpenMenu }) => {
             link: '/admin/edu-form'
         },
         {
-            name: 'Regionlar',
-            link: '/admin/regions'
+            name: 'Talim yonalishi',
+            link: '/admin/edu-dir'
         },
     ]
 

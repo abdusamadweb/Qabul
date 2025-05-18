@@ -71,6 +71,10 @@ const searchPassport = async (body) => {
     const { data } = await $resp.post("/admission/check-passport", body)
     return data
 }
+const checkPhone = async (body) => {
+    const { data } = await $resp.post("/auth/check-phone", body)
+    return data
+}
 
 
 const Application = () => {
@@ -90,7 +94,7 @@ const Application = () => {
 
 
     // submit form
-    const mutation = useMutation({
+    const muPassport = useMutation({
         mutationFn: searchPassport,
         onSuccess: (res) => {
             toast.success(res.message)
@@ -107,6 +111,22 @@ const Application = () => {
         }
     })
 
+    const muPhone = useMutation({
+        mutationFn: checkPhone,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            setCount(1)
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
+
     const onFormSubmit = (val) => {
 
         if (count === 0) {
@@ -114,10 +134,10 @@ const Application = () => {
 
             startTimer()
 
-            setTimeout(() => {
-                setCount(1)
-                setLoading(false)
-            }, 1000)
+            const body = {
+                phone_number: '+998' + val.phone_number
+            }
+            muPhone.mutate(body)
 
         } else if (count === 1) {
             setLoading(true)
@@ -141,7 +161,7 @@ const Application = () => {
             const body = {
                 ...val,
             }
-            mutation.mutate(body)
+            muPassport.mutate(body)
         }
     }
 

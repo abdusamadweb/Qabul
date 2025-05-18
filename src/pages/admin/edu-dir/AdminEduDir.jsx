@@ -10,11 +10,11 @@ import {getRequest, useCrud} from "../../../hooks/useCrud.jsx";
 
 
 // fetches
-const fetchData = () => getRequest(`/edu-lang/all`)
-const fetchEduForm = () => getRequest(`/edu-form/all`)
+const fetchData = () => getRequest(`/edu-direction/all`)
+const fetchEduLang = () => getRequest(`/edu-lang/all`)
 
 
-const AdminEduLang = () => {
+const AdminEduDir = () => {
 
     const [form] = Form.useForm()
 
@@ -24,13 +24,13 @@ const AdminEduLang = () => {
 
     // fetch
     const { data, refetch } = useQuery({
-        queryKey: ['edu-lang'],
+        queryKey: ['edu-dir'],
         queryFn: fetchData,
         keepPreviousData: true,
     })
-    const { data: eduForm } = useQuery({
-        queryKey: ['edu-form'],
-        queryFn: fetchEduForm,
+    const { data: eduLang } = useQuery({
+        queryKey: ['edu-lang'],
+        queryFn: fetchEduLang,
         keepPreviousData: true,
     })
 
@@ -39,7 +39,7 @@ const AdminEduLang = () => {
     const {
         addOrEditMutation,
         deleteMutation
-    } = useCrud('edu-lang', {
+    } = useCrud('edu-dir', {
         refetch,
         form,
         setModal,
@@ -111,7 +111,7 @@ const AdminEduLang = () => {
         <div className="other page">
             <div className="container">
                 <Title
-                    title='Talim tili ~ edu-lang'
+                    title='Talim yonalishi ~ edu-dir'
                     setModal={setModal}
                     btn
                 />
@@ -125,16 +125,16 @@ const AdminEduLang = () => {
                         expandable={{
                             expandedRowRender: (record) => (
                                 <div className='table-in'>
-                                    <p className="title">Talim shakli</p>
+                                    <p className="title">Talim tili</p>
                                     <Table
                                         size="middle"
                                         columns={columns2}
-                                        dataSource={record?.edu_form}
+                                        dataSource={record?.edu_langs}
                                         pagination={false}
                                     />
                                 </div>
                             ),
-                            rowExpandable: (record) => record.edu_form,
+                            rowExpandable: (record) => record.edu_langs,
                         }}
                         scroll={{ x: 750 }}
                     />
@@ -171,7 +171,7 @@ const AdminEduLang = () => {
                     ))}
 
                     <Form.Item
-                        name='edu_form_ids'
+                        name='edu_lang_ids'
                         label='Talim shakli'
                         rules={[{ required: true }]}
                     >
@@ -179,7 +179,7 @@ const AdminEduLang = () => {
                             size="large"
                             mode="multiple"
                             placeholder="Talim shakli"
-                            options={eduForm?.data?.map(i => ({
+                            options={eduLang?.data?.map(i => ({
                                 value: i.id,
                                 label: i.name_uz,
                             }))}
@@ -202,4 +202,4 @@ const AdminEduLang = () => {
     );
 };
 
-export default AdminEduLang
+export default AdminEduDir

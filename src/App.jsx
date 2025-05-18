@@ -15,6 +15,7 @@ import AdminEduLang from "./pages/admin/edu-lang/AdminEduLang.jsx";
 import AdminHeader from "./components/admin/header/AdminHeader.jsx";
 import AdminEduForm from "./pages/admin/edu-form/AdminEduForm.jsx";
 import AdminLogin from "./pages/admin/login/AdminLogin.jsx";
+import AdminEduDir from "./pages/admin/edu-dir/AdminEduDir.jsx";
 
 
 const Wrapper = ({ children }) => {
@@ -43,8 +44,9 @@ function App() {
 
                     <Route path='/profile' element={<Profile />} />
 
-                    <Route path='/admin/edu-lang' element={<AdminEduLang />} />
                     <Route path='/admin/edu-form' element={<AdminEduForm />} />
+                    <Route path='/admin/edu-lang' element={<AdminEduLang />} />
+                    <Route path='/admin/edu-dir' element={<AdminEduDir />} />
 
                 </Routes>
 
