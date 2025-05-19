@@ -263,8 +263,11 @@ const Application = () => {
         if (me?.state === 'passed') {
             setCount(3)
             setLoading(false)
+        } else {
+            setNav(true)
+            setLoading(false)
         }
-    }, [])
+    }, [me])
 
 
     // timer

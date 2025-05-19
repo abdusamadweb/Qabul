@@ -2,13 +2,33 @@ import React, {useState} from 'react';
 import geo from '../../../assets/images/geo.png'
 import {Popconfirm} from "antd";
 import {useTranslation} from "react-i18next";
+import {useQuery} from "@tanstack/react-query";
+import {$resp} from "../../../api/apiResp.js";
+import i18n from "i18next";
+
+// fetch
+const fetchApp = async () => {
+    const { data } = await $resp.get('/admission/my-admission')
+    return data
+}
 
 const ApplC = () => {
 
     const { t } = useTranslation()
+    const currentLang = i18n.language || 'uz'
 
     const [copied, setCopied] = useState(false)
 
+
+    // fetch
+    const { data: app } = useQuery({
+        queryKey: ['app'],
+        queryFn: fetchApp,
+        keepPreviousData: true
+    })
+
+
+    // copy
     const handleCopy = async (txt) => {
         try {
             await navigator.clipboard.writeText(txt)
@@ -26,42 +46,44 @@ const ApplC = () => {
             <div className="content__diver grid">
                 <div className="app">
                     <div className='app__titles row between align-center'>
-                        <p className="title">{ t('Ariza') } ID - 8888</p>
+                        <p className="title">{ t('Ariza') } ID - { app?.data?.id }</p>
                         <p className="desc">{ t('Status') }: <span>{ t('Tasdiqlangan') }</span></p>
                     </div>
                     <div className="app__body">
-                        <div className="title">{ t('Imtihon malumotlari') }</div>
+                        <div className="title">{ t('Ariza malumotlari') }</div>
                         <ul className="check">
                             <li className="check__item">
-                                <span className='txt'>{ t('Manzil') }</span>
+                                <span className='txt'>{t('Sana')}</span>
                                 <span className='dots'/>
-                                <span className='txt font'>Jasorat kochasi 43-uy</span>
+                                <span className='txt font'>{new Date(app?.data?.created_at).toLocaleDateString()}</span>
                             </li>
                             <li className="check__item">
-                                <span className='txt'>{ t('Sana') }</span>
+                                <span className='txt'>{t('Tugash sanasi')}</span>
                                 <span className='dots'/>
-                                <span className='txt font'>{ t('Imtixon vaqti hali belgilanmagan') }</span>
+                                <span
+                                    className='txt font'>{new Date(app?.data?.edu_end_date).toLocaleDateString()}</span>
                             </li>
                             <li className="check__item">
-                                <span className='txt'>{ t('Vaqt') }</span>
+                                <span className='txt'>{t('Talim shakli')}</span>
                                 <span className='dots'/>
-                                <span className='txt font'>{ t('Imtixon vaqti hali belgilanmagan') }</span>
+                                <span className='txt font'>{app?.data?.edu_form[`name_${currentLang}`]}</span>
                             </li>
                             <li className="check__item">
-                                <span className='txt'>{ t('Fanlar') }</span>
+                                <span className='txt'>{t('Talim tili')}</span>
                                 <span className='dots'/>
-                                <span className='txt font'>Fizika, Matematika</span>
+                                <span className='txt font'>{app?.data?.edu_lang[`name_${currentLang}`]}</span>
                             </li>
                             <li className="check__item">
-                                <span className='txt'>{ t('Izoh') }</span>
+                                <span className='txt'>{app?.data?.edu_form[`name_${currentLang}`]}</span>
                                 <span className='dots'/>
+                                <span className='txt font'>{app?.data?.edu_direction[`name_${currentLang}`]}</span>
                             </li>
                         </ul>
                         <div className="row between">
                             <span/>
                             <Popconfirm
-                                title={ t("Rostan ham arizani bekor qilmoxchimisiz?") }
-                                description={ t('Arizani bekor qilishni tasdiqlaysizmi?') }
+                                title={t("Rostan ham arizani bekor qilmoxchimisiz?")}
+                                description={t('Arizani bekor qilishni tasdiqlaysizmi?')}
                                 // onConfirm={confirm}
                                 okText={ t('Ha') }
                                 cancelText={ t('Yoq') }
@@ -74,7 +96,7 @@ const ApplC = () => {
                 <div className="geo">
                     <p className="title">{ t('OTM geolokatsiyasi') }</p>
                     <img src={geo} alt="img"/>
-                    <button className='copy row align-center g10' onClick={() => handleCopy('NMADR')}>
+                    <button className='copy d-flex align-center g10' onClick={() => handleCopy('NMADR')}>
                         { !copied ? <i className="fa-regular fa-paste"/> : <i className="fa-solid fa-check"/> }
                         <span>{ t('Joylashuvni nusxalash') }</span>
                     </button>

@@ -13,12 +13,12 @@ const AdminNavBar = ({ openMenu, setOpenMenu }) => {
             link: '/admin/feeds'
         },
         {
-            name: 'Talim tili',
-            link: '/admin/edu-lang'
-        },
-        {
             name: 'Talim shakli',
             link: '/admin/edu-form'
+        },
+        {
+            name: 'Talim tili',
+            link: '/admin/edu-lang'
         },
         {
             name: 'Talim yonalishi',
