@@ -159,6 +159,8 @@ const Application2 = () => {
         onSuccess: (res) => {
             toast.success(res.message)
 
+            localStorage.setItem('login', 'success')
+
             setLoading(false)
             navigate('/profile')
         },
@@ -267,7 +269,7 @@ const Application2 = () => {
                     <div className='type'>
                         <Form.Item
                             name='type_id'
-                            rules={[{required: true, message: ''}]}
+                            rules={[{required: true, message: t('Tanlang')}]}
                         >
                             <Radio.Group
                                 block
@@ -289,7 +291,7 @@ const Application2 = () => {
                         <Form.Item
                             name='edu_ins_id'
                             label={ t('Tugatgan talim muasssasangiz turini talnang') }
-                            rules={[{required: true, message: ''}]}
+                            rules={[{required: true, message: t('Tanlang')}]}
                         >
                             <Radio.Group
                                 block

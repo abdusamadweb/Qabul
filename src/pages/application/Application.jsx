@@ -7,11 +7,11 @@ import uz from '../../assets/images/uz.png'
 import ru from '../../assets/images/ru.png'
 import us from '../../assets/images/us.png'
 import Application2 from "./Application2.jsx";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import logo from '../../assets/images/big-logo.svg'
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
 import {$resp} from "../../api/apiResp.js";
-import {useMutation} from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 
@@ -88,18 +88,25 @@ const checkSms = async (body) => {
     return data
 }
 
+const checkState = async (token) => {
+    const { data } = await $resp.get('/user/me', {
+        headers: { Authorization: 'Bearer ' + token }
+    })
+    return data
+}
+
 
 const Application = () => {
 
     const { t } = useTranslation()
 
-    const navigate = useNavigate()
     const [form] = Form.useForm()
 
     const [count, setCount] = useState(0)
     const [nav, setNav] = useState(false)
 
     const [exist, setExist] = useState(false)
+    const [token, setToken] = useState(null)
     const [smsId, setSmsId] = useState(null)
 
     const [loading, setLoading] = useState(false)
@@ -113,8 +120,6 @@ const Application = () => {
     const muPhone = useMutation({
         mutationFn: checkPhone,
         onSuccess: (res) => {
-            toast.success(res.message)
-
             setLoading(false)
             setCount(1)
             setExist(res.exists)
@@ -147,10 +152,9 @@ const Application = () => {
         onSuccess: (res) => {
             toast.success(res.message)
 
+            setToken(res.token)
             localStorage.setItem('token', res.token)
-
-            setLoading(false)
-            navigate('/profile')
+            localStorage.setItem('login', 'success')
         },
         onError: (err) => {
             setLoading(false)
@@ -245,6 +249,22 @@ const Application = () => {
             muPassport.mutate(body)
         }
     }
+
+
+    // fetch
+    const { data: me } = useQuery({
+        queryKey: ['me'],
+        queryFn: () => checkState(token),
+        keepPreviousData: true,
+        enabled: !!token
+    })
+
+    useEffect(() => {
+        if (me?.state === 'passed') {
+            setCount(3)
+            setLoading(false)
+        }
+    }, [])
 
 
     // timer
@@ -379,24 +399,27 @@ const Application = () => {
                                                     >
                                                         <Input type="text" placeholder={t("Parolni kiriting")} />
                                                     </Form.Item>
-                                                    <Form.Item
-                                                        name="re-password"
-                                                        label={t("Parolni tasdiqlang")}
-                                                        dependencies={['password']}
-                                                        rules={[
-                                                            { required: true, message: t("Parolni tasdiqlang") },
-                                                            ({ getFieldValue }) => ({
-                                                                validator(_, value) {
-                                                                    if (!value || getFieldValue('password') === value) {
-                                                                        return Promise.resolve()
-                                                                    }
-                                                                    return Promise.reject(new Error(t("Parollar mos emas")))
-                                                                },
-                                                            }),
-                                                        ]}
-                                                    >
-                                                        <Input type="text" placeholder={t("Parolni tasdiqlang")} />
-                                                    </Form.Item>
+                                                    {
+                                                        !exist &&
+                                                        <Form.Item
+                                                            name="re-password"
+                                                            label={t("Parolni tasdiqlang")}
+                                                            dependencies={['password']}
+                                                            rules={[
+                                                                { required: true, message: t("Parolni tasdiqlang") },
+                                                                ({ getFieldValue }) => ({
+                                                                    validator(_, value) {
+                                                                        if (!value || getFieldValue('password') === value) {
+                                                                            return Promise.resolve()
+                                                                        }
+                                                                        return Promise.reject(new Error(t("Parollar mos emas")))
+                                                                    },
+                                                                }),
+                                                            ]}
+                                                        >
+                                                            <Input type="text" placeholder={t("Parolni tasdiqlang")} />
+                                                        </Form.Item>
+                                                    }
                                                 </>
                                             )}
 

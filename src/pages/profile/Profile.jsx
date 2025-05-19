@@ -1,6 +1,5 @@
 import './Profile.scss'
 import React, {useState} from 'react';
-import {Link} from "react-router-dom";
 import logo from '../../assets/images/big-logo.svg'
 import {Popconfirm, Steps} from "antd";
 import MainC from "./content/MainC.jsx";
@@ -8,6 +7,15 @@ import ApplC from "./content/ApplC.jsx";
 import DealC from "./content/DealC.jsx";
 import CertC from "./content/CertC.jsx";
 import {useTranslation} from "react-i18next";
+import {logout} from "../../hooks/useCrud.jsx";
+import {$resp} from "../../api/apiResp.js";
+import {useQuery} from "@tanstack/react-query";
+
+// fetch
+const fetchMe = async () => {
+    const { data } = await $resp.get('/user/me')
+    return data
+}
 
 const Profile = () => {
 
@@ -17,9 +25,13 @@ const Profile = () => {
 
     const [nav, setNav] = useState(0)
 
-    const logout = () => {
 
-    }
+    // fetch
+    const { data: me } = useQuery({
+        queryKey: ['me'],
+        queryFn: fetchMe,
+        keepPreviousData: true
+    })
 
 
     return (

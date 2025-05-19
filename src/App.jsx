@@ -17,6 +17,7 @@ import AdminEduForm from "./pages/admin/edu-form/AdminEduForm.jsx";
 import AdminLogin from "./pages/admin/login/AdminLogin.jsx";
 import AdminEduDir from "./pages/admin/edu-dir/AdminEduDir.jsx";
 import AdminFeed from "./pages/admin/feed/AdminFeed.jsx";
+import Auth from "./components/auth/Auth.jsx";
 
 
 const Wrapper = ({ children }) => {
@@ -43,7 +44,11 @@ function App() {
                     <Route path='/' element={<Application />} />
                     <Route path='/application' element={<Application2 />} />
 
-                    <Route path='/profile' element={<Profile />} />
+                    <Route element={<Auth />}>
+
+                        <Route path='/profile' element={<Profile />} />
+
+                    </Route>
 
                 </Routes>
 
