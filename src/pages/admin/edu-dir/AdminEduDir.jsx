@@ -39,7 +39,7 @@ const AdminEduDir = () => {
     const {
         addOrEditMutation,
         deleteMutation
-    } = useCrud('edu-dir', {
+    } = useCrud('edu-direction', {
         refetch,
         form,
         setModal,

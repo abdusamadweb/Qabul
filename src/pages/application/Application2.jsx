@@ -38,8 +38,10 @@ const fetchTypes = async () => {
     const { data } = await $resp.get('/ad-type/all')
     return data
 }
-const chooseType = async (body) => {
-    const { data } = await $resp.post("/admission/choice-type", body)
+const chooseType = async (body, token) => {
+    const { data } = await $resp.post("/admission/choice-type", body, {
+        headers: { Authorization: 'Bearer ' + token },
+    })
     return data
 }
 
@@ -47,8 +49,10 @@ const fetchInst = async () => {
     const { data } = await $resp.get('/admission/edu-institution')
     return data
 }
-const chooseInst = async (body) => {
-    const { data } = await $resp.post("/admission/edu-institution-accept", body)
+const chooseInst = async (body, token) => {
+    const { data } = await $resp.post("/admission/edu-institution-accept", body, {
+        headers: { Authorization: 'Bearer ' + token },
+    })
     return data
 }
 
@@ -56,13 +60,23 @@ const fetchOptions = async () => {
     const { data } = await $resp.get('/admission/edu-data-select-options')
     return data
 }
-const chooseOptions = async (body) => {
-    const { data } = await $resp.post("/admission/edu-data-accept", body)
+const chooseOptions = async (body, token) => {
+    const { data } = await $resp.post("/admission/edu-data-accept", body, {
+        headers: { Authorization: 'Bearer ' + token },
+    })
+    return data
+}
+
+const checkPassport = async (body, token) => {
+    const { data } = await $resp.post("/admission/auto-personal-data", body, {
+        headers: { Authorization: 'Bearer ' + token },
+    })
     return data
 }
 
 
-const Application2 = () => {
+const Application2 = ({ token, passport }) => {
+    console.log(token)
 
     const { i18n, t } = useTranslation()
     const lang = i18n.language
@@ -85,47 +99,71 @@ const Application2 = () => {
     const { data: types } = useQuery({
         queryKey: ['types'],
         queryFn: fetchTypes,
-        keepPreviousData: true
+        keepPreviousData: true,
     })
     const { data: inst } = useQuery({
         queryKey: ['inst'],
         queryFn: fetchInst,
-        keepPreviousData: true
+        keepPreviousData: true,
     })
     const { data: options } = useQuery({
         queryKey: ['options'],
         queryFn: fetchOptions,
-        keepPreviousData: true
+        keepPreviousData: true,
+        enabled: nav > 2
     })
 
 
     // selects
-    const [selectedFormId, setSelectedFormId] = useState(null)
-    const [selectedLangId, setSelectedLangId] = useState(null)
+    const [selectedFormId, setSelectedFormId] = useState(null);
+    const [selectedLangId, setSelectedLangId] = useState(null);
 
     const handleFormChange = (value) => {
-        setSelectedFormId(value)
-        setSelectedLangId(null) // сбрасываем язык при смене формы
-    }
+        setSelectedFormId(value);
+        setSelectedLangId(null);
+
+        // 👇 Обязательно сбросить значения select-ов в форме
+        form.setFieldsValue({
+            edu_lang_id: null,
+            edu_direction_id: null,
+        });
+    };
 
     const handleLangChange = (value) => {
-        setSelectedLangId(value)
-    }
+        setSelectedLangId(value);
 
-    // Фильтруем языки по выбранной форме
+        form.setFieldsValue({
+            edu_direction_id: null,
+        });
+    };
+
     const filteredLangs = options?.edu_langs?.filter(lang =>
         lang.edu_form_ids.includes(selectedFormId)
-    )
+    );
 
-    // Фильтруем направления по выбранному языку
     const filteredDirections = options?.edu_directions?.filter(dir =>
         dir.edu_lang_ids.includes(selectedLangId)
-    )
+    );
 
 
     // mutates
+    const muPassport = useMutation({
+        mutationFn: (body) => checkPassport(body, token),
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+            setLoading(false)
+            setNav(1)
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
     const muTypes = useMutation({
-        mutationFn: chooseType,
+        mutationFn: (body) => chooseType(body, token),
         onSuccess: (res) => {
             toast.success(res.message)
 
@@ -140,7 +178,7 @@ const Application2 = () => {
     })
 
     const muInst = useMutation({
-        mutationFn: chooseInst,
+        mutationFn: (body) => chooseInst(body, token),
         onSuccess: (res) => {
             toast.success(res.message)
 
@@ -155,7 +193,7 @@ const Application2 = () => {
     })
 
     const muOptions = useMutation({
-        mutationFn: chooseOptions,
+        mutationFn: (body) => chooseOptions(body, token),
         onSuccess: (res) => {
             toast.success(res.message)
 
@@ -178,10 +216,10 @@ const Application2 = () => {
         if (nav === 0) {
             setLoading(true)
 
-            setTimeout(() => {
-                setNav(1)
-                setLoading(false)
-            }, 1000)
+            const body = {
+                ...passport
+            }
+            muPassport.mutate(body)
 
         }
         else if (nav === 1) {
@@ -190,7 +228,7 @@ const Application2 = () => {
             const body = {
                 type_id: val.type_id
             }
-            muTypes.mutate(body)
+            muTypes.mutate(body, token)
 
         }
         else if (nav === 2) {
@@ -201,7 +239,7 @@ const Application2 = () => {
                 end_date: val.end_date,
                 file_id: (file && fileOn) ? file?.file.response.files[0].id : null,
             }
-            muInst.mutate(body)
+            muInst.mutate(body, token)
 
         }
         else if (nav === 3) {
@@ -212,7 +250,7 @@ const Application2 = () => {
                 edu_lang_id: val.edu_lang_id,
                 edu_direction_id: val.edu_direction_id,
             }
-            muOptions.mutate(body)
+            muOptions.mutate(body, token)
         }
     }
 
@@ -236,9 +274,12 @@ const Application2 = () => {
                 layout='vertical'
                 form={form}
             >
-                <button className="back-btn" type='button' onClick={() => setNav(prev => prev - 1)}>
-                    <i className="fa-solid fa-arrow-left"/>
-                </button>
+                {
+                    nav > 0 &&
+                    <button className="back-btn" type='button' onClick={() => setNav(prev => prev - 1)}>
+                        <i className="fa-solid fa-arrow-left"/>
+                    </button>
+                }
 
                 {nav === 0 && (
                     <ul className='check'>
@@ -352,45 +393,50 @@ const Application2 = () => {
                     <div className='select'>
                         <Form.Item
                             name='edu_form_id'
-                            label={ t('Talim shakli') }
+                            label={t('Talim shakli')}
                             rules={[{required: true, message: ''}]}
                         >
                             <Select
                                 size='large'
-                                placeholder={ t('Talim shakli') }
+                                placeholder={t('Talim shakli')}
                                 onChange={handleFormChange}
-                                options={options?.edu_forms?.map(i => {
-                                    return { label: i[`name_${currentLang}`], value: i.id }
-                                })}
+                                options={options?.edu_forms?.map(i => ({
+                                    label: i[`name_${currentLang}`],
+                                    value: i.id
+                                }))}
                             />
                         </Form.Item>
+
                         <Form.Item
                             name='edu_lang_id'
-                            label={ t('Talim tili') }
+                            label={t('Talim tili')}
                             rules={[{required: true, message: ''}]}
                         >
                             <Select
                                 size='large'
-                                placeholder={ t('Talim tili') }
+                                placeholder={t('Talim tili')}
                                 onChange={handleLangChange}
                                 disabled={!selectedFormId}
-                                options={filteredLangs?.map(i => {
-                                    return { label: i[`name_${currentLang}`], value: i.id }
-                                })}
+                                options={filteredLangs?.map(i => ({
+                                    label: i[`name_${currentLang}`],
+                                    value: i.id
+                                }))}
                             />
                         </Form.Item>
+
                         <Form.Item
                             name='edu_direction_id'
-                            label={ t('Talim yonalishi') }
+                            label={t('Talim yonalishi')}
                             rules={[{required: true, message: ''}]}
                         >
                             <Select
                                 size='large'
-                                placeholder={ t('Talim yonalishi') }
+                                placeholder={t('Talim yonalishi')}
                                 disabled={!selectedLangId}
-                                options={filteredDirections?.map(i => {
-                                    return { label: i[`name_${currentLang}`], value: i.id }
-                                })}
+                                options={filteredDirections?.map(i => ({
+                                    label: i[`name_${currentLang}`],
+                                    value: i.id
+                                }))}
                             />
                         </Form.Item>
                     </div>
@@ -403,7 +449,7 @@ const Application2 = () => {
                     htmlType="submit"
                     type='primary'
                 >
-                    { t('Tasdiqlash') }
+                    {t('Tasdiqlash')}
                 </Button>
             </Form>
         </div>

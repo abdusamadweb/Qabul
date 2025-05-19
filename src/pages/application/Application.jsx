@@ -111,9 +111,17 @@ const Application = () => {
 
     const [loading, setLoading] = useState(false)
 
+    const [passport, setPassport] = useState({ pinfl: '', serial: '' })
+
     // sms timer
     const [active, setActive] = useState(false)
     const [timeLeft, setTimeLeft] = useState(120)
+
+
+    //
+    useEffect(() => {
+        form.setFieldsValue(passport);
+    }, [passport])
 
 
     // submit form
@@ -135,6 +143,9 @@ const Application = () => {
         mutationFn: register,
         onSuccess: (res) => {
             toast.success(res.message)
+
+            localStorage.setItem('token', res.token)
+            setToken(res.token)
 
             setLoading(false)
             setCount(2)
@@ -260,14 +271,22 @@ const Application = () => {
     })
 
     useEffect(() => {
-        if (me?.state === 'passed') {
-            setCount(3)
-            setLoading(false)
-        } else {
-            setNav(true)
-            setLoading(false)
+        if (me) {
+            if (me?.state === 'passed') {
+                window.location = '/profile'
+                setLoading(false)
+            // } else if (me?.state === 'admission-type') {
+            //     setNav(true)
+            //     setLoading(false)
+            // } else if (me?.state === 'enter-personal-data') {
+            //     setCount(3)
+            //     setLoading(false)
+            } else {
+                setCount(3)
+                setLoading(false)
+            }
         }
-    }, [me])
+    }, [me, token])
 
 
     // timer
@@ -453,16 +472,22 @@ const Application = () => {
                                                 <div>
                                                     <Form.Item
                                                         name='pinfl'
-                                                        label={ t('JSHSHIR') }
+                                                        label={t('JSHSHIR')}
                                                     >
-                                                        <JshInput />
+                                                        <JshInput
+                                                            onChange={(val) => setPassport(prev => ({ ...prev, pinfl: val }))}
+                                                        />
                                                     </Form.Item>
+
                                                     <Form.Item
                                                         name='serial'
-                                                        label={ t('Seriyasi va raqami') }
+                                                        label={t('Seriyasi va raqami')}
                                                     >
-                                                        <PassportInput />
+                                                        <PassportInput
+                                                            onChange={(val) => setPassport(prev => ({ ...prev, serial: val }))}
+                                                        />
                                                     </Form.Item>
+
                                                     {/*<div className="search row between">*/}
                                                     {/*    <span/>*/}
                                                     {/*    <button className="row align-center" type='button'>*/}
@@ -484,7 +509,7 @@ const Application = () => {
                                             </Button>
                                         </Form>
                                     </div>
-                                    : <Application2/>
+                                    : <Application2 token={token} passport={passport} />
                             }
                         </div>
                     </div>
