@@ -356,7 +356,7 @@ const Application = () => {
                                             form={form}
                                         >
 
-                                            {count >= 0 && (
+                                            {(count >= 0 && count < 3) && (
                                                 <Form.Item
                                                     name="phone_number"
                                                     label={t("Telefon raqam")}
@@ -366,17 +366,37 @@ const Application = () => {
                                                 </Form.Item>
                                             )}
 
-                                            {count >= 1 && (
-                                                <Form.Item
-                                                    name="password"
-                                                    label={t("Parolni kiriting")}
-                                                    rules={[{ required: true, message: "" }]}
-                                                >
-                                                    <Input type="text" placeholder={t("Parolni kiriting")} />
-                                                </Form.Item>
+                                            {(count >= 1 && count < 3) && (
+                                                <>
+                                                    <Form.Item
+                                                        name="password"
+                                                        label={t("Parolni kiriting")}
+                                                        rules={[{ required: true, message: t("Parol majburiy") }]}
+                                                    >
+                                                        <Input type="text" placeholder={t("Parolni kiriting")} />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name="re-password"
+                                                        label={t("Parolni tasdiqlang")}
+                                                        dependencies={['password']}
+                                                        rules={[
+                                                            { required: true, message: t("Parolni tasdiqlang") },
+                                                            ({ getFieldValue }) => ({
+                                                                validator(_, value) {
+                                                                    if (!value || getFieldValue('password') === value) {
+                                                                        return Promise.resolve()
+                                                                    }
+                                                                    return Promise.reject(new Error(t("Parollar mos emas")))
+                                                                },
+                                                            }),
+                                                        ]}
+                                                    >
+                                                        <Input type="text" placeholder={t("Parolni tasdiqlang")} />
+                                                    </Form.Item>
+                                                </>
                                             )}
 
-                                            {count >= 2 && (
+                                            {(count >= 2 && count < 3) && (
                                                 <>
                                                     <Form.Item
                                                         name="code"
