@@ -147,6 +147,8 @@ const Application = () => {
         onSuccess: (res) => {
             toast.success(res.message)
 
+            localStorage.setItem('token', res.token)
+
             setLoading(false)
             navigate('/profile')
         },
@@ -161,6 +163,8 @@ const Application = () => {
         mutationFn: checkSms,
         onSuccess: (res) => {
             toast.success(res.message)
+
+            localStorage.setItem('token', res.token)
 
             setLoading(false)
             setCount(3)
