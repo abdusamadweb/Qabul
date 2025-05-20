@@ -78,6 +78,21 @@
             width: 20px;
           }
         }
+
+        .x-btn {
+          width: 37px;
+          height: 37px;
+          display: grid;
+          place-items: center;
+          border-radius: 50%;
+          border: 1px solid #ccc;
+          background: #fff;
+
+          i {
+            font-size: 16px;
+            color: #858585;
+          }
+        }
       }
 
       .titles {

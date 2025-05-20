@@ -7,11 +7,12 @@ import {useMutation, useQuery} from "@tanstack/react-query"
 import toast from "react-hot-toast"
 import {useTranslation} from "react-i18next"
 import {uploadProps} from "../../assets/scripts/global.js"
-import logo from '../../assets/images/big-logo.svg'
 import img from "../../assets/images/left.svg"
 import ru from "../../assets/images/ru.png"
 import us from "../../assets/images/us.png"
 import uz from "../../assets/images/uz.png"
+import logo from '../../assets/images/big-logo.svg'
+import {getRequest} from "../../hooks/useCrud.jsx";
 
 
 // fetch
@@ -57,26 +58,30 @@ const Application2 = () => {
     const navigate = useNavigate()
     const [form] = Form.useForm()
 
-    const me = JSON.parse(localStorage.getItem('me'))
     const passport = JSON.parse(localStorage.getItem('passport'))
 
     const [loading, setLoading] = useState(false)
     const [nav, setNav] = useState(0)
+    const [autoPass, setAutoPass] = useState(false)
 
     const [fileOn, setFileOn] = useState(false)
     const [file, setFile] = useState(null)
 
 
-    // change nav from HREF
+    // change nav from href
     const [searchParams] = useSearchParams()
 
     useEffect(() => {
         const navParam = searchParams.get('nav')
+        const autoPassParam = searchParams.get('autoPass')
 
         if (navParam) {
             setNav(Number(navParam))
         }
-    }, [searchParams, setNav])
+        if (autoPassParam) {
+            setAutoPass(autoPassParam === 'true')
+        }
+    }, [autoPass, searchParams, setNav])
 
 
     // fetch
@@ -96,6 +101,33 @@ const Application2 = () => {
         keepPreviousData: true,
         enabled: nav > 2
     })
+
+    // me
+    const getMe = () => getRequest('/user/me')
+    const { data: me } = useQuery({
+        queryKey: ['me'],
+        queryFn: getMe,
+        keepPreviousData: true,
+    })
+
+    //
+    useEffect(() => {
+        if (me) {
+            localStorage.setItem('me', JSON.stringify(me))
+            setAutoPass(me?.pasport_is_avto)
+
+            if (me?.state === 'passed') {
+                window.location = '/'
+                setLoading(false)
+            } else if (me?.state === 'admission-type') {
+                window.location = '/application/?nav=1'
+            } else if (me?.state === 'edu-data') {
+                window.location = '/application/?nav=2'
+            } else if (me?.state === 'edu-directions') {
+                window.location = '/application/?nav=3'
+            }
+        }
+    }, [me])
 
 
     // mutate
@@ -152,7 +184,7 @@ const Application2 = () => {
             localStorage.setItem('login', 'success')
 
             setLoading(false)
-            navigate('/profile')
+            navigate('/')
         },
         onError: (err) => {
             setLoading(false)
@@ -172,7 +204,15 @@ const Application2 = () => {
                 pinfl: me?.jshir || passport?.pinfl,
                 serial: me?.passport_id || passport?.serialAndNumber,
             }
-            muPassport.mutate(body)
+
+            if (autoPass) {
+                muPassport.mutate(body)
+            } else {
+                setTimeout(() => {
+                    setLoading(false)
+                    setNav(1)
+                }, 1000)
+            }
         }
         else if (nav === 1) {
             setLoading(true)
@@ -281,6 +321,7 @@ const Application2 = () => {
         value: currentYear - i,
         label: currentYear - i,
     }))
+    console.log(me)
 
 
     return (
@@ -296,12 +337,17 @@ const Application2 = () => {
                                 <Link className='logo' to='/'>
                                     <img src={logo} alt="logo"/>
                                 </Link>
-                                <Dropdown menu={{ items }} placement="bottomRight">
-                                    <Button className="btn row align-center g10">
-                                        <span>{languageMap[currentLang]?.label}</span>
-                                        <img src={languageMap[currentLang]?.flag} alt="flag" />
-                                    </Button>
-                                </Dropdown>
+                                <div className="d-flex align-center g1">
+                                    <Dropdown menu={{ items }} placement="bottomRight">
+                                        <Button className="btn row align-center g10">
+                                            <span>{languageMap[currentLang]?.label}</span>
+                                            <img src={languageMap[currentLang]?.flag} alt="flag" />
+                                        </Button>
+                                    </Dropdown>
+                                    <button className="x-btn" onClick={() => window.location = '/'}>
+                                        <i className="fa-solid fa-xmark" />
+                                    </button>
+                                </div>
                             </div>
                             <div className='appl2'>
                                 <div>
@@ -319,7 +365,7 @@ const Application2 = () => {
                                     layout='vertical'
                                     form={form}
                                 >
-                                    {nav > 0 && (
+                                    {nav > 1 && (
                                         <button className="back-btn" type='button' onClick={() => setNav(prev => prev - 1)}>
                                             <i className="fa-solid fa-arrow-left"/>
                                         </button>

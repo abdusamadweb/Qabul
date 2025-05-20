@@ -1,6 +1,6 @@
 import {useMutation} from '@tanstack/react-query'
 import {toast} from 'react-hot-toast'
-import {$adminResp} from "../api/apiResp.js";
+import {$resp} from "../api/apiResp.js";
 
 export const logout = () => {
     localStorage.clear()
@@ -13,12 +13,15 @@ export const logoutAdmin = () => {
 
 export const getRequest = async (url, config = {}) => {
     try {
-        const { data } = await $adminResp.get(url, config)
+        const { data } = await $resp.get(url, config)
         return data
     } catch (error) {
         if (error?.response?.status === 403) {
             toast.error("Sessiya tugagan. Qayta kiring.")
-            // logout()
+            if (!window.location.pathname.includes('/login')) {
+                toast.error("Sessiya tugagan. Qayta kiring.")
+                logout()
+            }
         } else {
             toast.error("Xatolik yuz berdi")
         }
@@ -58,7 +61,7 @@ export const useCrud = (key, options) => {
             toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
 
             if (err.status === 403) {
-                // logout()
+                logoutAdmin()
             }
         }
     })
@@ -73,7 +76,7 @@ export const useCrud = (key, options) => {
             toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
 
             if (err.status === 403) {
-                // logout()
+                logoutAdmin()
             }
         }
     })

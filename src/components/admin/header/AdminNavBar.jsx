@@ -28,6 +28,10 @@ const AdminNavBar = ({ openMenu, setOpenMenu }) => {
             name: 'Talim yonalishi',
             link: '/admin/edu-dir'
         },
+        {
+            name: 'Qabul turi',
+            link: '/admin/admission-type'
+        },
     ]
 
 

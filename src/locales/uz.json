@@ -22,7 +22,6 @@
   "Familiya": "Familiya",
   "Otasining imsi": "Otasining imsi",
   "Tugilgan kuni": "Tugilgan kuni",
-  "Rasm": "Rasm",
 
   "Millati": "Millati",
   "Imtixon turi": "Imtixon turi",
@@ -83,6 +82,8 @@
   "Sertifikatlar mavjud emas": "Sertifikatlar mavjud emas",
 
   "Tanlang": "Tanlang",
+  "Telefon raqam": "Telefon raqam",
+  "Passport fayl": "Passport fayl",
 
   "sound": "Sound"
 }

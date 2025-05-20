@@ -1,5 +1,5 @@
 import './Profile.scss'
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import logo from '../../assets/images/big-logo.svg'
 import {Button, Dropdown, Popconfirm, Steps} from "antd";
 import MainC from "./content/MainC.jsx";
@@ -7,18 +7,62 @@ import ApplC from "./content/ApplC.jsx";
 import DealC from "./content/DealC.jsx";
 import CertC from "./content/CertC.jsx";
 import {useTranslation} from "react-i18next";
-import {logout} from "../../hooks/useCrud.jsx";
+import {getRequest, logout} from "../../hooks/useCrud.jsx";
 import ru from "../../assets/images/ru.png";
 import us from "../../assets/images/us.png";
 import uz from "../../assets/images/uz.png";
+import {useQuery} from "@tanstack/react-query";
+import {$resp} from "../../api/apiResp.js";
+
+
+// fetch
+const fetchApp = async () => {
+    const { data } = await $resp.get('/admission/my-admission')
+    return data
+}
+
 
 const Profile = () => {
 
     const { t } = useTranslation()
 
-    const me = JSON.parse(localStorage.getItem('me'))
-
     const [nav, setNav] = useState(0)
+    const [status, setStatus] = useState(0)
+
+
+    // fetch
+    const getMe = () => getRequest('/user/me')
+    const { data: me } = useQuery({
+        queryKey: ['me'],
+        queryFn: getMe,
+        keepPreviousData: true,
+    })
+
+    useEffect(() => {
+        if (me) {
+            localStorage.setItem('me', JSON.stringify(me))
+        }
+    }, [me])
+
+
+    // fetch
+    const { data: app, refetch: refetchApp } = useQuery({
+        queryKey: ['app'],
+        queryFn: fetchApp,
+        keepPreviousData: true
+    })
+
+    useEffect(() => {
+        if (app?.data === null) {
+            setStatus(0)
+        }
+        else if (app?.data?.state === 'pending') {
+            setStatus(1)
+        }
+        else if (app?.data?.state === 'accepted') {
+            setStatus(2)
+        }
+    }, [app])
 
 
     // lang
@@ -87,7 +131,7 @@ const Profile = () => {
                     <div className="status">
                         <Steps
                             size="small"
-                            current={1}
+                            current={status}
                             labelPlacement="vertical"
                             responsive={false}
                             items={[
@@ -143,19 +187,19 @@ const Profile = () => {
                         </div>
                         <div className="content">
                             {nav === 0 && (
-                                <MainC />
+                                <MainC me={me} />
                             )}
 
                             {nav === 1 && (
-                                <ApplC />
+                                <ApplC me={me} app={app} refetchApp={refetchApp} />
                             )}
 
                             {nav === 2 && (
-                                <DealC />
+                                <DealC me={me} />
                             )}
 
                             {nav === 3 && (
-                                <CertC />
+                                <CertC me={me} />
                             )}
                         </div>
                     </div>

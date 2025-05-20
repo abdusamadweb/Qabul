@@ -19,6 +19,9 @@ import AdminEduDir from "./pages/admin/edu-dir/AdminEduDir.jsx";
 import AdminFeed from "./pages/admin/feed/AdminFeed.jsx";
 import Auth from "./components/auth/Auth.jsx";
 import Dashboard from "./pages/admin/dashboard/Dashboard.jsx";
+import Admin from "./pages/admin/Admin.jsx";
+import User from "./pages/admin/user/User.jsx";
+import Admission from "./pages/admin/admission/Admission.jsx";
 
 
 const Wrapper = ({ children }) => {
@@ -46,8 +49,8 @@ function App() {
 
                     <Route element={<Auth />}>
 
-                        <Route path='/' element={<Application2 />} />
-                        <Route path='/profile' element={<Profile />} />
+                        <Route path='/' element={<Profile />} />
+                        <Route path='/application' element={<Application2 />} />
 
                     </Route>
 
@@ -58,11 +61,14 @@ function App() {
                 <Routes>
                     <Route element={<AuthAdmin />}>
 
+                        <Route path='/admin' element={<Admin />} />
                         <Route path='/admin/dashboard' element={<Dashboard />} />
                         <Route path='/admin/edu-form' element={<AdminEduForm />} />
                         <Route path='/admin/edu-lang' element={<AdminEduLang />} />
                         <Route path='/admin/edu-dir' element={<AdminEduDir />} />
+                        <Route path='/admin/admission-type' element={<Admission />} />
                         <Route path='/admin/feeds' element={<AdminFeed />} />
+                        <Route path='/admin/users' element={<User />} />
 
                     </Route>
 

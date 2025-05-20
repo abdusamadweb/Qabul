@@ -1,11 +1,10 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
+import {formatPhone} from "../../../assets/scripts/global.js";
 
-const MainC = () => {
+const MainC = ({ me }) => {
 
     const { t } = useTranslation()
-
-    const passport = JSON.parse(localStorage.getItem('passport'))
 
 
     return (
@@ -17,32 +16,37 @@ const MainC = () => {
                     <li className="check__item">
                         <span className='txt'>{ t('F.I.O') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ passport?.firstName + ' ' + passport?.lastName }</span>
+                        <span className='txt font'>{ me?.first_name ? (me?.first_name + ' ' + me?.last_name) : t('Yoq') }</span>
+                    </li>
+                    <li className="check__item">
+                        <span className='txt'>{ t('Telefon raqam') }</span>
+                        <span className='dots'/>
+                        <span className='txt font'>{ formatPhone(me?.phone_number) }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('JSHSHIR') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ passport?.pinfl }</span>
+                        <span className='txt font'>{ me?.jshir || t('Yoq') }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('Seriya va raqami') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ passport?.serialAndNumber }</span>
+                        <span className='txt font'>{ me?.passport_id || t('Yoq') }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('Tugilgan yili') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ passport?.birthDate }</span>
+                        <span className='txt font'>{ me?.birth_date || t('Yoq') }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('Millati') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>Ozbek</span>
+                        <span className='txt font'>{ me?.region || t('Yoq') }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('Imtixon turi') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>Offline</span>
+                        <span className='txt font'>{ me?.offline || t('Yoq') }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('Qayd varaqasi') }</span>
@@ -55,7 +59,7 @@ const MainC = () => {
                     <li className="check__item">
                         <span className='txt'>{ t('Talaba shartnomasi') }</span>
                         <span className='dots'/>
-                        {/*<span className='txt font'>Ozbek</span>*/}
+                        <span className='txt font'>{ t('Yoq') }</span>
                     </li>
                 </ul>
             </div>

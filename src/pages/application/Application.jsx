@@ -13,6 +13,7 @@ import {useMutation, useQuery} from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {BirthDateInput, JshInput, PassportInput, PhoneInput} from "../../components/inputs/Inputs.jsx";
 import {uploadProps} from "../../assets/scripts/global.js";
+import {getRequest} from "../../hooks/useCrud.jsx";
 
 
 // fetch
@@ -41,13 +42,6 @@ const login = async (body) => {
 }
 const checkSms = async (body) => {
     const { data } = await $resp.post("/auth/check-sms", body)
-    return data
-}
-
-const getMe = async (token) => {
-    const { data } = await $resp.get('/user/me', {
-        headers: { Authorization: 'Bearer ' + token }
-    })
     return data
 }
 
@@ -96,9 +90,6 @@ const Application = () => {
         onSuccess: (res) => {
             toast.success(res.message)
 
-            localStorage.setItem('token', res.token)
-            setToken(res.token)
-
             setLoading(false)
             setCount(2)
             setSmsId(res.data.sms_id)
@@ -131,9 +122,12 @@ const Application = () => {
             toast.success(res.message)
 
             localStorage.setItem('token', res.token)
+            setToken(res.token)
 
-            setLoading(false)
-            setCount(3)
+            setTimeout(() => {
+                setLoading(false)
+                setCount(3)
+            }, 1000)
         },
         onError: (err) => {
             setLoading(false)
@@ -150,9 +144,10 @@ const Application = () => {
             toast.success(res.message)
 
             setLoading(false)
-            window.location = autoPass ? '/' : '/?autoPass=false'
 
-            localStorage.setItem('passport', JSON.stringify(res))
+            localStorage.setItem('passport', JSON.stringify(res || {}))
+
+            window.location = autoPass ? '/application' : '/application?autoPass=false'
         },
         onError: (err) => {
             setLoading(false)
@@ -209,19 +204,27 @@ const Application = () => {
 
             const body = {
                 ...val,
+                passport_file_id: file ? file?.file.response.files[0].id : null,
             }
             muPassport.mutate(body)
         }
     }
-    console.log(token)
 
 
     // fetch ME
+    const getMe = async (token) => {
+        const accessToken = token || localStorage.getItem('token');
+        return await getRequest('/user/me', {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            }
+        })
+    }
     const { data: me } = useQuery({
         queryKey: ['me'],
         queryFn: () => getMe(token),
         keepPreviousData: true,
-        enabled: !!token
+        enabled: !!token || count === 3
     })
 
     useEffect(() => {
@@ -230,17 +233,17 @@ const Application = () => {
             setAutoPass(me?.pasport_is_avto)
 
             if (me?.state === 'passed') {
-                window.location = '/profile'
+                window.location = '/'
                 setLoading(false)
             } else if (me?.state === 'enter-personal-data') {
                 navigate('/login?count=3')
                 setLoading(false)
             } else if (me?.state === 'admission-type') {
-                window.location = '/?nav=1'
+                window.location = '/application/?nav=1'
             } else if (me?.state === 'edu-data') {
-                window.location = '/?nav=2'
+                window.location = '/application/?nav=2'
             } else if (me?.state === 'edu-directions') {
-                window.location = '/?nav=3'
+                window.location = '/application/?nav=3'
             }
         }
     }, [me, token])
@@ -349,12 +352,19 @@ const Application = () => {
                                 <Link className='logo' to='/'>
                                     <img src={logo} alt="logo"/>
                                 </Link>
-                                <Dropdown menu={{ items: langItems }} placement="bottomRight">
-                                    <Button className="btn row align-center g10">
-                                        <span>{languageMap[currentLang]?.label}</span>
-                                        <img src={languageMap[currentLang]?.flag} alt="flag" />
-                                    </Button>
-                                </Dropdown>
+                                <div className="row align-center g1">
+                                    <Dropdown menu={{ items: langItems }} placement="bottomRight">
+                                        <Button className="btn row align-center g10">
+                                            <span>{languageMap[currentLang]?.label}</span>
+                                            <img src={languageMap[currentLang]?.flag} alt="flag" />
+                                        </Button>
+                                    </Dropdown>
+                                    {count > 2 && (
+                                        <button className="x-btn" onClick={() => window.location = '/'}>
+                                            <i className="fa-solid fa-xmark" />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                             <div>
                                 <div className='titles'>
@@ -478,8 +488,8 @@ const Application = () => {
                                                         <Input placeholder={t('Otasining imsi')} />
                                                     </Form.Item>
                                                     <Form.Item
-                                                        name='birth_day'
-                                                        label={t('Tugilgan kuni')}
+                                                        name='birth_date'
+                                                        label={t('Tugilgan kuni') + '(yyyy-oo-kk)'}
                                                         rules={[{required: true, message: ''}]}
                                                     >
                                                         <BirthDateInput />
@@ -500,13 +510,15 @@ const Application = () => {
                                                     </Form.Item>
                                                     <Form.Item
                                                         className='upload'
-                                                        name='file_id'
-                                                        label={t('Rasm')}
+                                                        name='passport_file_id'
+                                                        label={t('Passport fayl')}
                                                         rules={[{required: true, message: ''}]}
                                                     >
                                                         <Upload
                                                             {...uploadProps}
-                                                            headers={{ Authorization: `Bearer ${token}` }}
+                                                            headers={{
+                                                                Authorization: `Bearer ${token || localStorage.getItem('token')}`
+                                                            }}
                                                             onChange={(e) => setFile(e)}
                                                             listType="text"
                                                         >
