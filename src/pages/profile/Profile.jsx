@@ -1,37 +1,66 @@
 import './Profile.scss'
 import React, {useState} from 'react';
 import logo from '../../assets/images/big-logo.svg'
-import {Popconfirm, Steps} from "antd";
+import {Button, Dropdown, Popconfirm, Steps} from "antd";
 import MainC from "./content/MainC.jsx";
 import ApplC from "./content/ApplC.jsx";
 import DealC from "./content/DealC.jsx";
 import CertC from "./content/CertC.jsx";
 import {useTranslation} from "react-i18next";
 import {logout} from "../../hooks/useCrud.jsx";
-import {$resp} from "../../api/apiResp.js";
-import {useQuery} from "@tanstack/react-query";
-
-// fetch
-const fetchMe = async () => {
-    const { data } = await $resp.get('/user/me')
-    return data
-}
+import ru from "../../assets/images/ru.png";
+import us from "../../assets/images/us.png";
+import uz from "../../assets/images/uz.png";
 
 const Profile = () => {
 
     const { t } = useTranslation()
 
-    const user = JSON.parse(localStorage.getItem('user'))
+    const me = JSON.parse(localStorage.getItem('me'))
 
     const [nav, setNav] = useState(0)
 
 
-    // fetch
-    const { data: me } = useQuery({
-        queryKey: ['me'],
-        queryFn: fetchMe,
-        keepPreviousData: true
-    })
+    // lang
+    const { i18n } = useTranslation()
+
+    const langItems = [
+        {
+            key: 'ru',
+            label: (
+                <button className='top-btn' onClick={() => i18n.changeLanguage('ru')}>
+                    <span>Russian</span>
+                    <img src={ru} alt="flag" />
+                </button>
+            ),
+        },
+        {
+            key: 'en',
+            label: (
+                <button className='top-btn' onClick={() => i18n.changeLanguage('en')}>
+                    <span>English</span>
+                    <img src={us} alt="flag" />
+                </button>
+            ),
+        },
+        {
+            key: 'uz',
+            label: (
+                <button className='top-btn' onClick={() => i18n.changeLanguage('uz')}>
+                    <span>Uzbek</span>
+                    <img src={uz} alt="flag" />
+                </button>
+            ),
+        },
+    ]
+
+    const languageMap = {
+        ru: { label: 'Russian', flag: ru },
+        en: { label: 'English', flag: us },
+        uz: { label: 'Uzbek', flag: uz },
+    }
+
+    const currentLang = i18n.language || 'uz'
 
 
     return (
@@ -39,10 +68,18 @@ const Profile = () => {
             <div className="profile__header">
                 <div className="container row between align-center">
                     <img src={logo} alt="logo"/>
-                    <button className='btn row align-center g10' onClick={() => setNav(0)}>
-                        <span>{ user?.firstName }</span>
-                        <i className="fa-solid fa-circle-user"/>
-                    </button>
+                    <div className="row align-center g1">
+                        <Dropdown menu={{ items: langItems }} placement="bottomRight">
+                            <Button className="lang-btn row align-center g10">
+                                <span>{languageMap[currentLang]?.label}</span>
+                                <img src={languageMap[currentLang]?.flag} alt="flag" />
+                            </Button>
+                        </Dropdown>
+                        <button className='btn row align-center g10' onClick={() => setNav(0)}>
+                            <span>{ me?.firstName }</span>
+                            <i className="fa-solid fa-circle-user"/>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div className="profile__inner">
@@ -94,8 +131,8 @@ const Profile = () => {
                                 <Popconfirm
                                     title={ t('Tizimdan chiqishni xoxlaysizmi?') }
                                     onConfirm={logout}
-                                    okText="Ha"
-                                    cancelText="Yoq"
+                                    okText={ t('Ha') }
+                                    cancelText={ t('Yoq') }
                                 >
                                     <li className='item logout'>
                                         <i className="fa-solid fa-arrow-right-from-bracket"/>

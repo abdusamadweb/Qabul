@@ -5,7 +5,7 @@ const MainC = () => {
 
     const { t } = useTranslation()
 
-    const user = JSON.parse(localStorage.getItem('user'))
+    const passport = JSON.parse(localStorage.getItem('passport'))
 
 
     return (
@@ -17,22 +17,22 @@ const MainC = () => {
                     <li className="check__item">
                         <span className='txt'>{ t('F.I.O') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ user?.firstName + ' ' + user?.lastName }</span>
+                        <span className='txt font'>{ passport?.firstName + ' ' + passport?.lastName }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('JSHSHIR') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ user?.pinfl }</span>
+                        <span className='txt font'>{ passport?.pinfl }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('Seriya va raqami') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ user?.serialAndNumber }</span>
+                        <span className='txt font'>{ passport?.serialAndNumber }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('Tugilgan yili') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ user?.birthDate }</span>
+                        <span className='txt font'>{ passport?.birthDate }</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('Millati') }</span>

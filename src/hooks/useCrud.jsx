@@ -4,6 +4,10 @@ import {$adminResp} from "../api/apiResp.js";
 
 export const logout = () => {
     localStorage.clear()
+    setTimeout(() => window.location.href = '/login', 1000)
+}
+export const logoutAdmin = () => {
+    localStorage.clear()
     setTimeout(() => window.location.href = '/admin/login', 1000)
 }
 

@@ -37,5 +37,51 @@
   "Talim shakli": "Form of education",
   "Talim tili": "Language of instruction",
   "Talim yonalishi": "Field of study",
-  "sound": "Sound"
+
+  "Ariza topshirildi": "Application submitted",
+  "Qayd varaqa": "Registration sheet",
+  "Imtixon topshirilmagan": "Exam not taken",
+  "Imtixon vaqti:": "Exam time:",
+  "belgilanmagan": "not assigned",
+  "Shartnoma mavjud emas": "No contract available",
+
+  "Asosiy sahifa": "Home",
+  "Mening arizam": "My application",
+  "Mening shartnomam": "My contract",
+  "Til sertifikatlari": "Language certificates",
+  "Chiqish": "Logout",
+  "Tizimdan chiqishni xoxlaysizmi?": "Do you really want to log out?",
+
+  "Xush kelibsiz!": "Welcome!",
+  "Shaxsiy malumotlar": "Personal information",
+  "Millati": "Nationality",
+  "Imtixon turi": "Exam type",
+  "Qayd varaqasi": "Registration sheet",
+  "Yuklash": "Download",
+  "Talaba shartnomasi": "Student contract",
+
+  "Mening arizalarim": "My applications",
+  "Ariza": "Application",
+  "Tasdiqlangan": "Approved",
+  "Status": "Status",
+  "Ariza malumotlari": "Application details",
+  "Manzil": "Address",
+  "Ariza sanasi": "Application date",
+  "Bitrgan yili": "Year of graduation",
+  "Vaqt": "Time",
+  "Fanlar": "Subjects",
+  "Izoh": "Note",
+  "Imtixon vaqti hali belgilanmagan": "Exam time has not been assigned yet",
+
+  "Rostan ham arizani bekor qilmoxchimisiz?": "Are you sure you want to cancel the application?",
+  "Arizani bekor qilishni tasdiqlaysizmi?": "Do you confirm the cancellation of the application?",
+  "Arizani bekor qilish": "Cancel application",
+  "OTM geolokatsiyasi": "University geolocation",
+  "Joylashuvni nusxalash": "Copy location",
+
+  "Mening sertifikatlarim": "My certificates",
+  "Sertifikat qoshish": "Add certificate",
+  "Sertifikatlar mavjud emas": "No certificates available",
+
+  "Tanlang": "Select"
 }

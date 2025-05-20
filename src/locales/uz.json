@@ -18,6 +18,16 @@
   "F.I.O": "F.I.O",
   "Seriya va raqami": "Seriya va raqami",
   "Tugilgan yili": "Tugilgan yili",
+  "Ism": "Ism",
+  "Familiya": "Familiya",
+  "Otasining imsi": "Otasining imsi",
+  "Tugilgan kuni": "Tugilgan kuni",
+  "Rasm": "Rasm",
+
+  "Millati": "Millati",
+  "Imtixon turi": "Imtixon turi",
+  "Qayd varaqasi": "Qayd varaqasi",
+  "Talaba shartnomasi": "Talaba shartnomasi",
 
   "Tugatgan talim muasssasangiz turini talnang": "Tugatgan talim muasssasangiz turini talnang",
   "Bitirgan yili": "Bitirgan yili",
@@ -45,11 +55,6 @@
 
   "Xush kelibsiz!": "Xush kelibsiz!",
   "Shaxsiy malumotlar": "Shaxsiy malumotlar",
-  "Millati": "Millati",
-  "Imtixon turi": "Imtixon turi",
-  "Qayd varaqasi": "Qayd varaqasi",
-  "Yuklash": "Yuklash",
-  "Talaba shartnomasi": "Talaba shartnomasi",
 
   "Mening arizalarim": "Mening arizalarim",
   "Ariza": "Ariza",
@@ -57,8 +62,8 @@
   "Status": "Status",
   "Ariza malumotlari": "Ariza malumotlari",
   "Manzil": "Manzil",
-  "Sana": "Sana",
-  "Tugash sanasi": "Tugash sanasi",
+  "Ariza sanasi": "Ariza sanasi",
+  "Bitrgan yili": "Bitrgan yili",
   "Vaqt": "Vaqt",
   "Fanlar": "Fanlar",
   "Izoh": "Izoh",
@@ -78,14 +83,6 @@
   "Sertifikatlar mavjud emas": "Sertifikatlar mavjud emas",
 
   "Tanlang": "Tanlang",
-
-  "sound": "Sound",
-  "sound": "Sound",
-  "sound": "Sound",
-  "sound": "Sound",
-  "sound": "Sound",
-
-
 
   "sound": "Sound"
 }

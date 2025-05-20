@@ -37,5 +37,51 @@
   "Talim shakli": "Форма обучения",
   "Talim tili": "Язык обучения",
   "Talim yonalishi": "Направление обучения",
-  "sound": "Звук"
+
+  "Ariza topshirildi": "Заявка отправлена",
+  "Qayd varaqa": "Лист регистрации",
+  "Imtixon topshirilmagan": "Экзамен не сдан",
+  "Imtixon vaqti:": "Время экзамена:",
+  "belgilanmagan": "не назначено",
+  "Shartnoma mavjud emas": "Договор отсутствует",
+
+  "Asosiy sahifa": "Главная страница",
+  "Mening arizam": "Моя заявка",
+  "Mening shartnomam": "Мой договор",
+  "Til sertifikatlari": "Языковые сертификаты",
+  "Chiqish": "Выход",
+  "Tizimdan chiqishni xoxlaysizmi?": "Вы действительно хотите выйти из системы?",
+
+  "Xush kelibsiz!": "Добро пожаловать!",
+  "Shaxsiy malumotlar": "Личная информация",
+  "Millati": "Национальность",
+  "Imtixon turi": "Тип экзамена",
+  "Qayd varaqasi": "Лист регистрации",
+  "Yuklash": "Скачать",
+  "Talaba shartnomasi": "Договор студента",
+
+  "Mening arizalarim": "Мои заявки",
+  "Ariza": "Заявка",
+  "Tasdiqlangan": "Одобрено",
+  "Status": "Статус",
+  "Ariza malumotlari": "Детали заявки",
+  "Manzil": "Адрес",
+  "Ariza sanasi": "Дата заявки",
+  "Bitrgan yili": "Год окончания",
+  "Vaqt": "Время",
+  "Fanlar": "Предметы",
+  "Izoh": "Примечание",
+  "Imtixon vaqti hali belgilanmagan": "Время экзамена ещё не назначено",
+
+  "Rostan ham arizani bekor qilmoxchimisiz?": "Вы действительно хотите отменить заявку?",
+  "Arizani bekor qilishni tasdiqlaysizmi?": "Вы подтверждаете отмену заявки?",
+  "Arizani bekor qilish": "Отменить заявку",
+  "OTM geolokatsiyasi": "Геолокация вуза",
+  "Joylashuvni nusxalash": "Скопировать местоположение",
+
+  "Mening sertifikatlarim": "Мои сертификаты",
+  "Sertifikat qoshish": "Добавить сертификат",
+  "Sertifikatlar mavjud emas": "Сертификатов нет",
+
+  "Tanlang": "Выберите"
 }

@@ -1,69 +1,18 @@
 import './Application.scss'
 import React, {useEffect, useState} from 'react'
-import {Button, Dropdown, Form, Input} from "antd";
-import {IMaskInput} from "react-imask";
+import {Button, Dropdown, Form, Input, Upload} from "antd";
 import img from '../../assets/images/left.svg'
 import uz from '../../assets/images/uz.png'
 import ru from '../../assets/images/ru.png'
 import us from '../../assets/images/us.png'
-import Application2 from "./Application2.jsx";
-import {Link} from "react-router-dom";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import logo from '../../assets/images/big-logo.svg'
 import {useTranslation} from 'react-i18next';
 import {$resp} from "../../api/apiResp.js";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import toast from "react-hot-toast";
-
-
-const PhoneInput = React.forwardRef(({ value, onChange }, ref) => {
-    return (
-        <IMaskInput
-            type="tel"
-            mask="+998 00 000 00 00"
-            lazy={false} // Показывает маску сразу
-            placeholder="-"
-            unmask={true} // Передает "чистый" номер в Form
-            value={value} // Связывает с Form
-            onAccept={onChange} // Передает изменения в Form
-            inputRef={ref} // Ant Design ожидает, что ref будет передан в Input
-        />
-    );
-})
-
-const PassportInput = React.forwardRef(({ value, onChange }, ref) => {
-    return (
-        <IMaskInput
-            className='inp-mask'
-            mask="aa 0000000" // Две буквы и 7 цифр
-            definitions={{
-                a: /[a-zA-Z]/, // Разрешаем и строчные, и заглавные буквы
-                0: /[0-9]/, // Только цифры
-            }}
-            lazy={false} // Показывает маску сразу
-            unmask={true} // Передает "чистое" значение в Form
-            value={value}
-            onAccept={(val) => onChange(val.toUpperCase())}
-            inputRef={ref}
-        />
-    );
-})
-
-const JshInput = React.forwardRef(({ value, onChange }, ref) => {
-    return (
-        <IMaskInput
-            className='inp-mask'
-            mask="00000000000000" // Две буквы и 14 цифр
-            definitions={{
-                0: /[0-9]/, // Только цифры
-            }}
-            lazy={false} // Показывает маску сразу
-            unmask={true} // Передает "чистое" значение в Form
-            value={value}
-            onAccept={onChange}
-            inputRef={ref}
-        />
-    );
-})
+import {BirthDateInput, JshInput, PassportInput, PhoneInput} from "../../components/inputs/Inputs.jsx";
+import {uploadProps} from "../../assets/scripts/global.js";
 
 
 // fetch
@@ -71,6 +20,13 @@ const searchPassport = async (body) => {
     const { data } = await $resp.post("/admission/check-passport", body)
     return data
 }
+const doManualPass = async (body, token) => {
+    const { data } = await $resp.post("/admission/manual-personal-data", body, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return data
+}
+
 const checkPhone = async (body) => {
     const { data } = await $resp.post("/auth/check-phone", body)
     return data
@@ -88,7 +44,7 @@ const checkSms = async (body) => {
     return data
 }
 
-const checkState = async (token) => {
+const getMe = async (token) => {
     const { data } = await $resp.get('/user/me', {
         headers: { Authorization: 'Bearer ' + token }
     })
@@ -98,33 +54,29 @@ const checkState = async (token) => {
 
 const Application = () => {
 
+    const navigate = useNavigate()
     const { t } = useTranslation()
 
     const [form] = Form.useForm()
 
+    const [loading, setLoading] = useState(false)
+
     const [count, setCount] = useState(0)
-    const [nav, setNav] = useState(false)
 
     const [exist, setExist] = useState(false)
+    const [autoPass, setAutoPass] = useState(false)
+
     const [token, setToken] = useState(null)
     const [smsId, setSmsId] = useState(null)
 
-    const [loading, setLoading] = useState(false)
-
-    const [passport, setPassport] = useState({ pinfl: '', serial: '' })
+    const [file, setFile] = useState(null)
 
     // sms timer
     const [active, setActive] = useState(false)
     const [timeLeft, setTimeLeft] = useState(120)
 
 
-    //
-    useEffect(() => {
-        form.setFieldsValue(passport);
-    }, [passport])
-
-
-    // submit form
+    // mutate
     const muPhone = useMutation({
         mutationFn: checkPhone,
         onSuccess: (res) => {
@@ -165,7 +117,6 @@ const Application = () => {
 
             setToken(res.token)
             localStorage.setItem('token', res.token)
-            localStorage.setItem('login', 'success')
         },
         onError: (err) => {
             setLoading(false)
@@ -192,14 +143,16 @@ const Application = () => {
     })
 
     const muPassport = useMutation({
-        mutationFn: searchPassport,
+        mutationFn: (body) => autoPass
+            ? searchPassport(body)
+            : doManualPass(body, token),
         onSuccess: (res) => {
             toast.success(res.message)
 
             setLoading(false)
-            setNav(true)
+            window.location = autoPass ? '/' : '/?autoPass=false'
 
-            localStorage.setItem('user', JSON.stringify(res))
+            localStorage.setItem('passport', JSON.stringify(res))
         },
         onError: (err) => {
             setLoading(false)
@@ -260,33 +213,49 @@ const Application = () => {
             muPassport.mutate(body)
         }
     }
+    console.log(token)
 
 
-    // fetch
+    // fetch ME
     const { data: me } = useQuery({
         queryKey: ['me'],
-        queryFn: () => checkState(token),
+        queryFn: () => getMe(token),
         keepPreviousData: true,
         enabled: !!token
     })
 
     useEffect(() => {
         if (me) {
+            localStorage.setItem('me', JSON.stringify(me))
+            setAutoPass(me?.pasport_is_avto)
+
             if (me?.state === 'passed') {
                 window.location = '/profile'
                 setLoading(false)
-            // } else if (me?.state === 'admission-type') {
-            //     setNav(true)
-            //     setLoading(false)
-            // } else if (me?.state === 'enter-personal-data') {
-            //     setCount(3)
-            //     setLoading(false)
-            } else {
-                setCount(3)
+            } else if (me?.state === 'enter-personal-data') {
+                navigate('/login?count=3')
                 setLoading(false)
+            } else if (me?.state === 'admission-type') {
+                window.location = '/?nav=1'
+            } else if (me?.state === 'edu-data') {
+                window.location = '/?nav=2'
+            } else if (me?.state === 'edu-directions') {
+                window.location = '/?nav=3'
             }
         }
     }, [me, token])
+
+
+    // change nav from HREF
+    const [searchParams] = useSearchParams()
+
+    useEffect(() => {
+        const navParam = searchParams.get('count')
+
+        if (navParam) {
+            setCount(Number(navParam))
+        }
+    }, [searchParams, setCount])
 
 
     // timer
@@ -328,7 +297,7 @@ const Application = () => {
     // lang
     const { i18n } = useTranslation()
 
-    const items = [
+    const langItems = [
         {
             key: 'ru',
             label: (
@@ -380,137 +349,191 @@ const Application = () => {
                                 <Link className='logo' to='/'>
                                     <img src={logo} alt="logo"/>
                                 </Link>
-                                <Dropdown menu={{ items }} placement="bottomRight">
+                                <Dropdown menu={{ items: langItems }} placement="bottomRight">
                                     <Button className="btn row align-center g10">
                                         <span>{languageMap[currentLang]?.label}</span>
                                         <img src={languageMap[currentLang]?.flag} alt="flag" />
                                     </Button>
                                 </Dropdown>
                             </div>
-                            {
-                                !nav ?
-                                    <div>
-                                        <div className='titles'>
-                                            <p className="title">{ t('title') }</p>
-                                            <p className="subtitle">{ t('subtitle') }</p>
-                                            <p className="desc">{ t('desc') }</p>
-                                        </div>
-                                        <Form
-                                            className='form'
-                                            onFinish={onFormSubmit}
-                                            layout='vertical'
-                                            form={form}
-                                        >
+                            <div>
+                                <div className='titles'>
+                                    <p className="title">{ t('title') }</p>
+                                    <p className="subtitle">{ t('subtitle') }</p>
+                                    <p className="desc">{ t('desc') }</p>
+                                </div>
+                                <Form
+                                    className='form'
+                                    onFinish={onFormSubmit}
+                                    layout='vertical'
+                                    form={form}
+                                >
 
-                                            {(count >= 0 && count < 3) && (
+                                    {(count >= 0 && count < 3) && (
+                                        <>
+                                            <Form.Item
+                                                name="phone_number"
+                                                label={t("Telefon raqam")}
+                                                rules={[{ required: true, message: "" }]}
+                                            >
+                                                <PhoneInput />
+                                            </Form.Item>
+                                        </>
+                                    )}
+
+                                    {(count >= 1 && count < 3) && (
+                                        <>
+                                            <Form.Item
+                                                name="password"
+                                                label={t("Parolni kiriting")}
+                                                rules={[{ required: true, message: t("Parol majburiy") }]}
+                                            >
+                                                <Input type="text" placeholder={t("Parolni kiriting")} />
+                                            </Form.Item>
+                                            {
+                                                !exist &&
                                                 <Form.Item
-                                                    name="phone_number"
-                                                    label={t("Telefon raqam")}
-                                                    rules={[{ required: true, message: "" }]}
+                                                    name="re-password"
+                                                    label={t("Parolni tasdiqlang")}
+                                                    dependencies={['password']}
+                                                    rules={[
+                                                        { required: true, message: t("Parolni tasdiqlang") },
+                                                        ({ getFieldValue }) => ({
+                                                            validator(_, value) {
+                                                                if (!value || getFieldValue('password') === value) {
+                                                                    return Promise.resolve()
+                                                                }
+                                                                return Promise.reject(new Error(t("Parollar mos emas")))
+                                                            },
+                                                        }),
+                                                    ]}
                                                 >
-                                                    <PhoneInput />
+                                                    <Input type="text" placeholder={t("Parolni tasdiqlang")} />
                                                 </Form.Item>
-                                            )}
+                                            }
+                                        </>
+                                    )}
 
-                                            {(count >= 1 && count < 3) && (
-                                                <>
-                                                    <Form.Item
-                                                        name="password"
-                                                        label={t("Parolni kiriting")}
-                                                        rules={[{ required: true, message: t("Parol majburiy") }]}
-                                                    >
-                                                        <Input type="text" placeholder={t("Parolni kiriting")} />
-                                                    </Form.Item>
-                                                    {
-                                                        !exist &&
-                                                        <Form.Item
-                                                            name="re-password"
-                                                            label={t("Parolni tasdiqlang")}
-                                                            dependencies={['password']}
-                                                            rules={[
-                                                                { required: true, message: t("Parolni tasdiqlang") },
-                                                                ({ getFieldValue }) => ({
-                                                                    validator(_, value) {
-                                                                        if (!value || getFieldValue('password') === value) {
-                                                                            return Promise.resolve()
-                                                                        }
-                                                                        return Promise.reject(new Error(t("Parollar mos emas")))
-                                                                    },
-                                                                }),
-                                                            ]}
-                                                        >
-                                                            <Input type="text" placeholder={t("Parolni tasdiqlang")} />
-                                                        </Form.Item>
-                                                    }
-                                                </>
-                                            )}
+                                    {(count >= 2 && count < 3) && (
+                                        <>
+                                            <Form.Item
+                                                name="code"
+                                                label={t("Kodni kiriting")}
+                                                rules={[{ required: true, message: "" }]}
+                                            >
+                                                <Input type="tel" placeholder={t("Kodni kiriting")} />
+                                            </Form.Item>
 
-                                            {(count >= 2 && count < 3) && (
-                                                <>
-                                                    <Form.Item
-                                                        name="code"
-                                                        label={t("Kodni kiriting")}
-                                                        rules={[{ required: true, message: "" }]}
-                                                    >
-                                                        <Input type="tel" placeholder={t("Kodni kiriting")} />
-                                                    </Form.Item>
+                                            <div className="sms-retry">
+                                                <p className="txt">{t("SMS ni qayta yuborish")}:</p>
+                                                {active ? (
+                                                    <span className="sms-btn">{formatTime(timeLeft)}</span>
+                                                ) : (
+                                                    <button className="sms-btn" onClick={retryOnFinish} type="button">
+                                                        {t("Qayta yuborish")}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </>
+                                    )}
 
-                                                    <div className="sms-retry">
-                                                        <p className="txt">{t("SMS ni qayta yuborish")}:</p>
-                                                        {active ? (
-                                                            <span className="sms-btn">{formatTime(timeLeft)}</span>
-                                                        ) : (
-                                                            <button className="sms-btn" onClick={retryOnFinish} type="button">
-                                                                {t("Qayta yuborish")}
-                                                            </button>
-                                                        )}
-                                                    </div>
-                                                </>
-                                            )}
-
-                                            {count === 3 && (
+                                    {count === 3 && (
+                                        <>
+                                            {autoPass ?
                                                 <div>
                                                     <Form.Item
                                                         name='pinfl'
                                                         label={t('JSHSHIR')}
                                                     >
-                                                        <JshInput
-                                                            onChange={(val) => setPassport(prev => ({ ...prev, pinfl: val }))}
-                                                        />
+                                                        <JshInput />
                                                     </Form.Item>
-
                                                     <Form.Item
                                                         name='serial'
                                                         label={t('Seriyasi va raqami')}
                                                     >
-                                                        <PassportInput
-                                                            onChange={(val) => setPassport(prev => ({ ...prev, serial: val }))}
-                                                        />
+                                                        <PassportInput />
                                                     </Form.Item>
-
-                                                    {/*<div className="search row between">*/}
-                                                    {/*    <span/>*/}
-                                                    {/*    <button className="row align-center" type='button'>*/}
-                                                    {/*        <span>Qidirish</span>*/}
-                                                    {/*        <i className="fa-solid fa-magnifying-glass"/>*/}
-                                                    {/*    </button>*/}
-                                                    {/*</div>*/}
                                                 </div>
-                                            )}
+                                                :
+                                                <div>
+                                                    <Form.Item
+                                                        name='first_name'
+                                                        label={t('Ism')}
+                                                        rules={[{required: true, message: ''}]}
+                                                    >
+                                                        <Input placeholder={t('Ism')} />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name='last_name'
+                                                        label={t('Familiya')}
+                                                        rules={[{required: true, message: ''}]}
+                                                    >
+                                                        <Input placeholder={t('Familiya')} />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name='patron'
+                                                        label={t('Otasining imsi')}
+                                                        rules={[{required: true, message: ''}]}
+                                                    >
+                                                        <Input placeholder={t('Otasining imsi')} />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name='birth_day'
+                                                        label={t('Tugilgan kuni')}
+                                                        rules={[{required: true, message: ''}]}
+                                                    >
+                                                        <BirthDateInput />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name='jshir'
+                                                        label={t('JSHSHIR')}
+                                                        rules={[{required: true, message: ''}]}
+                                                    >
+                                                        <JshInput />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name='passport_id'
+                                                        label={t('Seriyasi va raqami')}
+                                                        rules={[{required: true, message: ''}]}
+                                                    >
+                                                        <PassportInput />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        className='upload'
+                                                        name='file_id'
+                                                        label={t('Rasm')}
+                                                        rules={[{required: true, message: ''}]}
+                                                    >
+                                                        <Upload
+                                                            {...uploadProps}
+                                                            headers={{ Authorization: `Bearer ${token}` }}
+                                                            onChange={(e) => setFile(e)}
+                                                            listType="text"
+                                                        >
+                                                            <Input
+                                                                rootClassName={file?.file.percent !== null && 'change-icon'}
+                                                                size='large'
+                                                                suffix={<i className="fa-solid fa-upload"/>}
+                                                                prefix={file ? file?.file.percent?.toFixed(1) + '%' : 'Yuklash'}
+                                                            />
+                                                        </Upload>
+                                                    </Form.Item>
+                                                </div>
+                                            }
+                                        </>
+                                    )}
 
-                                            <Button
-                                                className='btn'
-                                                loading={loading}
-                                                size='large'
-                                                htmlType="submit"
-                                                type='primary'
-                                            >
-                                                { t('Tasdiqlash') }
-                                            </Button>
-                                        </Form>
-                                    </div>
-                                    : <Application2 token={token} passport={passport} />
-                            }
+                                    <Button
+                                        className='btn'
+                                        loading={loading}
+                                        size='large'
+                                        htmlType="submit"
+                                        type='primary'
+                                    >
+                                        { t('Tasdiqlash') }
+                                    </Button>
+                                </Form>
+                            </div>
                         </div>
                     </div>
                 </div>

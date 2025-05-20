@@ -4,7 +4,7 @@ import {Link, useHref} from "react-router-dom";
 import AdminNavBar from "./AdminNavBar.jsx";
 import {hiddenRoutesAdmin, openRoutesAdmin} from "../../../assets/scripts/mockAPI.js";
 import {Button, Modal} from "antd";
-import {logout} from "../../../hooks/useCrud.jsx";
+import {logoutAdmin} from "../../../hooks/useCrud.jsx";
 
 const AdminHeader = () => {
 
@@ -53,7 +53,7 @@ const AdminHeader = () => {
                     <Button
                         className="btn red"
                         size="large"
-                        onClick={logout}
+                        onClick={logoutAdmin}
                     >
                         Ha
                     </Button>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
-import {Button, Checkbox, Form, Input, Modal, Select, Table} from "antd";
+import {Button, Form, Input, Modal, Select, Table} from "antd";
 import {validateMessages} from "../../../assets/scripts/global.js";
 import {addOrEdit, deleteData} from "../../../api/crud.js";
 import {useQuery} from "@tanstack/react-query";
@@ -129,7 +129,7 @@ const AdminEduLang = () => {
                                     <Table
                                         size="middle"
                                         columns={columns2}
-                                        dataSource={record?.edu_form}
+                                        dataSource={record?.edu_forms}
                                         pagination={false}
                                     />
                                 </div>

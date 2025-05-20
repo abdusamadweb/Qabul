@@ -2,13 +2,19 @@ import React, {useState} from 'react';
 import geo from '../../../assets/images/geo.png'
 import {Popconfirm} from "antd";
 import {useTranslation} from "react-i18next";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import {$resp} from "../../../api/apiResp.js";
 import i18n from "i18next";
+import toast from "react-hot-toast";
+import {Link} from "react-router-dom";
 
 // fetch
 const fetchApp = async () => {
     const { data } = await $resp.get('/admission/my-admission')
+    return data
+}
+const fetchRejectAppl = async () => {
+    const { data } = await $resp.post("/admission/reject-my-admission")
     return data
 }
 
@@ -26,6 +32,22 @@ const ApplC = () => {
         queryFn: fetchApp,
         keepPreviousData: true
     })
+
+
+    // reject appl
+    const muReject = useMutation({
+        mutationFn: fetchRejectAppl,
+        onSuccess: (res) => {
+            toast(res.message)
+        },
+        onError: (err) => {
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
+    const rejectAppl = () => {
+        muReject.mutate()
+    }
 
 
     // copy
@@ -53,15 +75,9 @@ const ApplC = () => {
                         <div className="title">{ t('Ariza malumotlari') }</div>
                         <ul className="check">
                             <li className="check__item">
-                                <span className='txt'>{t('Sana')}</span>
+                                <span className='txt'>{t('F.I.O')}</span>
                                 <span className='dots'/>
-                                <span className='txt font'>{new Date(app?.data?.created_at).toLocaleDateString()}</span>
-                            </li>
-                            <li className="check__item">
-                                <span className='txt'>{t('Tugash sanasi')}</span>
-                                <span className='dots'/>
-                                <span
-                                    className='txt font'>{new Date(app?.data?.edu_end_date).toLocaleDateString()}</span>
+                                <span className='txt font'>{ app?.data?.user.first_name + ' ' + app?.data?.user.last_name }</span>
                             </li>
                             <li className="check__item">
                                 <span className='txt'>{t('Talim shakli')}</span>
@@ -78,13 +94,24 @@ const ApplC = () => {
                                 <span className='dots'/>
                                 <span className='txt font'>{app?.data?.edu_direction[`name_${currentLang}`]}</span>
                             </li>
+                            <li className="check__item">
+                                <span className='txt'>{t('Bitrgan yili')}</span>
+                                <span className='dots'/>
+                                <span
+                                    className='txt font'>{new Date(app?.data?.edu_end_date).toLocaleDateString()}</span>
+                            </li>
+                            <li className="check__item">
+                                <span className='txt'>{t('Ariza sanasi')}</span>
+                                <span className='dots'/>
+                                <span className='txt font'>{new Date(app?.data?.created_at).toLocaleDateString()}</span>
+                            </li>
                         </ul>
                         <div className="row between">
                             <span/>
                             <Popconfirm
                                 title={t("Rostan ham arizani bekor qilmoxchimisiz?")}
                                 description={t('Arizani bekor qilishni tasdiqlaysizmi?')}
-                                // onConfirm={confirm}
+                                onConfirm={rejectAppl}
                                 okText={ t('Ha') }
                                 cancelText={ t('Yoq') }
                             >
@@ -93,6 +120,7 @@ const ApplC = () => {
                         </div>
                     </div>
                 </div>
+
                 <div className="geo">
                     <p className="title">{ t('OTM geolokatsiyasi') }</p>
                     <img src={geo} alt="img"/>
@@ -102,6 +130,9 @@ const ApplC = () => {
                     </button>
                 </div>
             </div>
+            <Link class="again-btn" to='/'>
+                <span>Ariza topshirish</span>
+            </Link>
         </div>
     );
 };

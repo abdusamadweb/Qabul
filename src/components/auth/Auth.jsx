@@ -3,11 +3,11 @@ import {Navigate, Outlet} from "react-router-dom"
 
 const Auth = () => {
 
-    const login = localStorage.getItem('login')
+    const token = localStorage.getItem('token')
 
     return (
-        login === 'success' ? <Outlet />
-            : <Navigate to="/" />
+        token ? <Outlet />
+            : <Navigate to="/login" />
     )
 }
 
