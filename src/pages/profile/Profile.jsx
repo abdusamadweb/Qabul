@@ -32,7 +32,7 @@ const Profile = () => {
 
     // fetch
     const getMe = () => getRequest('/user/me')
-    const { data: me } = useQuery({
+    const { data: me, refetch: refetchMe } = useQuery({
         queryKey: ['me'],
         queryFn: getMe,
         keepPreviousData: true,
@@ -104,7 +104,8 @@ const Profile = () => {
         uz: { label: 'Uzbek', flag: uz },
     }
 
-    const currentLang = i18n.language || 'uz'
+    const rawLang = i18n.language || 'uz';
+    const currentLang = rawLang.split('-')[0]
 
 
     return (
@@ -191,7 +192,12 @@ const Profile = () => {
                             )}
 
                             {nav === 1 && (
-                                <ApplC me={me} app={app} refetchApp={refetchApp} />
+                                <ApplC
+                                    me={me}
+                                    app={app}
+                                    refetchApp={refetchApp}
+                                    refetchMe={refetchMe}
+                                />
                             )}
 
                             {nav === 2 && (

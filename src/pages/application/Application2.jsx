@@ -53,7 +53,8 @@ const Application2 = () => {
 
     const { i18n, t } = useTranslation()
     const lang = i18n.language
-    const currentLang = i18n.language || 'uz'
+    const rawLang = i18n.language || 'uz';
+    const currentLang = rawLang.split('-')[0]
 
     const navigate = useNavigate()
     const [form] = Form.useForm()
@@ -113,19 +114,21 @@ const Application2 = () => {
     //
     useEffect(() => {
         if (me) {
-            localStorage.setItem('me', JSON.stringify(me))
-            setAutoPass(me?.pasport_is_avto)
+            setAutoPass(me?.pasport_is_avto);
+            localStorage.setItem('me', JSON.stringify(me));
 
-            if (me?.state === 'passed') {
-                window.location = '/'
-                setLoading(false)
-            } else if (me?.state === 'admission-type') {
-                window.location = '/application/?nav=1'
-            } else if (me?.state === 'edu-data') {
-                window.location = '/application/?nav=2'
-            } else if (me?.state === 'edu-directions') {
-                window.location = '/application/?nav=3'
-            }
+            // redirectni biroz keyinroq bajaramiz
+            setTimeout(() => {
+                if (me?.state === 'passed') {
+                    navigate('/');
+                } else if (me?.state === 'admission-type') {
+                    navigate('/application/?nav=1');
+                } else if (me?.state === 'edu-data') {
+                    navigate('/application/?nav=2');
+                } else if (me?.state === 'edu-directions') {
+                    navigate('/application/?nav=3');
+                }
+            }, 100); // 50ms delay yetarli
         }
     }, [me])
 

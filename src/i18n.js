@@ -8,7 +8,7 @@ import translationRU from './locales/ru.json';
 import translationUZ from './locales/uz.json';
 
 i18n
-    .use(LanguageDetector) // определяет язык из localStorage, navigator и т.д.
+    .use(LanguageDetector)
     .use(initReactI18next)
     .init({
         resources: {
@@ -16,7 +16,16 @@ i18n
             ru: { translation: translationRU },
             uz: { translation: translationUZ },
         },
+        supportedLngs: ['en', 'ru', 'uz'],
         fallbackLng: 'uz',
+
+        load: 'languageOnly',      // ✅ Faqat asosiy til kodi (ru, en, uz)
+
+        detection: {
+            order: ['localStorage', 'navigator'],
+            caches: ['localStorage'],
+        },
+
         interpolation: {
             escapeValue: false,
         },

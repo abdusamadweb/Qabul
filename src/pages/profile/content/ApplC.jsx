@@ -14,10 +14,11 @@ const fetchRejectAppl = async () => {
     return data
 }
 
-const ApplC = ({ app, refetchApp }) => {
+const ApplC = ({ app, refetchApp, refetchMe }) => {
 
     const { t } = useTranslation()
-    const currentLang = i18n.language || 'uz'
+    const rawLang = i18n.language || 'uz';
+    const currentLang = rawLang.split('-')[0]
 
     const [copied, setCopied] = useState(false)
     const [rejectStatus, setRejectStatus] = useState(false)
@@ -38,6 +39,7 @@ const ApplC = ({ app, refetchApp }) => {
             setRejectStatus(true)
 
             refetchApp()
+            refetchMe()
         },
         onError: (err) => {
             toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)

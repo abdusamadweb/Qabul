@@ -18,7 +18,10 @@ export const getRequest = async (url, config = {}) => {
     } catch (error) {
         if (error?.response?.status === 403) {
             toast.error("Sessiya tugagan. Qayta kiring.")
-            if (!window.location.pathname.includes('/login')) {
+            if (
+                !window.location.pathname.includes('/login') &&
+                !window.location.pathname.includes('/application')
+            ) {
                 toast.error("Sessiya tugagan. Qayta kiring.")
                 logout()
             }

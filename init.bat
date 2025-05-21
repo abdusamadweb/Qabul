@@ -2,14 +2,14 @@
 set SERVER=31.128.39.74
 set USERNAME=root
 set PASSWORD=t^54KxAA+Mav
-set LOCAL_DIR="C:\Users\user\Documents\Front-end\Qabul\Qabul"
+set LOCAL_DIR="C:\Users\user\Documents\Front-End\React Vite JS\qabul\Qabul"
 set REMOTE_DIR=/var/www/sharq.pro-premiums.com/html/
-set ARCHIVE_PATH="C:\Users\user\Documents\Front-end\Qabul\Qabul\dist.tar.gz"
+set ARCHIVE_PATH="C:\Users\user\Documents\Front-End\React Vite JS\qabul\Qabul\dist.tar.gz"
 
 
 @REM vite build
 REM node_modules papkasini chetlab o‘tib arxiv yaratish
-tar --exclude=".idea" --exclude=".vscode"  --exclude=".git" --exclude="init.bat"  -czvf %ARCHIVE_PATH% -C "C:\Users\user\Documents\Front-end\Qabul\Qabul\dist" .
+tar --exclude=".idea" --exclude=".vscode"  --exclude=".git" --exclude="init.bat"  -czvf %ARCHIVE_PATH% -C "C:\Users\user\Documents\Front-End\React Vite JS\qabul\Qabul\dist" .
 
 
 echo Starting SCP upload...

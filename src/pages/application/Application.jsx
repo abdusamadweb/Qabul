@@ -22,8 +22,12 @@ const searchPassport = async (body) => {
     return data
 }
 const doManualPass = async (body, token) => {
+    const finalToken = token || localStorage.getItem('token'); // tokenni tanlash
+
     const { data } = await $resp.post("/admission/manual-personal-data", body, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: {
+            Authorization: `Bearer ${finalToken}`
+        }
     })
     return data
 }
@@ -232,19 +236,21 @@ const Application = () => {
             localStorage.setItem('me', JSON.stringify(me))
             setAutoPass(me?.pasport_is_avto)
 
-            if (me?.state === 'passed') {
-                window.location = '/'
-                setLoading(false)
-            } else if (me?.state === 'enter-personal-data') {
-                navigate('/login?count=3')
-                setLoading(false)
-            } else if (me?.state === 'admission-type') {
-                window.location = '/application/?nav=1'
-            } else if (me?.state === 'edu-data') {
-                window.location = '/application/?nav=2'
-            } else if (me?.state === 'edu-directions') {
-                window.location = '/application/?nav=3'
-            }
+            setTimeout(() => {
+                if (me?.state === 'passed') {
+                    window.location = '/'
+                    setLoading(false)
+                } else if (me?.state === 'enter-personal-data') {
+                    navigate('/login?count=3')
+                    setLoading(false)
+                } else if (me?.state === 'admission-type') {
+                    window.location = '/application/?nav=1'
+                } else if (me?.state === 'edu-data') {
+                    window.location = '/application/?nav=2'
+                } else if (me?.state === 'edu-directions') {
+                    window.location = '/application/?nav=3'
+                }
+            }, 100)
         }
     }, [me, token])
 
@@ -336,7 +342,8 @@ const Application = () => {
         uz: { label: 'Uzbek', flag: uz },
     }
 
-    const currentLang = i18n.language || 'uz'
+    const rawLang = i18n.language || 'uz';
+    const currentLang = rawLang.split('-')[0]
 
 
     return (
