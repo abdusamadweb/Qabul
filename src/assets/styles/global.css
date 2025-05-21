@@ -66,6 +66,7 @@ strong {
 i {
    position: relative;
    z-index: 1;
+   color: inherit;
 }
 
 .center-absolute {

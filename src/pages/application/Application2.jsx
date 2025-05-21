@@ -204,8 +204,8 @@ const Application2 = () => {
             setLoading(true)
 
             const body = {
-                pinfl: me?.jshir || passport?.pinfl,
-                serial: me?.passport_id || passport?.serialAndNumber,
+                pinfl: passport?.pinfl || me?.jshir,
+                serial: passport?.serialAndNumber || me?.passport_id,
             }
 
             if (autoPass) {
@@ -379,26 +379,25 @@ const Application2 = () => {
                                             <li className="check__item">
                                                 <span className='txt'>{ t('F.I.O') }</span>
                                                 <span className='dots'/>
-                                                <span className='txt font'>{ me?.first_name && me?.last_name
-                                                    ? `${me.first_name} ${me.last_name}`
-                                                    : passport?.firstName && passport?.lastName
+                                                <span className='txt font'>{ passport?.firstName && passport?.lastName
                                                         ? `${passport.firstName} ${passport.lastName}`
-                                                        : '' }</span>
+                                                        : me?.first_name && me?.last_name
+                                                        ? `${me.first_name} ${me.last_name}` : '' }</span>
                                             </li>
                                             <li className="check__item">
                                                 <span className='txt'>{ t('JSHSHIR') }</span>
                                                 <span className='dots'/>
-                                                <span className='txt font'>{ me?.jshir || passport?.pinfl }</span>
+                                                <span className='txt font'>{ passport?.pinfl || me?.jshir }</span>
                                             </li>
                                             <li className="check__item">
                                                 <span className='txt'>{ t('Seriya va raqami') }</span>
                                                 <span className='dots'/>
-                                                <span className='txt font'>{ me?.passport_id || passport?.serialAndNumber }</span>
+                                                <span className='txt font'>{ passport?.serialAndNumber || me?.passport_id }</span>
                                             </li>
                                             <li className="check__item">
                                                 <span className='txt'>{ t('Tugilgan yili') }</span>
                                                 <span className='dots'/>
-                                                <span className='txt font'>{ new Date(me?.birth_date || passport?.birthDate)?.toLocaleDateString() }</span>
+                                                <span className='txt font'>{ new Date(passport?.birthDate || me?.birth_date)?.toLocaleDateString() }</span>
                                             </li>
                                         </ul>
                                     )}
