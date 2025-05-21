@@ -14,6 +14,7 @@
     background: #fff;
     border-bottom: 1px solid hsla(0, 0%, 95%, .251);
     box-shadow: 0 5px 15px -3px rgba(0, 0, 0, 0.2);
+    z-index: 10;
 
     img {
       width: 110px;
@@ -34,6 +35,29 @@
     .lang-btn {
       img {
         width: 20px;
+      }
+    }
+
+    @include breakpoint-down(444px) {
+      padding: 10px;
+
+      .container {
+        flex-flow: column;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      .g1 {
+        gap: 10px;
+      }
+
+      .btn {
+        font-size: 14px;
+        padding: 8px 1rem;
+
+        i {
+          font-size: 18px;
+        }
       }
     }
   }
@@ -69,7 +93,7 @@
     grid-template-columns: 2fr 7.5fr;
     gap: 1rem;
 
-    @include mobile {
+    @include tablet {
       grid-template-columns: 0fr 7.5fr;
     }
   }
@@ -107,11 +131,11 @@
         }
 
         @include tablet {
-          i, span {
-            font-size: 16px;
+          padding: 12px 1rem;
+
+          i {
+            font-size: 15px;
           }
-        }
-        @include mobile {
           span {
             display: none;
           }
@@ -203,6 +227,12 @@
           .desc {
             span {
               color: #22c55e;
+            }
+
+            &.warn {
+              span {
+                color: #ffb62c;
+              }
             }
           }
         }

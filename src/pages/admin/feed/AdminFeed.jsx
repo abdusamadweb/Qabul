@@ -112,9 +112,15 @@ const AdminFeed = () => {
         },
         {
             title: 'Tugash sanasi',
-            dataIndex: 'user',
-            key: 'user',
+            dataIndex: 'edu_end_date',
+            key: 'edu_end_date',
             render: (_, i) => <span>{ i?.edu_end_date || '_' }</span>
+        },
+        {
+            title: 'Amo status',
+            dataIndex: 'amo_status',
+            key: 'amo_status',
+            render: (_, i) => <span>{ i?.amo_status || '_' }</span>
         },
         {
             ...tableCols.actions,

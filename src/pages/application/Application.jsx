@@ -6,7 +6,7 @@ import uz from '../../assets/images/uz.png'
 import ru from '../../assets/images/ru.png'
 import us from '../../assets/images/us.png'
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
-import logo from '../../assets/images/big-logo.svg'
+import logo from '../../assets/images/logo.png'
 import {useTranslation} from 'react-i18next';
 import {$resp} from "../../api/apiResp.js";
 import {useMutation, useQuery} from "@tanstack/react-query";

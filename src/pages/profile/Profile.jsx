@@ -1,6 +1,6 @@
 import './Profile.scss'
 import React, {useEffect, useState} from 'react';
-import logo from '../../assets/images/big-logo.svg'
+import logo from '../../assets/images/logo.png'
 import {Button, Dropdown, Popconfirm, Steps} from "antd";
 import MainC from "./content/MainC.jsx";
 import ApplC from "./content/ApplC.jsx";
@@ -30,7 +30,7 @@ const Profile = () => {
     const [status, setStatus] = useState(0)
 
 
-    // fetch
+    // fetch me
     const getMe = () => getRequest('/user/me')
     const { data: me, refetch: refetchMe } = useQuery({
         queryKey: ['me'],
@@ -45,7 +45,7 @@ const Profile = () => {
     }, [me])
 
 
-    // fetch
+    // fetch app
     const { data: app, refetch: refetchApp } = useQuery({
         queryKey: ['app'],
         queryFn: fetchApp,
@@ -53,14 +53,16 @@ const Profile = () => {
     })
 
     useEffect(() => {
-        if (app?.data === null) {
-            setStatus(0)
-        }
-        else if (app?.data?.state === 'pending') {
-            setStatus(1)
-        }
-        else if (app?.data?.state === 'accepted') {
-            setStatus(2)
+        if (app) {
+            if (app?.data === null) {
+                setStatus(0)
+            }
+            else if (app?.data?.status === 'pending') {
+                setStatus(1)
+            }
+            else if (app?.data?.status === 'accepted') {
+                setStatus(2)
+            }
         }
     }, [app])
 
@@ -108,6 +110,22 @@ const Profile = () => {
     const currentLang = rawLang.split('-')[0]
 
 
+    // steps responsive
+    const [labelPlacement, setLabelPlacement] = useState('horizontal');
+
+    useEffect(() => {
+        const handleResize = () => {
+            const isSmall = window.innerWidth < 600;
+            setLabelPlacement(!isSmall ? 'horizontal' : 'vertical');
+        };
+
+        handleResize(); // Boshlanishda chaqiramiz
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, [])
+
+
     return (
         <div className="profile">
             <div className="profile__header">
@@ -121,7 +139,7 @@ const Profile = () => {
                             </Button>
                         </Dropdown>
                         <button className='btn row align-center g10' onClick={() => setNav(0)}>
-                            <span>{ me?.firstName }</span>
+                            <span>{ me?.first_name }</span>
                             <i className="fa-solid fa-circle-user"/>
                         </button>
                     </div>
@@ -134,21 +152,23 @@ const Profile = () => {
                             size="small"
                             current={status}
                             labelPlacement="vertical"
+                            direction={labelPlacement}
                             responsive={false}
                             items={[
                                 {
-                                    title: t('Ariza topshirildi'),
-                                    description: <button className='btn d-flex align-center g10'>
-                                        <i className="fa-solid fa-download"/>
-                                        <span>{ t('Qayd varaqa') }</span>
-                                    </button>
+                                    title: t(app?.data === null ? 'Ariza topshirilmagan' : 'Ariza topshirildi'),
+                                    description:
+                                        <button className='btn d-flex align-center g10'>
+                                            { app?.data && <i className="fa-solid fa-download"/> }
+                                            <span>{ t(app?.data ? 'Qayd varaqa' : 'Ariza topshirish') }</span>
+                                        </button>
                                 },
                                 {
                                     title: <span className='s-title'>{ t('Imtixon topshirilmagan') }</span>,
                                     description: <span className='s-title s-desc'>{ t('Imtixon vaqti:') } { t('belgilanmagan') }</span>
                                 },
                                 {
-                                    title: t('Shartnoma mavjud emas'),
+                                    title: t(app?.data?.status === 'accepted' ? '---' : 'Shartnoma mavjud emas'),
                                 },
                             ]}
                         />

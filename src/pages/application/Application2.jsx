@@ -11,7 +11,7 @@ import img from "../../assets/images/left.svg"
 import ru from "../../assets/images/ru.png"
 import us from "../../assets/images/us.png"
 import uz from "../../assets/images/uz.png"
-import logo from '../../assets/images/big-logo.svg'
+import logo from '../../assets/images/logo.png'
 import {getRequest} from "../../hooks/useCrud.jsx";
 
 
@@ -318,9 +318,9 @@ const Application2 = () => {
     )
 
 
-    // генерируем список годов от текущего до (текущий год - 50)
+    // генерируем список годов от текущего до (текущий год - 40)
     const currentYear = new Date().getFullYear()
-    const years = Array.from({ length: 50 }, (_, i) => ({
+    const years = Array.from({ length: 40 }, (_, i) => ({
         value: currentYear - i,
         label: currentYear - i,
     }))
@@ -447,7 +447,6 @@ const Application2 = () => {
                                                 label={ t('Bitirgan yili') }
                                                 rules={[{required: true, message: ''}]}
                                             >
-
                                                 <Select
                                                     size='large'
                                                     placeholder={t('Bitirgan yili')}

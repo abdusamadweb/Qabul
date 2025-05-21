@@ -1,6 +1,6 @@
 import {useMutation} from '@tanstack/react-query'
 import {toast} from 'react-hot-toast'
-import {$resp} from "../api/apiResp.js";
+import {$adminResp, $resp} from "../api/apiResp.js";
 
 export const logout = () => {
     localStorage.clear()
@@ -25,6 +25,21 @@ export const getRequest = async (url, config = {}) => {
                 toast.error("Sessiya tugagan. Qayta kiring.")
                 logout()
             }
+        } else {
+            toast.error("Xatolik yuz berdi")
+        }
+        throw error
+    }
+}
+
+export const getRequestAdmin = async (url, config = {}) => {
+    try {
+        const { data } = await $adminResp.get(url, config)
+        return data
+    } catch (error) {
+        if (error?.response?.status === 403) {
+            toast.error("Sessiya tugagan. Qayta kiring.")
+            logoutAdmin()
         } else {
             toast.error("Xatolik yuz berdi")
         }

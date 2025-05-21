@@ -70,9 +70,11 @@ const ApplC = ({ app, refetchApp, refetchMe }) => {
                 {!rejectStatus ?
                     <>
                         <div className="app">
-                            <div className='app__titles row between align-center'>
+                            <div className='app__titles row between align-center g10'>
                                 <p className="title">{ t('Ariza') } ID - { app?.data?.id }</p>
-                                <p className="desc">{ t('Status') }: <span>{ t('Tasdiqlangan') }</span></p>
+                                <p className={`desc ${app?.data?.status === 'pending' ? 'warn' : ''}`}>
+                                    { t('Status') }: <span>{ t(app?.data?.status === 'accepted' ? 'Tasdiqlangan' : 'Kutilmoqda') }</span>
+                                </p>
                             </div>
                             <div className="app__body">
                                 <div className="title">{ t('Ariza malumotlari') }</div>
@@ -101,7 +103,7 @@ const ApplC = ({ app, refetchApp, refetchMe }) => {
                                         <span className='txt'>{t('Bitrgan yili')}</span>
                                         <span className='dots'/>
                                         <span
-                                            className='txt font'>{new Date(app?.data?.edu_end_date).toLocaleDateString()}</span>
+                                            className='txt font'>{new Date(app?.data?.edu_end_date).getFullYear()}</span>
                                     </li>
                                     <li className="check__item">
                                         <span className='txt'>{t('Ariza sanasi')}</span>

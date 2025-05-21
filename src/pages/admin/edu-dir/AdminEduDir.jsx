@@ -6,12 +6,12 @@ import {addOrEdit, deleteData} from "../../../api/crud.js";
 import {useQuery} from "@tanstack/react-query";
 import {tableCols} from "../../../components/admin/table/columns.js";
 import Actions from "../../../components/admin/table/Actions.jsx";
-import {getRequest, useCrud} from "../../../hooks/useCrud.jsx";
+import {getRequestAdmin, useCrud} from "../../../hooks/useCrud.jsx";
 
 
 // fetches
-const fetchData = () => getRequest(`/edu-direction/all`)
-const fetchEduLang = () => getRequest(`/edu-lang/all`)
+const fetchData = () => getRequestAdmin(`/edu-direction/all`)
+const fetchEduLang = () => getRequestAdmin(`/edu-lang/all`)
 
 
 const AdminEduDir = () => {
