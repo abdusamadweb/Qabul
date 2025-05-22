@@ -72,8 +72,16 @@ const ApplC = ({ app, refetchApp, refetchMe }) => {
                         <div className="app">
                             <div className='app__titles row between align-center g10'>
                                 <p className="title">{ t('Ariza') } ID - { app?.data?.id }</p>
-                                <p className={`desc ${app?.data?.status === 'pending' ? 'warn' : ''}`}>
-                                    { t('Status') }: <span>{ t(app?.data?.status === 'accepted' ? 'Tasdiqlangan' : 'Kutilmoqda') }</span>
+                                <p className={`desc ${app?.data?.status === 'pending' ? 'warn' : app?.data?.status === 'rejected' ? 'red' : ''}`}>
+                                    { t('Status') }: <span>
+                                    {t(
+                                        app?.data?.status === 'accepted'
+                                            ? 'Tasdiqlangan'
+                                            : app?.data?.status === 'rejected'
+                                                ? 'Bekor qilingan'
+                                                : 'Kutilmoqda'
+                                    )}
+                                </span>
                                 </p>
                             </div>
                             <div className="app__body">
