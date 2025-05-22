@@ -5,6 +5,7 @@ import IMask from "imask";
 export const PhoneInput = React.forwardRef(({ value, onChange }, ref) => {
     return (
         <IMaskInput
+            className='inp-mask'
             type="tel"
             mask="+998 00 000 00 00"
             lazy={false} // Показывает маску сразу
@@ -55,6 +56,7 @@ export const JshInput = React.forwardRef(({ value, onChange }, ref) => {
 export const BirthDateInput = React.forwardRef(({ value, onChange }, ref) => {
     return (
         <IMaskInput
+            className='inp-mask'
             type='tel'
             mask="0000-00-00" // Формат YYYY-MM-DD
             blocks={{

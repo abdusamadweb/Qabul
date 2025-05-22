@@ -266,6 +266,18 @@
     }
   }
 
+  .inp-mask {
+    padding: 12px 1rem;
+    border-radius: 10px;
+    border: 1px solid #d9d9d9;
+    outline: none;
+    transition: border-color 0.2s ease;
+
+    &:hover, &:focus {
+      border-color: $main-color;
+    }
+  }
+
   .ant-table {
 
     &-cell {

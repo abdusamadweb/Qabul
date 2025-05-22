@@ -1,18 +1,23 @@
 import React, {useEffect, useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
 import {Button, Form, Modal, Select, Table} from "antd";
-import {validateMessages} from "../../../assets/scripts/global.js";
+import {formatPhone, validateMessages} from "../../../assets/scripts/global.js";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {tableCols} from "../../../components/admin/table/columns.js";
 import Actions from "../../../components/admin/table/Actions.jsx";
 import {$adminResp, $resp} from "../../../api/apiResp.js";
 import toast from "react-hot-toast";
+import profileImg from "../../../assets/images/profile.jpeg";
 
 
 // fetches
 const fetchFilteredData = async ({ queryKey }) => {
     const [, body] = queryKey
     const { data } = await $adminResp.post('/admission/all-appointment', body)
+    return data
+}
+const fetchOneData = async (id) => {
+    const { data } = await $adminResp.get(`/admission/get/${id}`)
     return data
 }
 const fetchChangeStatus = async (body) => {
@@ -26,7 +31,7 @@ const AdminFeed = () => {
     const [form] = Form.useForm()
 
     const [modal, setModal] = useState('close')
-    const [selectedItem, setSelectedItem] = useState(null)
+    const [selItem, setSelectedItem] = useState(null)
 
 
     // filter data
@@ -44,13 +49,24 @@ const AdminFeed = () => {
         keepPreviousData: true,
     })
 
+    // get one data
+    const { data: oneData, isLoading: oneLoading } = useQuery({
+        queryKey: ['one-data', selItem?.id],
+        queryFn: () => fetchOneData(selItem?.id),
+        keepPreviousData: true,
+        enabled: !!selItem
+    })
+    const one = oneData?.data
+
 
     // edit
     const muChangeStatus = useMutation({
         mutationFn: fetchChangeStatus,
         onSuccess: (res) => {
             toast.success(res.message)
+
             setModal('close')
+            setSelectedItem(null)
         },
         onError: (err) => {
             toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
@@ -60,7 +76,7 @@ const AdminFeed = () => {
     const onFormSubmit = (values) => {
         const body = {
             ...values,
-            admission_id: selectedItem?.id
+            admission_id: selItem?.id
         }
 
         muChangeStatus.mutate(body)
@@ -69,12 +85,12 @@ const AdminFeed = () => {
 
     // form
     useEffect(() => {
-        if (selectedItem) {
-            form.setFieldsValue(selectedItem)
+        if (selItem) {
+            form.setFieldsValue(selItem)
         } else {
             form.resetFields()
         }
-    }, [form, selectedItem])
+    }, [form, selItem])
 
 
     // table
@@ -111,10 +127,10 @@ const AdminFeed = () => {
             render: (_, i) => <span>{ i?.edu_lang?.name_uz || '_' }</span>
         },
         {
-            title: 'Tugash sanasi',
+            title: 'Bitrgan sanasi',
             dataIndex: 'edu_end_date',
             key: 'edu_end_date',
-            render: (_, i) => <span>{ i?.edu_end_date || '_' }</span>
+            render: (_, i) => <span>{ new Date(i?.edu_end_date).getFullYear() || '_' }</span>
         },
         {
             title: 'Amo status',
@@ -123,11 +139,18 @@ const AdminFeed = () => {
             render: (_, i) => <span>{ i?.amo_status || '_' }</span>
         },
         {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+            render: (_, i) => <span>{ i?.status || '_' }</span>
+        },
+        {
             ...tableCols.actions,
             render: (_, i) => <Actions
                 setModal={setModal}
                 setSelectedItem={setSelectedItem}
                 i={i}
+                view
             />
         },
     ]
@@ -136,7 +159,11 @@ const AdminFeed = () => {
     return (
         <div className="other page">
             <div className="container">
-                <Title title='Arizalar ~ addmission'/>
+                <Title
+                    title='Arizalar ~ addmission'
+                    setModal={setModal}
+                    btn
+                />
                 <div className="content">
                     <Table
                         columns={columns}
@@ -149,7 +176,7 @@ const AdminFeed = () => {
                 rootClassName='admin-modal'
                 className='main-modal'
                 title={modal === 'add' ? "Qoshish" : "Ozgartirish"}
-                open={modal !== 'close'}
+                open={modal === 'add' || modal === 'edit'}
                 onCancel={() => {
                     setModal('close')
                     setSelectedItem(null)
@@ -173,7 +200,6 @@ const AdminFeed = () => {
                             options={[
                                 { label: 'accepted', value: 'accepted' },
                                 { label: 'rejected', value: 'rejected' },
-                                { label: 'accepted', value: 'accepted' },
                             ]}
                         />
                     </Form.Item>
@@ -189,6 +215,87 @@ const AdminFeed = () => {
                         </Button>
                     </div>
                 </Form>
+            </Modal>
+            <Modal
+                rootClassName='admin-modal'
+                className='main-modal admin-modal user-modal feed-modal'
+                width={600}
+                title='Arizani korish'
+                open={modal === 'view'}
+                loading={oneLoading}
+                onCancel={() => {
+                    setModal('close')
+                    setSelectedItem(null)
+                }}
+            >
+                <div className="head row between g1">
+                    <div className="row align-center g1">
+                        <img className='img' src={one?.user?.photo ? `data:image/jpeg;base64,${one?.user?.photo}` : profileImg} alt="img"/>
+                        <div>
+                            <span className='name'>{ one?.user?.first_name + ' ' + one?.user?.last_name + ' ' + one?.user?.patron }</span>
+                            <p className="phone">{ formatPhone(one?.user?.phone_number) }</p>
+                            <p className="region">{ one?.user?.region }</p>
+                            <p className="region">{ new Date(one?.user?.birth_date).toLocaleDateString() }</p>
+                        </div>
+                    </div>
+                    <p className='name id'>ID: {one?.user?.id}</p>
+                </div>
+                <div className="body">
+                    <div className="item">
+                        <span className='title'>Qabul turi:</span>
+                        <span className='dots'/>
+                        <p className="txt">{ one?.admission_type?.name }</p>
+                    </div>
+                    <div className="item">
+                        <span className='title'>Yonalishi:</span>
+                        <span className='dots'/>
+                        <p className="txt">{ one?.edu_direction?.name_uz }</p>
+                    </div>
+                    <div className="item">
+                        <span className='title'>Talim shakli:</span>
+                        <span className='dots'/>
+                        <p className="txt">{ one?.edu_form?.name_uz }</p>
+                    </div>
+                    <div className="item">
+                        <span className='title'>Talim tili:</span>
+                        <span className='dots'/>
+                        <p className="txt">{ one?.edu_lang?.name_uz }</p>
+                    </div>
+                    <div className="item">
+                        <span className='title'>Bitirgan yili:</span>
+                        <span className='dots'/>
+                        <p className="txt">{ new Date(one?.edu_end_date).getFullYear() }</p>
+                    </div>
+                    <div className="item">
+                        <span className='title'>Amo status:</span>
+                        <span className='dots'/>
+                        <p className="txt">{ one?.amo_status || '{ null }' }</p>
+                    </div>
+                    <div className="item">
+                        <span className='title'>Shartnoma:</span>
+                        <span className='dots'/>
+                        <p className="txt">{ one?.contracted ? 'Mavjud' : 'Mavjud emas' }</p>
+                    </div>
+                    <div className="item">
+                        <span className='title'>Sertifikat:</span>
+                        <span className='dots'/>
+                        {one?.certificate_id ? (
+                            <button className="btn">
+                                <i className="fa-solid fa-file-arrow-down"/>
+                                <span>Yuklash</span>
+                            </button>
+                        ) : '{ null }'}
+                    </div>
+                    <Button
+                        className="mt1"
+                        type='primary'
+                        onClick={() => {
+                            setModal('edit')
+                        }}
+                    >
+                        Ozgartirish
+                    </Button>
+                </div>
             </Modal>
         </div>
     );
