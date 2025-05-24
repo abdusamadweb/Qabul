@@ -83,5 +83,10 @@
   "Sertifikat qoshish": "Добавить сертификат",
   "Sertifikatlar mavjud emas": "Сертификатов нет",
 
-  "Tanlang": "Выберите"
+  "Tanlang": "Выберите",
+  "Telefon raqam": "Номер телефона",
+  "Passport fayl": "Файл паспорта",
+  "Kutilmoqda": "Ожидается",
+  "Ariza topshirilmagan": "Заявка не подана",
+  "Bekor qilingan": "Отменено"
 }

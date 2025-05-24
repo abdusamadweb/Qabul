@@ -111,7 +111,7 @@ const AdminEduDir = () => {
         <div className="other page">
             <div className="container">
                 <Title
-                    title='Talim yonalishi ~ edu-dir'
+                    title="Ta'lim yo'nalishi"
                     setModal={setModal}
                     btn
                 />
@@ -125,7 +125,7 @@ const AdminEduDir = () => {
                         expandable={{
                             expandedRowRender: (record) => (
                                 <div className='table-in'>
-                                    <p className="title">Talim tili</p>
+                                    <p className="title">Ta'lim tili</p>
                                     <Table
                                         size="middle"
                                         columns={columns2}
@@ -143,7 +143,7 @@ const AdminEduDir = () => {
             <Modal
                 rootClassName='admin-modal'
                 className='main-modal'
-                title={modal === 'add' ? "Qoshish" : "Ozgartirish"}
+                title={modal === 'add' ? "Qo'shish" : "O'zgartirish"}
                 open={modal !== 'close'}
                 onCancel={() => {
                     setModal('close')
@@ -172,13 +172,13 @@ const AdminEduDir = () => {
 
                     <Form.Item
                         name='edu_lang_ids'
-                        label='Talim shakli'
+                        label="Ta'lim shakli"
                         rules={[{ required: true }]}
                     >
                         <Select
                             size="large"
                             mode="multiple"
-                            placeholder="Talim shakli"
+                            placeholder="Ta'lim shakli"
                             options={eduLang?.data?.map(i => ({
                                 value: i.id,
                                 label: i.name_uz,

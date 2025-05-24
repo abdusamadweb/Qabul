@@ -31,7 +31,7 @@ const Title = ({ title, btn, setModal, additional, navigate, className }) => {
             <div className='row align-center g1'>
                 { additional }
                 <button className={`admin-titles__btn ${className}`} onClick={() => setModal('add')}>
-                    <span>Qoshish</span>
+                    <span>Qo'shish</span>
                     <i className="fa-solid fa-circle-plus"/>
                 </button>
             </div>

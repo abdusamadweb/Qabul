@@ -83,5 +83,10 @@
   "Sertifikat qoshish": "Add certificate",
   "Sertifikatlar mavjud emas": "No certificates available",
 
-  "Tanlang": "Select"
+  "Tanlang": "Select",
+  "Telefon raqam": "Phone number",
+  "Passport fayl": "Passport file",
+  "Kutilmoqda": "Pending",
+  "Ariza topshirilmagan": "Application not submitted",
+  "Bekor qilingan": "Cancelled"
 }

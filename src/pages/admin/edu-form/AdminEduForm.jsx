@@ -98,7 +98,7 @@ const AdminEduForm = () => {
         <div className="other page">
             <div className="container">
                 <Title
-                    title='Talim shakli ~ edu-form'
+                    title="Ta'lim shakli"
                     setModal={setModal}
                     btn
                 />
@@ -113,7 +113,7 @@ const AdminEduForm = () => {
             <Modal
                 rootClassName='admin-modal'
                 className='main-modal'
-                title={modal === 'add' ? "Qoshish" : "Ozgartirish"}
+                title={modal === 'add' ? "Qo'shish" : "O'zgartirish"}
                 open={modal !== 'close'}
                 onCancel={() => {
                     setModal('close')

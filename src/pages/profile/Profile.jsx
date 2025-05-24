@@ -1,6 +1,6 @@
 import './Profile.scss'
 import React, {useEffect, useState} from 'react';
-import logo from '../../assets/images/logo.png'
+import logo from '../../assets/images/logo-dark.png'
 import {Button, Dropdown, Popconfirm, Steps} from "antd";
 import MainC from "./content/MainC.jsx";
 import ApplC from "./content/ApplC.jsx";

@@ -142,7 +142,8 @@ const AdminFeed = () => {
         const body = {
             ...values,
             passport_file_id: file ? file?.file.response.files[0].id : null,
-            admission_id: selItem?.id
+            admission_id: selItem?.id || 1,
+            status: values?.status || 1,
         }
 
         muChangeStatus.mutate(body)
@@ -234,7 +235,7 @@ const AdminFeed = () => {
         <div className="other page">
             <div className="container">
                 <Title
-                    title='Arizalar ~ addmission'
+                    title='Arizalar'
                     setModal={setModal}
                     btn
                 />
@@ -250,7 +251,7 @@ const AdminFeed = () => {
                 rootClassName='admin-modal'
                 className='main-modal'
                 width={modal === 'add' ? 666 : 444}
-                title={modal === 'add' ? "Qoshish" : "Ozgartirish"}
+                title={modal === 'add' ? "Q'oshish" : "O'zgartirish"}
                 open={modal === 'add' || modal === 'edit'}
                 onCancel={() => {
                     setModal('close')
@@ -313,12 +314,12 @@ const AdminFeed = () => {
                             </Form.Item>
                             <Form.Item
                                 name='edu_ins_id'
-                                label='Talim muassasasi'
+                                label="Ta'lim muassasasi"
                                 rules={[{required: true, message: ''}]}
                             >
                                 <Select
                                     size='large'
-                                    placeholder='Talim muassasasini tanlang'
+                                    placeholder="Ta'lim muassasasini tanlang"
                                     options={ins?.data?.map(i => ({
                                         label: i.name_uz,
                                         value: i.id
@@ -338,12 +339,12 @@ const AdminFeed = () => {
                             </Form.Item>
                             <Form.Item
                                 name='edu_form_id'
-                                label='Talim shakli'
+                                label="Ta'lim shakli"
                                 rules={[{required: true, message: ''}]}
                             >
                                 <Select
                                     size='large'
-                                    placeholder='Talim shaklini tanlang'
+                                    placeholder="Ta'lim shaklini tanlang"
                                     options={eform?.data?.map(i => ({
                                         label: i.name_uz,
                                         value: i.id
@@ -352,12 +353,12 @@ const AdminFeed = () => {
                             </Form.Item>
                             <Form.Item
                                 name='edu_lang_id'
-                                label='Talim tili'
+                                label="Ta'lim tili"
                                 rules={[{required: true, message: ''}]}
                             >
                                 <Select
                                     size='large'
-                                    placeholder='Talim tilini tanlang'
+                                    placeholder="Ta'lim tilini tanlang"
                                     options={lang?.data?.map(i => ({
                                         label: i.name_uz,
                                         value: i.id
@@ -366,12 +367,12 @@ const AdminFeed = () => {
                             </Form.Item>
                             <Form.Item
                                 name='edu_direction_id'
-                                label='Talim yonalishi'
+                                label="Ta'lim yonalishi"
                                 rules={[{required: true, message: ''}]}
                             >
                                 <Select
                                     size='large'
-                                    placeholder='Talim yonalishini tanlang'
+                                    placeholder="Ta'lim yonalishini tanlang"
                                     options={dir?.data?.map(i => ({
                                         label: i.name_uz,
                                         value: i.id
@@ -419,7 +420,7 @@ const AdminFeed = () => {
                 rootClassName='admin-modal'
                 className='main-modal admin-modal user-modal feed-modal'
                 width={600}
-                title='Arizani korish'
+                title="Arizani ko'rish"
                 open={modal === 'view'}
                 loading={oneLoading}
                 onCancel={() => {
@@ -451,12 +452,12 @@ const AdminFeed = () => {
                         <p className="txt">{ one?.edu_direction?.name_uz }</p>
                     </div>
                     <div className="item">
-                        <span className='title'>Talim shakli:</span>
+                        <span className='title'>Ta'lim shakli:</span>
                         <span className='dots'/>
                         <p className="txt">{ one?.edu_form?.name_uz }</p>
                     </div>
                     <div className="item">
-                        <span className='title'>Talim tili:</span>
+                        <span className='title'>Ta'lim tili:</span>
                         <span className='dots'/>
                         <p className="txt">{ one?.edu_lang?.name_uz }</p>
                     </div>

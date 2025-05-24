@@ -95,7 +95,7 @@ const Admission = () => {
         <div className="other page">
             <div className="container">
                 <Title
-                    title='Qabul turi ~ ad-type'
+                    title='Qabul turi'
                     setModal={setModal}
                     btn
                 />
@@ -110,7 +110,7 @@ const Admission = () => {
             <Modal
                 rootClassName='admin-modal'
                 className='main-modal'
-                title={modal === 'add' ? "Qoshish" : "Ozgartirish"}
+                title={modal === 'add' ? "Qo'shish" : "O'zgartirish"}
                 open={modal !== 'close'}
                 onCancel={() => {
                     setModal('close')

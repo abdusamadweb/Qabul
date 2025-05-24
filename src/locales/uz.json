@@ -28,15 +28,15 @@
   "Qayd varaqasi": "Qayd varaqasi",
   "Talaba shartnomasi": "Talaba shartnomasi",
 
-  "Tugatgan talim muasssasangiz turini talnang": "Tugatgan talim muasssasangiz turini talnang",
+  "Tugatgan talim muasssasangiz turini talnang": "Tugatgan ta'lim muasssasangiz turini talnang",
   "Bitirgan yili": "Bitirgan yili",
   "Sertifikatingiz bormi?": "Sertifikatingiz bormi?",
   "Ha": "Ha",
   "Yoq": "Yoq",
 
-  "Talim shakli": "Talim shakli",
-  "Talim tili": "Talim tili",
-  "Talim yonalishi": "Talim yonalishi",
+  "Talim shakli": "Ta'lim shakli",
+  "Talim tili": "Ta'lim tili",
+  "Talim yonalishi": "Ta'lim yo'nalishi",
 
   "Ariza topshirildi": "Ariza topshirildi",
   "Qayd varaqa": "Qayd varaqa",
@@ -78,7 +78,7 @@
   "Shartnoma mavjud emas": "Shartnoma mavjud emas",
 
   "Mening sertifikatlarim": "Mening sertifikatlarim",
-  "Sertifikat qoshish": "Sertifikat qoshish",
+  "Sertifikat qoshish": "Sertifikat qo'shish",
   "Sertifikatlar mavjud emas": "Sertifikatlar mavjud emas",
 
   "Tanlang": "Tanlang",
@@ -86,7 +86,5 @@
   "Passport fayl": "Passport fayl",
   "Kutilmoqda": "Kutilmoqda",
   "Ariza topshirilmagan": "Ariza topshirilmagan",
-  "Bekor qilingan": "Bekor qilingan",
-
-  "sound": "Sound"
+  "Bekor qilingan": "Bekor qilingan"
 }

@@ -7,7 +7,7 @@ import {useMutation, useQuery} from "@tanstack/react-query"
 import toast from "react-hot-toast"
 import {useTranslation} from "react-i18next"
 import {uploadProps} from "../../assets/scripts/global.js"
-import img from "../../assets/images/left.svg"
+import img from "../../assets/images/hero-img.png"
 import ru from "../../assets/images/ru.png"
 import us from "../../assets/images/us.png"
 import uz from "../../assets/images/uz.png"
@@ -332,13 +332,14 @@ const Application2 = () => {
                 <div className="appl__content grid-center">
                     <div className='wrapper'>
                         <div className='left grid-center'>
-                            <img src={img} alt="img"/>
+                            <img className='logo' src={logo} alt="logo"/>
+                            <img className='img' src={img} alt="img"/>
+                            <h2 className="title">Sharq universiteti
+                                Hoziroq ro’yxatdan o’ting!</h2>
                         </div>
                         <div className='right grid-center'>
                             <div className="top row between align-center g1">
-                                <Link className='logo' to='/'>
-                                    <img src={logo} alt="logo"/>
-                                </Link>
+                                <div/>
                                 <div className="d-flex align-center g1">
                                     <Dropdown menu={{ items }} placement="bottomRight">
                                         <Button className="btn row align-center g10">

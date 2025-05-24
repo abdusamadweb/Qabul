@@ -94,7 +94,7 @@ const User = () => {
             render: (_, i) => <span>{ i?.last_name || '_' }</span>
         },
         {
-            title: 'Otasini ismi',
+            title: 'Otasining ismi',
             dataIndex: 'patron',
             key: 'patron',
             render: (_, i) => <span>{ i?.patron || '_' }</span>
@@ -122,7 +122,7 @@ const User = () => {
         <div className="other page">
             <div className="container">
                 <Title
-                    title='Foydalanuvchilar ~ users'
+                    title='Foydalanuvchilar'
                     setModal={setModal}
                     btn
                 />
@@ -139,7 +139,7 @@ const User = () => {
                 rootClassName='admin-modal'
                 className='main-modal add-user-modal'
                 width={600}
-                title={modal === 'add' ? "Qoshish" : "Ozgartirish"}
+                title={modal === 'add' ? "Q'oshish" : "O'zgartirish"}
                 open={modal === 'add' || modal === 'edit'}
                 onCancel={() => {
                     setModal('close')
@@ -311,7 +311,7 @@ const User = () => {
                 rootClassName='admin-modal'
                 className='main-modal admin-modal user-modal'
                 width={888}
-                title='Foydalanuvchini korish'
+                title="Foydalanuvchini ko'rish"
                 open={modal === 'view'}
                 onCancel={() => {
                     setModal('close')
@@ -347,10 +347,6 @@ const User = () => {
                         <div className="item">
                             <span className='title'>Royxatdan otgan sana:</span>
                             <p className="txt">{ new Date(selItem?.created_at).toLocaleDateString() }</p>
-                        </div>
-                        <div className="item">
-                            <span className='title'>State:</span>
-                            <p className="txt">{ selItem?.state || '{ null }' }</p>
                         </div>
                     </div>
                 </div>

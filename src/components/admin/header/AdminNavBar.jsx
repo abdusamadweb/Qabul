@@ -17,15 +17,15 @@ const AdminNavBar = ({ openMenu, setOpenMenu }) => {
             link: '/admin/feeds'
         },
         {
-            name: 'Talim shakli',
+            name: "Ta'lim shakli",
             link: '/admin/edu-form'
         },
         {
-            name: 'Talim tili',
+            name: "Ta'lim tili",
             link: '/admin/edu-lang'
         },
         {
-            name: 'Talim yonalishi',
+            name: "Ta'lim yo'nalishi",
             link: '/admin/edu-dir'
         },
         {

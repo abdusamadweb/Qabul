@@ -23,7 +23,7 @@ const AdminHeader = () => {
             <div className="container row flex-column between">
                 <div className="admin-header__inner">
                     <Link className='admin-header__logos' to='/admin/dashboard'>
-                        <h1 className={`admin-header__logo ${openMenu && 'opa'}`}>CRM</h1>
+                        <h1 className={`admin-header__logo ${openMenu && 'opa'}`}>Qabul</h1>
                     </Link>
                     <AdminNavBar openMenu={openMenu} setOpenMenu={setOpenMenu} />
                     <div className='burger-menu'>
