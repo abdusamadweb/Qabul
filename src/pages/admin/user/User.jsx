@@ -1,11 +1,11 @@
 import './User.scss'
 import React, {useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
-import {Button, Flex, Form, Input, Modal, Radio, Select, Table, Upload} from "antd";
+import {Button, Form, Input, Modal, Radio, Select, Table, Upload} from "antd";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {tableCols} from "../../../components/admin/table/columns.js";
 import Actions from "../../../components/admin/table/Actions.jsx";
-import {$adminResp, $resp} from "../../../api/apiResp.js";
+import {$adminResp} from "../../../api/apiResp.js";
 import {formatPhone, uploadProps, validateMessages} from "../../../assets/scripts/global.js";
 import profileImg from '../../../assets/images/profile.jpeg';
 import toast from "react-hot-toast";
@@ -45,7 +45,7 @@ const User = () => {
     })
 
     const { data, refetch } = useQuery({
-        queryKey: ['filteredData', body],
+        queryKey: ['users', body],
         queryFn: fetchFilteredData,
         keepPreviousData: true,
     })

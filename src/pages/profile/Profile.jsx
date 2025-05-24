@@ -13,6 +13,8 @@ import us from "../../assets/images/us.png";
 import uz from "../../assets/images/uz.png";
 import {useQuery} from "@tanstack/react-query";
 import {$resp} from "../../api/apiResp.js";
+import {useNavigate} from "react-router-dom";
+import toast from "react-hot-toast";
 
 
 // fetch
@@ -20,9 +22,32 @@ const fetchApp = async () => {
     const { data } = await $resp.get('/admission/my-admission')
     return data
 }
+const downloadFile = async (id) => {
+    try {
+        const response = await $resp.get(`/admission/admission-request-file/${id}`, {
+            responseType: 'blob',
+        });
+
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `document-${id}.pdf`); // или любое имя файла
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Ошибка при скачивании PDF:', error);
+        toast.error('PDF faylni yuklab bo‘lmadi');
+    }
+}
 
 
 const Profile = () => {
+
+    const navigate = useNavigate()
 
     const { t } = useTranslation()
 
@@ -158,7 +183,7 @@ const Profile = () => {
                                 {
                                     title: t(app?.data === null ? 'Ariza topshirilmagan' : 'Ariza topshirildi'),
                                     description:
-                                        <button className='btn d-flex align-center g10'>
+                                        <button className='btn d-flex align-center g10' onClick={() => app?.data ? downloadFile(me?.id) : navigate('/login?count=3')}>
                                             { app?.data && <i className="fa-solid fa-download"/> }
                                             <span>{ t(app?.data ? 'Qayd varaqa' : 'Ariza topshirish') }</span>
                                         </button>
@@ -208,7 +233,7 @@ const Profile = () => {
                         </div>
                         <div className="content">
                             {nav === 0 && (
-                                <MainC me={me} />
+                                <MainC me={me} app={app} downloadFile={downloadFile} />
                             )}
 
                             {nav === 1 && (

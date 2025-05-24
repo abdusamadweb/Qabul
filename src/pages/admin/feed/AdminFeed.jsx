@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
-import {Button, Form, Modal, Select, Table} from "antd";
-import {formatPhone, validateMessages} from "../../../assets/scripts/global.js";
+import {Button, Form, Input, Modal, Select, Table, Upload} from "antd";
+import {formatPhone, uploadProps, validateMessages} from "../../../assets/scripts/global.js";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {tableCols} from "../../../components/admin/table/columns.js";
 import Actions from "../../../components/admin/table/Actions.jsx";
-import {$adminResp, $resp} from "../../../api/apiResp.js";
+import {$adminResp} from "../../../api/apiResp.js";
 import toast from "react-hot-toast";
 import profileImg from "../../../assets/images/profile.jpeg";
 
@@ -21,7 +21,33 @@ const fetchOneData = async (id) => {
     return data
 }
 const fetchChangeStatus = async (body) => {
-    const { data } = await $resp.post('/admission/update-status', body)
+    const { data } = await $adminResp.post('/admission/update-status', body)
+    return data
+}
+
+const fetchUsers = async ({ queryKey }) => {
+    const [, body] = queryKey
+    const { data } = await $adminResp.get('/user/all', body)
+    return data
+}
+const fetchTypes = async () => {
+    const { data } = await $adminResp.get('/ad-type/all')
+    return data
+}
+const fetchIns = async () => {
+    const { data } = await $adminResp.get('/admission/edu-institution')
+    return data
+}
+const fetchForm = async () => {
+    const { data } = await $adminResp.get('/edu-form/all')
+    return data
+}
+const fetchLang = async () => {
+    const { data } = await $adminResp.get('/edu-lang/all')
+    return data
+}
+const fetchDirection = async () => {
+    const { data } = await $adminResp.get('/edu-direction/all')
     return data
 }
 
@@ -32,6 +58,8 @@ const AdminFeed = () => {
 
     const [modal, setModal] = useState('close')
     const [selItem, setSelectedItem] = useState(null)
+
+    const [file, setFile] = useState(null)
 
 
     // filter data
@@ -44,7 +72,7 @@ const AdminFeed = () => {
     })
 
     const { data, isLoading, refetch } = useQuery({
-        queryKey: ['filteredData', body],
+        queryKey: ['feeds', body],
         queryFn: fetchFilteredData,
         keepPreviousData: true,
     })
@@ -57,6 +85,43 @@ const AdminFeed = () => {
         enabled: !!selItem
     })
     const one = oneData?.data
+
+    const { data: user } = useQuery({
+        queryKey: ['users', body],
+        queryFn: fetchUsers,
+        keepPreviousData: true,
+        enabled: modal === 'add'
+    })
+    const { data: types } = useQuery({
+        queryKey: ['types'],
+        queryFn: fetchTypes,
+        keepPreviousData: true,
+        enabled: modal === 'add'
+    })
+    const { data: ins } = useQuery({
+        queryKey: ['edu-ins'],
+        queryFn: fetchIns,
+        keepPreviousData: true,
+        enabled: modal === 'add'
+    })
+    const { data: eform } = useQuery({
+        queryKey: ['edu-form'],
+        queryFn: fetchForm,
+        keepPreviousData: true,
+        enabled: modal === 'add'
+    })
+    const { data: lang } = useQuery({
+        queryKey: ['edu-lang'],
+        queryFn: fetchLang,
+        keepPreviousData: true,
+        enabled: modal === 'add'
+    })
+    const { data: dir } = useQuery({
+        queryKey: ['edu-dir'],
+        queryFn: fetchDirection,
+        keepPreviousData: true,
+        enabled: modal === 'add'
+    })
 
 
     // edit
@@ -76,6 +141,7 @@ const AdminFeed = () => {
     const onFormSubmit = (values) => {
         const body = {
             ...values,
+            passport_file_id: file ? file?.file.response.files[0].id : null,
             admission_id: selItem?.id
         }
 
@@ -156,6 +222,14 @@ const AdminFeed = () => {
     ]
 
 
+    // генерируем список годов от текущего до (текущий год - 40)
+    const currentYear = new Date().getFullYear()
+    const years = Array.from({ length: 40 }, (_, i) => ({
+        value: currentYear - i,
+        label: currentYear - i,
+    }))
+
+
     return (
         <div className="other page">
             <div className="container">
@@ -175,6 +249,7 @@ const AdminFeed = () => {
             <Modal
                 rootClassName='admin-modal'
                 className='main-modal'
+                width={modal === 'add' ? 666 : 444}
                 title={modal === 'add' ? "Qoshish" : "Ozgartirish"}
                 open={modal === 'add' || modal === 'edit'}
                 onCancel={() => {
@@ -189,20 +264,143 @@ const AdminFeed = () => {
                     form={form}
                 >
 
-                    <Form.Item
-                        name='status'
-                        label='Status'
-                        rules={[{required: true, message: ''}]}
-                    >
-                        <Select
-                            size='large'
-                            placeholder='Status'
-                            options={[
-                                { label: 'accepted', value: 'accepted' },
-                                { label: 'rejected', value: 'rejected' },
-                            ]}
-                        />
-                    </Form.Item>
+                    {modal === 'edit' && (
+                        <Form.Item
+                            name='status'
+                            label='Status'
+                            rules={[{required: true, message: ''}]}
+                        >
+                            <Select
+                                size='large'
+                                placeholder='Status'
+                                options={[
+                                    { label: 'accepted', value: 'accepted' },
+                                    { label: 'rejected', value: 'rejected' },
+                                ]}
+                            />
+                        </Form.Item>
+                    )}
+
+                    {modal === 'add' && (
+                        <div className='grid grid-wrapper'>
+                            <Form.Item
+                                name='user_id'
+                                label='Foydalanuvchilar'
+                                rules={[{required: true, message: ''}]}
+                            >
+                                <Select
+                                    size='large'
+                                    placeholder='Foydalanuvchilarni tanlang'
+                                    options={user?.data?.map(i => ({
+                                        label: i?.first_name + ' ' + i?.last_name + ' ' + i?.patron,
+                                        value: i.id
+                                    }))}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name='admission_type_id'
+                                label='Qabul turi'
+                                rules={[{required: true, message: ''}]}
+                            >
+                                <Select
+                                    size='large'
+                                    placeholder='Qabul turini tanlang'
+                                    options={types?.map(i => ({
+                                        label: i.name,
+                                        value: i.id
+                                    }))}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name='edu_ins_id'
+                                label='Talim muassasasi'
+                                rules={[{required: true, message: ''}]}
+                            >
+                                <Select
+                                    size='large'
+                                    placeholder='Talim muassasasini tanlang'
+                                    options={ins?.data?.map(i => ({
+                                        label: i.name_uz,
+                                        value: i.id
+                                    }))}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name='edu_end_date'
+                                label='Bitirgan yili'
+                                rules={[{required: true, message: ''}]}
+                            >
+                                <Select
+                                    size='large'
+                                    placeholder='Bitirgan yilini tanlang'
+                                    options={years}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name='edu_form_id'
+                                label='Talim shakli'
+                                rules={[{required: true, message: ''}]}
+                            >
+                                <Select
+                                    size='large'
+                                    placeholder='Talim shaklini tanlang'
+                                    options={eform?.data?.map(i => ({
+                                        label: i.name_uz,
+                                        value: i.id
+                                    }))}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name='edu_lang_id'
+                                label='Talim tili'
+                                rules={[{required: true, message: ''}]}
+                            >
+                                <Select
+                                    size='large'
+                                    placeholder='Talim tilini tanlang'
+                                    options={lang?.data?.map(i => ({
+                                        label: i.name_uz,
+                                        value: i.id
+                                    }))}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                name='edu_direction_id'
+                                label='Talim yonalishi'
+                                rules={[{required: true, message: ''}]}
+                            >
+                                <Select
+                                    size='large'
+                                    placeholder='Talim yonalishini tanlang'
+                                    options={dir?.data?.map(i => ({
+                                        label: i.name_uz,
+                                        value: i.id
+                                    }))}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                className='upload'
+                                name='passport_file_id'
+                                label='Passport fayl'
+                            >
+                                <Upload
+                                    {...uploadProps}
+                                    headers={{
+                                        Authorization: `Bearer ${localStorage.getItem('admin-token')}`
+                                    }}
+                                    onChange={(e) => setFile(e)}
+                                    listType="text"
+                                >
+                                    <Input
+                                        rootClassName={file?.file.percent !== null && 'change-icon'}
+                                        size='large'
+                                        suffix={<i className="fa-solid fa-upload"/>}
+                                        prefix={file ? file?.file.percent?.toFixed(1) + '%' : 'Yuklash'}
+                                    />
+                                </Upload>
+                            </Form.Item>
+                        </div>
+                    )}
 
                     <div className='end mt1'>
                         <Button
@@ -216,6 +414,7 @@ const AdminFeed = () => {
                     </div>
                 </Form>
             </Modal>
+
             <Modal
                 rootClassName='admin-modal'
                 className='main-modal admin-modal user-modal feed-modal'

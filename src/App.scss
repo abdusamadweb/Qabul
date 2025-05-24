@@ -266,6 +266,11 @@
     }
   }
 
+  .grid-wrapper {
+    grid-template-columns: 1fr 1fr;
+    gap: 5px 1rem;
+  }
+
   .inp-mask {
     padding: 12px 1rem;
     border-radius: 10px;
