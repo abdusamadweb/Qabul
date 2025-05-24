@@ -324,7 +324,6 @@ const Application2 = () => {
         value: currentYear - i,
         label: currentYear - i,
     }))
-    console.log(me)
 
 
     return (

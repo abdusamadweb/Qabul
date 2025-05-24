@@ -1,7 +1,7 @@
 import './Application.scss'
 import React, {useEffect, useState} from 'react'
 import {Button, Dropdown, Form, Input, Upload} from "antd";
-import img from '../../assets/images/left.svg'
+import img from '../../assets/images/hero-img.png'
 import uz from '../../assets/images/uz.png'
 import ru from '../../assets/images/ru.png'
 import us from '../../assets/images/us.png'
@@ -352,13 +352,14 @@ const Application = () => {
                 <div className="appl__content grid-center">
                     <div className='wrapper'>
                         <div className='left grid-center'>
-                            <img src={img} alt="img"/>
+                            <img className='logo' src={logo} alt="logo"/>
+                            <img className='img' src={img} alt="img"/>
+                            <h2 className="title">Sharq universiteti
+                                Hoziroq ro’yxatdan o’ting!</h2>
                         </div>
                         <div className='right grid-center'>
-                            <div className="top row between align-center g1">
-                                <Link className='logo' to='/'>
-                                    <img src={logo} alt="logo"/>
-                                </Link>
+                        <div className="top row between align-center g1">
+                                <div/>
                                 <div className="row align-center g1">
                                     <Dropdown menu={{ items: langItems }} placement="bottomRight">
                                         <Button className="btn row align-center g10">

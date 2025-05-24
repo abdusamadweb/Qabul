@@ -2,7 +2,9 @@ import React from 'react';
 import {useTranslation} from "react-i18next";
 import {formatPhone} from "../../../assets/scripts/global.js";
 
-const MainC = ({ me }) => {
+// fetch
+
+const MainC = ({ me, app, downloadFile }) => {
 
     const { t } = useTranslation()
 
@@ -51,13 +53,17 @@ const MainC = ({ me }) => {
                     <li className="check__item">
                         <span className='txt'>{ t('Qayd varaqasi') }</span>
                         <span className='dots'/>
-                        <button className='txt btn'>
-                            <i className="fa-solid fa-download"/>
-                            <span>{ t('Yuklash') }</span>
-                        </button>
+                        {app?.data ? (
+                            <button className='txt btn' onClick={() => downloadFile(me?.id)}>
+                                <i className="fa-solid fa-download"/>
+                                <span>{t('Yuklash')}</span>
+                            </button>
+                        ) : (
+                            <span className='txt font'>{t('Yoq')}</span>
+                        )}
                     </li>
                     <li className="check__item">
-                        <span className='txt'>{ t('Talaba shartnomasi') }</span>
+                    <span className='txt'>{t('Talaba shartnomasi')}</span>
                         <span className='dots'/>
                         <span className='txt font'>{ t('Yoq') }</span>
                     </li>
