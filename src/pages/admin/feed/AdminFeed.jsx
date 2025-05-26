@@ -265,6 +265,38 @@ const AdminFeed = () => {
     ]
 
 
+    // selects
+    const [selectedFormId, setSelectedFormId] = useState(null)
+    const [selectedLangId, setSelectedLangId] = useState(null)
+
+    const handleFormChange = (value) => {
+        setSelectedFormId(value)
+        setSelectedLangId(null)
+
+        // 👇 Обязательно сбросить значения select-ов в форме
+        form.setFieldsValue({
+            edu_lang_id: null,
+            edu_direction_id: null,
+        })
+    }
+
+    const handleLangChange = (value) => {
+        setSelectedLangId(value)
+
+        form.setFieldsValue({
+            edu_direction_id: null,
+        })
+    }
+
+    const filteredLangs = lang?.data?.filter(lang =>
+        lang.edu_form_ids.includes(selectedFormId)
+    )
+
+    const filteredDirections = dir?.data?.filter(dir =>
+        dir.edu_lang_ids.includes(selectedLangId)
+    )
+
+
     // генерируем список годов от текущего до (текущий год - 40)
     const currentYear = new Date().getFullYear()
     const years = Array.from({ length: 40 }, (_, i) => ({
@@ -439,6 +471,7 @@ const AdminFeed = () => {
                                 <Select
                                     size='large'
                                     placeholder="Ta'lim shaklini tanlang"
+                                    onChange={handleFormChange}
                                     options={eform?.data?.map(i => ({
                                         label: i.name_uz,
                                         value: i.id
@@ -453,7 +486,9 @@ const AdminFeed = () => {
                                 <Select
                                     size='large'
                                     placeholder="Ta'lim tilini tanlang"
-                                    options={lang?.data?.map(i => ({
+                                    onChange={handleLangChange}
+                                    disabled={!selectedFormId}
+                                    options={filteredLangs?.map(i => ({
                                         label: i.name_uz,
                                         value: i.id
                                     }))}
@@ -467,7 +502,8 @@ const AdminFeed = () => {
                                 <Select
                                     size='large'
                                     placeholder="Ta'lim yonalishini tanlang"
-                                    options={dir?.data?.map(i => ({
+                                    disabled={!selectedLangId}
+                                    options={filteredDirections?.map(i => ({
                                         label: i.name_uz,
                                         value: i.id
                                     }))}
