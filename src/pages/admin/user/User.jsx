@@ -13,9 +13,8 @@ import {BirthDateInput, JshInput, PassportInput} from "../../../components/input
 
 
 // fetches
-const fetchFilteredData = async ({ queryKey }) => {
-    const [, body] = queryKey
-    const { data } = await $adminResp.get('/user/all', body)
+const fetchFilteredData = async (body) => {
+    const { data } = await $adminResp.get(`/user/all?search=${body.search}`, body)
     return data
 }
 
@@ -38,15 +37,13 @@ const User = () => {
     // filter data
     const [body, setBody] = useState({
         page: 1,
-        limit: 20,
-        edu_form_ids: [],
-        edu_lang_ids: [],
-        edu_direction_ids: []
+        limit: 1000,
+        search: '',
     })
 
     const { data, refetch } = useQuery({
         queryKey: ['users', body],
-        queryFn: fetchFilteredData,
+        queryFn: () => fetchFilteredData(body),
         keepPreviousData: true,
     })
     const user = data?.data
@@ -127,10 +124,22 @@ const User = () => {
                     btn
                 />
                 <div className="content">
+                    <div className="filters row g10">
+                        <Input.Search
+                            size='large'
+                            allowClear
+                            placeholder="Qidirish . . ."
+                            onSearch={(value) => {
+                                setBody(prev => ({ ...prev, search: value }))
+                                refetch()
+                            }}
+                            style={{ width: 333 }}
+                        />
+                    </div>
                     <Table
                         columns={columns}
                         dataSource={user}
-                        scroll={{ x: 750 }}
+                        scroll={{x: 750}}
                     />
                 </div>
             </div>
@@ -160,21 +169,21 @@ const User = () => {
                                     label='Ism'
                                     rules={[{required: true, message: ''}]}
                                 >
-                                    <Input placeholder='Ism' />
+                                    <Input placeholder='Ism'/>
                                 </Form.Item>
                                 <Form.Item
                                     name='last_name'
                                     label='Familiya'
                                     rules={[{required: true, message: ''}]}
                                 >
-                                    <Input placeholder='Familiya' />
+                                    <Input placeholder='Familiya'/>
                                 </Form.Item>
                                 <Form.Item
                                     name='patron'
                                     label='Otasining ismi'
                                     rules={[{required: true, message: ''}]}
                                 >
-                                    <Input placeholder='Otasining ismi' />
+                                    <Input placeholder='Otasining ismi'/>
                                 </Form.Item>
                                 <Form.Item
                                     name='phone_number'

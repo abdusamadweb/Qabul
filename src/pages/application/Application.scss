@@ -78,7 +78,11 @@
         border-radius: 0 0 0 30px;
         border-top: 1px solid #fff;
         color: #fff;
-        backdrop-filter: blur(5px)
+        backdrop-filter: blur(5px);
+
+        @include breakpoint-down(1222px) {
+          font-size: 27px;
+        }
       }
 
       .img {

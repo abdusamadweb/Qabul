@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
-import {Button, Form, Input, Modal, Select, Space, Table, Upload} from "antd";
+import {Button, Form, Input, Modal, Select, Table, Upload} from "antd";
 import {formatPhone, uploadProps, validateMessages} from "../../../assets/scripts/global.js";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {tableCols} from "../../../components/admin/table/columns.js";
@@ -11,8 +11,7 @@ import profileImg from "../../../assets/images/profile.jpeg";
 
 
 // fetches
-const fetchFilteredData = async ({ queryKey }) => {
-    const [, body] = queryKey
+const fetchFilteredData = async (body) => {
     const { data } = await $adminResp.post('/admission/all-appointment', body)
     return data
 }
@@ -65,17 +64,24 @@ const AdminFeed = () => {
     // filter data
     const [body, setBody] = useState({
         page: 1,
-        limit: 20,
+        limit: 1000,
         edu_form_ids: [],
         edu_lang_ids: [],
         edu_direction_ids: []
     })
 
-    const { data, isLoading, refetch } = useQuery({
+    const { data } = useQuery({
         queryKey: ['feeds', body],
-        queryFn: fetchFilteredData,
+        queryFn: () => fetchFilteredData(body),
         keepPreviousData: true,
     })
+
+    const handleSelectChange = (value, type) => {
+        setBody(prev => ({
+            ...prev,
+            [type]: value ? [value] : [],
+        }))
+    }
 
     // get one data
     const { data: oneData, isLoading: oneLoading } = useQuery({
@@ -108,19 +114,16 @@ const AdminFeed = () => {
         queryKey: ['edu-form'],
         queryFn: fetchForm,
         keepPreviousData: true,
-        enabled: modal === 'add'
     })
     const { data: lang } = useQuery({
         queryKey: ['edu-lang'],
         queryFn: fetchLang,
         keepPreviousData: true,
-        enabled: modal === 'add'
     })
     const { data: dir } = useQuery({
         queryKey: ['edu-dir'],
         queryFn: fetchDirection,
         keepPreviousData: true,
-        enabled: modal === 'add'
     })
 
 
@@ -240,10 +243,48 @@ const AdminFeed = () => {
                     btn
                 />
                 <div className="content">
+                    <div className="filters row g10">
+                        <Select
+                            size='large'
+                            placeholder="Ta'lim shaklini tanlang"
+                            onChange={(val) => handleSelectChange(val, 'edu_form_ids')}
+                            options={[
+                                {label: "Tanlanmagan", value: null},
+                                ...(Array.isArray(eform?.data) ? eform.data.map(i => ({
+                                    label: i.name_uz,
+                                    value: i.id
+                                })) : [])
+                            ]}
+                        />
+                        <Select
+                            size='large'
+                            placeholder="Ta'lim tilini tanlang"
+                            onChange={(val) => handleSelectChange(val, 'edu_lang_ids')}
+                            options={[
+                                {label: "Tanlanmagan", value: null},
+                                ...(Array.isArray(lang?.data) ? lang.data.map(i => ({
+                                    label: i.name_uz,
+                                    value: i.id
+                                })) : [])
+                            ]}
+                        />
+                        <Select
+                            size='large'
+                            placeholder="Ta'lim yonalishini tanlang"
+                            onChange={(val) => handleSelectChange(val, 'edu_direction_ids')}
+                            options={[
+                                {label: "Tanlanmagan", value: null},
+                                ...(Array.isArray(dir?.data) ? dir.data.map(i => ({
+                                    label: i.name_uz,
+                                    value: i.id
+                                })) : [])
+                            ]}
+                        />
+                    </div>
                     <Table
                         columns={columns}
                         dataSource={data?.data}
-                        scroll={{ x: 750 }}
+                        scroll={{x: 750}}
                     />
                 </div>
             </div>
@@ -275,8 +316,8 @@ const AdminFeed = () => {
                                 size='large'
                                 placeholder='Status'
                                 options={[
-                                    { label: 'accepted', value: 'accepted' },
-                                    { label: 'rejected', value: 'rejected' },
+                                    {label: 'accepted', value: 'accepted'},
+                                    {label: 'rejected', value: 'rejected'},
                                 ]}
                             />
                         </Form.Item>

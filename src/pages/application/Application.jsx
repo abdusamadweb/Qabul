@@ -22,7 +22,7 @@ const searchPassport = async (body) => {
     return data
 }
 const doManualPass = async (body, token) => {
-    const finalToken = token || localStorage.getItem('token'); // tokenni tanlash
+    const finalToken = token || localStorage.getItem('token') // tokenni tanlash
 
     const { data } = await $resp.post("/admission/manual-personal-data", body, {
         headers: {
@@ -46,6 +46,15 @@ const login = async (body) => {
 }
 const checkSms = async (body) => {
     const { data } = await $resp.post("/auth/check-sms", body)
+    return data
+}
+
+const resetSms = async (body) => {
+    const { data } = await $resp.post("/auth/access-code", body)
+    return data
+}
+const resetPsw = async (body) => {
+    const { data } = await $resp.post("/auth/reset-password", body)
     return data
 }
 
@@ -74,7 +83,7 @@ const Application = () => {
     const [timeLeft, setTimeLeft] = useState(120)
 
 
-    // mutate
+    // mutates
     const muPhone = useMutation({
         mutationFn: checkPhone,
         onSuccess: (res) => {
@@ -160,6 +169,33 @@ const Application = () => {
         }
     })
 
+    // ------------------------------------------
+    const muResetSms = useMutation({
+        mutationFn: resetSms,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
+    const muResetPsw = useMutation({
+        mutationFn: resetPsw,
+        onSuccess: (res) => {
+            toast.success(res.message)
+
+        },
+        onError: (err) => {
+            setLoading(false)
+
+            toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
+        }
+    })
+
 
     const onFormSubmit = (val) => {
 
@@ -211,6 +247,17 @@ const Application = () => {
                 passport_file_id: file ? file?.file.response.files[0].id : null,
             }
             muPassport.mutate(body)
+        }
+        // ------------------------------------------------------------
+        else if (count === 10) {
+            setLoading(true)
+
+            const body = {
+                password: val.password,
+                sms_id: smsId,
+                code: val.code2,
+            }
+            muSms.mutate(body)
         }
     }
 
@@ -296,10 +343,15 @@ const Application = () => {
         setActive(true)
     }
 
-    const retryOnFinish = () => {
-
+    const retryOnFinish = (val) => {
         startTimer()
-        // mutation.mutate(sms.phone_number)
+
+        const body = {
+            phone_number: '+998' + val.phone_number,
+            sms_id: smsId,
+            code: val.code,
+        }
+        muSms.mutate(body)
     }
 
 
