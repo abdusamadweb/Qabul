@@ -426,12 +426,14 @@ const Application = () => {
                         <div className='left grid-center'>
                             <img className='logo' src={logo} alt="logo"/>
                             <img className='img' src={img} alt="img"/>
-                            <h2 className="title">Sharq universiteti <br/>
-                                Hoziroq ro’yxatdan o’ting!</h2>
+                            <div className="title">
+                                <h2>Sharq universiteti</h2>
+                                <h2>Hoziroq ro’yxatdan o’ting!</h2>
+                            </div>
                         </div>
                         <div className='right grid-center'>
-                        <div className="top row between align-center g1">
-                                <div/>
+                            <div className="top row between align-center g1">
+                            <div/>
                                 <div className="row align-center g1">
                                     <Dropdown menu={{ items: langItems }} placement="bottomRight">
                                         <Button className="btn row align-center g10">
@@ -439,7 +441,7 @@ const Application = () => {
                                             <img src={languageMap[currentLang]?.flag} alt="flag" />
                                         </Button>
                                     </Dropdown>
-                                    {count > 2 && (
+                                    {count > 2 && count !== 10 && (
                                         <button className="x-btn" onClick={() => window.location = '/'}>
                                             <i className="fa-solid fa-xmark" />
                                         </button>
@@ -503,6 +505,7 @@ const Application = () => {
                                                     :
                                                     <button
                                                         className='reset'
+                                                        type='button'
                                                         onClick={() => {
                                                             setCount(10)
                                                             submitResetSms()
@@ -633,6 +636,24 @@ const Application = () => {
                                                 rules={[{ required: true, message: t("Parol majburiy") }]}
                                             >
                                                 <Input type="text" placeholder={t("Yangi parolni kiriting")} />
+                                            </Form.Item>
+                                            <Form.Item
+                                                name="re-password"
+                                                label={t("Parolni tasdiqlang")}
+                                                dependencies={['password']}
+                                                rules={[
+                                                    { required: true, message: t("Parolni tasdiqlang") },
+                                                    ({ getFieldValue }) => ({
+                                                        validator(_, value) {
+                                                            if (!value || getFieldValue('password') === value) {
+                                                                return Promise.resolve()
+                                                            }
+                                                            return Promise.reject(new Error(t("Parollar mos emas")))
+                                                        },
+                                                    }),
+                                                ]}
+                                            >
+                                                <Input type="text" placeholder={t("Parolni tasdiqlang")} />
                                             </Form.Item>
 
                                             <Form.Item

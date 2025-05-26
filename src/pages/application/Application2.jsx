@@ -334,8 +334,10 @@ const Application2 = () => {
                         <div className='left grid-center'>
                             <img className='logo' src={logo} alt="logo"/>
                             <img className='img' src={img} alt="img"/>
-                            <h2 className="title">Sharq universiteti <br/>
-                                Hoziroq ro’yxatdan o’ting!</h2>
+                            <div className="title">
+                                <h2>Sharq universiteti</h2>
+                                <h2>Hoziroq ro’yxatdan o’ting!</h2>
+                            </div>
                         </div>
                         <div className='right grid-center'>
                             <div className="top row between align-center g1">

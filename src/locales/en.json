@@ -88,5 +88,8 @@
   "Passport fayl": "Passport file",
   "Kutilmoqda": "Pending",
   "Ariza topshirilmagan": "Application not submitted",
-  "Bekor qilingan": "Cancelled"
+  "Bekor qilingan": "Cancelled",
+
+  "Parolni unutdingizmi?": "Forgot your password?",
+  "Yangi parolni kiriting": "Enter new password"
 }

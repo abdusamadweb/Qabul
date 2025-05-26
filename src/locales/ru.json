@@ -88,5 +88,8 @@
   "Passport fayl": "Файл паспорта",
   "Kutilmoqda": "Ожидается",
   "Ariza topshirilmagan": "Заявка не подана",
-  "Bekor qilingan": "Отменено"
+  "Bekor qilingan": "Отменено",
+
+  "Parolni unutdingizmi?": "Забыли пароль?",
+  "Yangi parolni kiriting": "Введите новый пароль"
 }
