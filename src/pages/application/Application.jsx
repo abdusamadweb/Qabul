@@ -354,7 +354,7 @@ const Application = () => {
                         <div className='left grid-center'>
                             <img className='logo' src={logo} alt="logo"/>
                             <img className='img' src={img} alt="img"/>
-                            <h2 className="title">Sharq universiteti
+                            <h2 className="title">Sharq universiteti <br/>
                                 Hoziroq ro’yxatdan o’ting!</h2>
                         </div>
                         <div className='right grid-center'>

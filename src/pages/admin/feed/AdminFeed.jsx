@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
-import {Button, Form, Input, Modal, Select, Table, Upload} from "antd";
+import {Button, Form, Input, Modal, Select, Space, Table, Upload} from "antd";
 import {formatPhone, uploadProps, validateMessages} from "../../../assets/scripts/global.js";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {tableCols} from "../../../components/admin/table/columns.js";
@@ -292,6 +292,8 @@ const AdminFeed = () => {
                                 <Select
                                     size='large'
                                     placeholder='Foydalanuvchilarni tanlang'
+                                    showSearch
+                                    optionFilterProp="label"
                                     options={user?.data?.map(i => ({
                                         label: i?.first_name + ' ' + i?.last_name + ' ' + i?.patron,
                                         value: i.id

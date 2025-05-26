@@ -172,13 +172,13 @@ const AdminEduDir = () => {
 
                     <Form.Item
                         name='edu_lang_ids'
-                        label="Ta'lim shakli"
+                        label="Ta'lim tili"
                         rules={[{ required: true }]}
                     >
                         <Select
                             size="large"
                             mode="multiple"
-                            placeholder="Ta'lim shakli"
+                            placeholder="Ta'lim tili"
                             options={eduLang?.data?.map(i => ({
                                 value: i.id,
                                 label: i.name_uz,
