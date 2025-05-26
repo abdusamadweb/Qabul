@@ -23,6 +23,10 @@ const fetchChangeStatus = async (body) => {
     const { data } = await $adminResp.post('/admission/update-status', body)
     return data
 }
+const fetchAddStatus = async (body) => {
+    const { data } = await $adminResp.post('/admission/create-admission', body)
+    return data
+}
 
 const fetchTypes = async () => {
     const { data } = await $adminResp.get('/ad-type/all')
@@ -164,7 +168,9 @@ const AdminFeed = () => {
 
     // edit
     const muChangeStatus = useMutation({
-        mutationFn: fetchChangeStatus,
+        mutationFn: (body) => modal === 'add'
+            ? fetchAddStatus(body)
+            : fetchChangeStatus(body),
         onSuccess: (res) => {
             toast.success(res.message)
 
@@ -179,9 +185,7 @@ const AdminFeed = () => {
     const onFormSubmit = (values) => {
         const body = {
             ...values,
-            passport_file_id: file ? file?.file.response.files[0].id : null,
-            admission_id: selItem?.id || 1,
-            status: values?.status || 1,
+            passport_file_id: file ? file?.file.response.files[0].id : null
         }
 
         muChangeStatus.mutate(body)
