@@ -1,13 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import Title from "../../../components/admin/title/Title.jsx";
-import {Button, Form, Input, Modal, Select, Table, Upload} from "antd";
-import {formatPhone, uploadProps, validateMessages} from "../../../assets/scripts/global.js";
-import {useMutation, useQuery} from "@tanstack/react-query";
-import {tableCols} from "../../../components/admin/table/columns.js";
-import Actions from "../../../components/admin/table/Actions.jsx";
-import {$adminResp} from "../../../api/apiResp.js";
-import toast from "react-hot-toast";
-import profileImg from "../../../assets/images/profile.jpeg";
+import React, {useEffect, useMemo, useState} from 'react'
+import Title from "../../../components/admin/title/Title.jsx"
+import {Button, Form, Input, Modal, Select, Table, Upload} from "antd"
+import {formatPhone, uploadProps, validateMessages} from "../../../assets/scripts/global.js"
+import {useMutation, useQuery} from "@tanstack/react-query"
+import {tableCols} from "../../../components/admin/table/columns.js"
+import Actions from "../../../components/admin/table/Actions.jsx"
+import {$adminResp} from "../../../api/apiResp.js"
+import toast from "react-hot-toast"
+import profileImg from "../../../assets/images/profile.jpeg"
 
 
 // fetches
@@ -24,11 +24,6 @@ const fetchChangeStatus = async (body) => {
     return data
 }
 
-const fetchUsers = async ({ queryKey }) => {
-    const [, body] = queryKey
-    const { data } = await $adminResp.get('/user/all', body)
-    return data
-}
 const fetchTypes = async () => {
     const { data } = await $adminResp.get('/ad-type/all')
     return data
@@ -51,6 +46,16 @@ const fetchDirection = async () => {
 }
 
 
+// debounce search
+function debounce(func, wait) {
+    let timeout
+    return (...args) => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => func(...args), wait)
+    }
+}
+
+
 const AdminFeed = () => {
 
     const [form] = Form.useForm()
@@ -65,12 +70,13 @@ const AdminFeed = () => {
     const [body, setBody] = useState({
         page: 1,
         limit: 1000,
+        search: '',
         edu_form_ids: [],
         edu_lang_ids: [],
         edu_direction_ids: []
     })
 
-    const { data } = useQuery({
+    const { data, refetch } = useQuery({
         queryKey: ['feeds', body],
         queryFn: () => fetchFilteredData(body),
         keepPreviousData: true,
@@ -92,12 +98,41 @@ const AdminFeed = () => {
     })
     const one = oneData?.data
 
-    const { data: user } = useQuery({
-        queryKey: ['users', body],
+
+    const [searchTerm, setSearchTerm] = useState('')
+    const [searchQuery, setSearchQuery] = useState('')
+
+    const debouncedSearch = useMemo(() => debounce((val) => {
+        if (val.length >= 3) setSearchQuery(val)
+    }, 400), [])
+
+    const fetchUsers = async ({ queryKey }) => {
+        const [_key, search] = queryKey
+
+        const params = search && search.length >= 3
+            ? { search }
+            : {}; // hech narsa bermasa, umumiy ro‘yxat
+
+        const { data } = await $adminResp.get('/user/all', { params })
+        return data
+    }
+
+    const handleSearch = (val) => {
+        setSearchTerm(val);
+        if (!val) {
+            setSearchQuery(''); // tozalanganda umumiy userlar ko‘rsatiladi
+        } else {
+            debouncedSearch(val);
+        }
+    }
+
+    const { data: user, isFetching } = useQuery({
+        queryKey: ['users', searchQuery],
         queryFn: fetchUsers,
-        keepPreviousData: true,
-        enabled: modal === 'add'
+        enabled: modal === 'add', // faqat 3 harfdan keyin ishga tushadi
+        keepPreviousData: true
     })
+
     const { data: types } = useQuery({
         queryKey: ['types'],
         queryFn: fetchTypes,
@@ -244,6 +279,16 @@ const AdminFeed = () => {
                 />
                 <div className="content">
                     <div className="filters row g10">
+                        <Input.Search
+                            size='large'
+                            allowClear
+                            placeholder="Qidirish . . ."
+                            onSearch={(value) => {
+                                setBody(prev => ({ ...prev, search: value }))
+                                refetch()
+                            }}
+                            style={{ width: 333 }}
+                        />
                         <Select
                             size='large'
                             placeholder="Ta'lim shaklini tanlang"
@@ -326,18 +371,20 @@ const AdminFeed = () => {
                     {modal === 'add' && (
                         <div className='grid grid-wrapper'>
                             <Form.Item
-                                name='user_id'
-                                label='Foydalanuvchilar'
-                                rules={[{required: true, message: ''}]}
+                                name="user_id"
+                                label="Foydalanuvchilar"
+                                rules={[{ required: true, message: '' }]}
                             >
                                 <Select
-                                    size='large'
-                                    placeholder='Foydalanuvchilarni tanlang'
                                     showSearch
-                                    optionFilterProp="label"
+                                    size="large"
+                                    placeholder="Foydalanuvchini tanlang"
+                                    notFoundContent={isFetching ? 'Yuklanmoqda...' : 'Topilmadi'}
+                                    onSearch={handleSearch}
+                                    filterOption={false}
                                     options={user?.data?.map(i => ({
-                                        label: i?.first_name + ' ' + i?.last_name + ' ' + i?.patron,
-                                        value: i.id
+                                        label: `${i.first_name} ${i.last_name} ${i.patron || ''}`,
+                                        value: i.id,
                                     }))}
                                 />
                             </Form.Item>
@@ -473,7 +520,7 @@ const AdminFeed = () => {
             >
                 <div className="head row between g1">
                     <div className="row align-center g1">
-                        <img className='img' src={one?.user?.photo ? `data:image/jpeg;base64,${one?.user?.photo}` : profileImg} alt="img"/>
+                        <img className='img' src={one?.user?.photo ? `data:image/jpegbase64,${one?.user?.photo}` : profileImg} alt="img"/>
                         <div>
                             <span className='name'>{ one?.user?.first_name + ' ' + one?.user?.last_name + ' ' + one?.user?.patron }</span>
                             <p className="phone">{ formatPhone(one?.user?.phone_number) }</p>
@@ -541,7 +588,7 @@ const AdminFeed = () => {
                 </div>
             </Modal>
         </div>
-    );
-};
+    )
+}
 
 export default AdminFeed

@@ -78,6 +78,12 @@ const Application = () => {
 
     const [file, setFile] = useState(null)
 
+    const [reset, setReset] = useState({
+        phone: '',
+        sms_id: '',
+        code: ''
+    })
+
     // sms timer
     const [active, setActive] = useState(false)
     const [timeLeft, setTimeLeft] = useState(120)
@@ -175,6 +181,10 @@ const Application = () => {
         onSuccess: (res) => {
             toast.success(res.message)
 
+            setReset({
+                ...reset,
+                sms_id: res?.data.sms_id
+            })
         },
         onError: (err) => {
             setLoading(false)
@@ -188,6 +198,11 @@ const Application = () => {
         onSuccess: (res) => {
             toast.success(res.message)
 
+            setTimeout(() => {
+                form.setFieldsValue({ password: '' })
+                setLoading(false)
+                setCount(1)
+            }, 1000)
         },
         onError: (err) => {
             setLoading(false)
@@ -254,11 +269,16 @@ const Application = () => {
 
             const body = {
                 password: val.password,
-                sms_id: smsId,
+                sms_id: reset.sms_id,
                 code: val.code2,
             }
-            muSms.mutate(body)
+            muResetPsw.mutate(body)
         }
+    }
+
+    const submitResetSms = () => {
+        const body = { phone: reset.phone }
+        muResetSms.mutate(body)
     }
 
 
@@ -446,7 +466,7 @@ const Application = () => {
                                                 label={t("Telefon raqam")}
                                                 rules={[{ required: true, message: "" }]}
                                             >
-                                                <PhoneInput />
+                                                <PhoneInput onChange={(e) => setReset({...reset, phone: `+998${e}`})} />
                                             </Form.Item>
                                         </>
                                     )}
@@ -461,7 +481,7 @@ const Application = () => {
                                                 <Input type="text" placeholder={t("Parolni kiriting")} />
                                             </Form.Item>
                                             {
-                                                !exist &&
+                                                !exist ?
                                                 <Form.Item
                                                     name="re-password"
                                                     label={t("Parolni tasdiqlang")}
@@ -480,6 +500,16 @@ const Application = () => {
                                                 >
                                                     <Input type="text" placeholder={t("Parolni tasdiqlang")} />
                                                 </Form.Item>
+                                                    :
+                                                    <button
+                                                        className='reset'
+                                                        onClick={() => {
+                                                            setCount(10)
+                                                            submitResetSms()
+                                                        }}
+                                                    >
+                                                        { t('Parolni unutdingizmi?') }
+                                                    </button>
                                             }
                                         </>
                                     )}
@@ -592,6 +622,26 @@ const Application = () => {
                                                     </Form.Item>
                                                 </div>
                                             }
+                                        </>
+                                    )}
+
+                                    {count === 10 && (
+                                        <>
+                                            <Form.Item
+                                                name="password"
+                                                label={t("Yangi parolni kiriting")}
+                                                rules={[{ required: true, message: t("Parol majburiy") }]}
+                                            >
+                                                <Input type="text" placeholder={t("Yangi parolni kiriting")} />
+                                            </Form.Item>
+
+                                            <Form.Item
+                                                name="code2"
+                                                label={t("Kodni kiriting") + ' (sms)'}
+                                                rules={[{ required: true, message: "" }]}
+                                            >
+                                                <Input type="tel" placeholder={t("Kodni kiriting") + ' (sms)'} />
+                                            </Form.Item>
                                         </>
                                     )}
 
