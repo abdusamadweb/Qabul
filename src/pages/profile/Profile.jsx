@@ -96,24 +96,24 @@ const Profile = () => {
     const { i18n } = useTranslation()
 
     const langItems = [
-        {
-            key: 'ru',
-            label: (
-                <button className='top-btn' onClick={() => i18n.changeLanguage('ru')}>
-                    <span>Russian</span>
-                    <img src={ru} alt="flag" />
-                </button>
-            ),
-        },
-        {
-            key: 'en',
-            label: (
-                <button className='top-btn' onClick={() => i18n.changeLanguage('en')}>
-                    <span>English</span>
-                    <img src={us} alt="flag" />
-                </button>
-            ),
-        },
+        // {
+        //     key: 'ru',
+        //     label: (
+        //         <button className='top-btn' onClick={() => i18n.changeLanguage('ru')}>
+        //             <span>Russian</span>
+        //             <img src={ru} alt="flag" />
+        //         </button>
+        //     ),
+        // },
+        // {
+        //     key: 'en',
+        //     label: (
+        //         <button className='top-btn' onClick={() => i18n.changeLanguage('en')}>
+        //             <span>English</span>
+        //             <img src={us} alt="flag" />
+        //         </button>
+        //     ),
+        // },
         {
             key: 'uz',
             label: (
@@ -126,12 +126,12 @@ const Profile = () => {
     ]
 
     const languageMap = {
-        ru: { label: 'Russian', flag: ru },
-        en: { label: 'English', flag: us },
+        // ru: { label: 'Russian', flag: ru },
+        // en: { label: 'English', flag: us },
         uz: { label: 'Uzbek', flag: uz },
     }
 
-    const rawLang = i18n.language || 'uz';
+    const rawLang = 'uz';
     const currentLang = rawLang.split('-')[0]
 
 

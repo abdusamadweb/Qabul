@@ -17,7 +17,7 @@ const fetchRejectAppl = async () => {
 const ApplC = ({ app, refetchApp, refetchMe }) => {
 
     const { t } = useTranslation()
-    const rawLang = i18n.language || 'uz';
+    const rawLang = 'uz';
     const currentLang = rawLang.split('-')[0]
 
     const [copied, setCopied] = useState(false)

@@ -53,7 +53,7 @@ const Application2 = () => {
 
     const { i18n, t } = useTranslation()
     const lang = i18n.language
-    const rawLang = i18n.language || 'uz';
+    const rawLang = 'uz';
     const currentLang = rawLang.split('-')[0]
 
     const navigate = useNavigate()
@@ -250,24 +250,24 @@ const Application2 = () => {
 
     // lang
     const items = [
-        {
-            key: 'ru',
-            label: (
-                <button className='top-btn' onClick={() => i18n.changeLanguage('ru')}>
-                    <span>Russian</span>
-                    <img src={ru} alt="flag" />
-                </button>
-            ),
-        },
-        {
-            key: 'en',
-            label: (
-                <button className='top-btn' onClick={() => i18n.changeLanguage('en')}>
-                    <span>English</span>
-                    <img src={us} alt="flag" />
-                </button>
-            ),
-        },
+        // {
+        //     key: 'ru',
+        //     label: (
+        //         <button className='top-btn' onClick={() => i18n.changeLanguage('ru')}>
+        //             <span>Russian</span>
+        //             <img src={ru} alt="flag" />
+        //         </button>
+        //     ),
+        // },
+        // {
+        //     key: 'en',
+        //     label: (
+        //         <button className='top-btn' onClick={() => i18n.changeLanguage('en')}>
+        //             <span>English</span>
+        //             <img src={us} alt="flag" />
+        //         </button>
+        //     ),
+        // },
         {
             key: 'uz',
             label: (
@@ -280,8 +280,8 @@ const Application2 = () => {
     ]
 
     const languageMap = {
-        ru: { label: 'Russian', flag: ru },
-        en: { label: 'English', flag: us },
+        // ru: { label: 'Russian', flag: ru },
+        // en: { label: 'English', flag: us },
         uz: { label: 'Uzbek', flag: uz },
     }
 
