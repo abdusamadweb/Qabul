@@ -17,8 +17,14 @@ import {getRequest} from "../../hooks/useCrud.jsx";
 
 
 // fetch
-const searchPassport = async (body) => {
-    const { data } = await $resp.post("/admission/check-passport", body)
+const searchPassport = async (body, token) => {
+    const finalToken = token || localStorage.getItem('token') // tokenni tanlash
+
+    const { data } = await $resp.post("/admission/check-passport", body, {
+        headers: {
+            Authorization: `Bearer ${finalToken}`
+        }
+    })
     return data
 }
 const doManualPass = async (body, token) => {
@@ -157,7 +163,7 @@ const Application = () => {
 
     const muPassport = useMutation({
         mutationFn: (body) => autoPass
-            ? searchPassport(body)
+            ? searchPassport(body, token)
             : doManualPass(body, token),
         onSuccess: (res) => {
             toast.success(res.message)

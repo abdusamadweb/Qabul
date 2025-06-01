@@ -64,9 +64,7 @@ const Profile = () => {
     })
 
     useEffect(() => {
-        if (me) {
-            localStorage.setItem('me', JSON.stringify(me))
-        }
+        if (me) localStorage.setItem('me', JSON.stringify(me))
     }, [me])
 
 

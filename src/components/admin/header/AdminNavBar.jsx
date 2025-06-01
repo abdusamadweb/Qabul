@@ -3,6 +3,8 @@ import {NavLink} from "react-router-dom";
 
 const AdminNavBar = ({ openMenu, setOpenMenu }) => {
 
+    const me = JSON.parse(localStorage.getItem('meAdmin'))
+
     const nav = [
         {
             name: 'Statistika',
@@ -34,12 +36,31 @@ const AdminNavBar = ({ openMenu, setOpenMenu }) => {
         },
     ]
 
+    const navManager = [
+        {
+            name: 'Foydalanuvchilar',
+            link: '/admin/users'
+        },
+        {
+            name: 'Arizalar',
+            link: '/admin/feeds'
+        },
+    ]
+
+    const links =
+        me?.role === 'admin' ? nav :
+            me?.role === 'manager' ? navManager :
+                [{
+                    name: 'Statistika',
+                    link: '/'
+                }]
+
 
     return (
         <nav className={`nav ${openMenu ? 'open' : ''}`}>
             <ul className="nav__list">
                 {
-                    nav.map((item, i) => (
+                    links.map((item, i) => (
                         <li className="nav__item" onClick={() => setOpenMenu(false)} key={i}>
                             <NavLink className='nav__link row between align-center' to={item.link}>
                                 <span>{ item.name }</span>

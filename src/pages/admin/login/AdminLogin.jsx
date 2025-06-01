@@ -25,7 +25,7 @@ const Auth = () => {
             toast.success(res.message)
 
             localStorage.setItem('admin-token', res.token)
-            window.location.href = '/admin/feeds'
+            window.location.href = '/admin'
         },
         onError: (err) => {
             toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
