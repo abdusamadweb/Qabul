@@ -307,7 +307,7 @@ const Application = () => {
     useEffect(() => {
         if (me) {
             localStorage.setItem('me', JSON.stringify(me))
-            setAutoPass(me?.pasport_is_avto)
+            // setAutoPass(me?.pasport_is_avto) --------------------------------------------------------------
 
             setTimeout(() => {
                 if (me?.state === 'passed') {
