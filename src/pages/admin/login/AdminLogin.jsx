@@ -14,14 +14,11 @@ const fetchLogin = async (body) => {
 
 const Auth = () => {
 
-    const [loading, setLoading] = useState(false)
-
 
     // log in
     const mutation = useMutation({
         mutationFn: fetchLogin,
         onSuccess: (res) => {
-            setLoading(true)
             toast.success(res.message)
 
             localStorage.setItem('admin-token', res.token)
@@ -29,13 +26,11 @@ const Auth = () => {
         },
         onError: (err) => {
             toast.error(`Ошибка: ${err.response?.data?.message || err.message}`)
-            setLoading(false)
         }
     })
 
     const onFinish = (values) => {
         mutation.mutate(values)
-        setTimeout(() => setLoading(false), 3000)
     }
 
 
@@ -77,7 +72,7 @@ const Auth = () => {
                         type="primary"
                         htmlType="submit"
                         size='large'
-                        loading={loading}
+                        loading={mutation.isPending}
                     >
                         Tasdiqlash
                     </Button>

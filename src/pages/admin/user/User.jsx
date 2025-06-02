@@ -1,7 +1,7 @@
 import './User.scss'
 import React, {useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
-import {Button, Form, Input, Modal, Radio, Select, Table, Upload} from "antd";
+import {Button, Form, Input, Modal, Pagination, Radio, Select, Table, Upload} from "antd";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {tableCols} from "../../../components/admin/table/columns.js";
 import Actions from "../../../components/admin/table/Actions.jsx";
@@ -14,7 +14,7 @@ import {BirthDateInput, JshInput, PassportInput} from "../../../components/input
 
 // fetches
 const fetchFilteredData = async (body) => {
-    const { data } = await $adminResp.get(`/user/all?search=${body.search}`, body)
+    const { data } = await $adminResp.get(`/user/all?page=${body.page}&limit=${body.limit}&search=${body.search}`, body)
     return data
 }
 
@@ -37,12 +37,12 @@ const User = () => {
     // filter data
     const [body, setBody] = useState({
         page: 1,
-        limit: 1000,
+        limit: 15,
         search: '',
     })
 
-    const { data, refetch } = useQuery({
-        queryKey: ['users', body],
+    const { data, refetch, isLoading } = useQuery({
+        queryKey: ['users', JSON.stringify(body)],
         queryFn: () => fetchFilteredData(body),
         keepPreviousData: true,
     })
@@ -139,7 +139,24 @@ const User = () => {
                     <Table
                         columns={columns}
                         dataSource={user}
+                        rowKey="id"
+                        pagination={false}
+                        loading={isLoading}
                         scroll={{x: 750}}
+                    />
+                    <Pagination
+                        align='end'
+                        current={data?.page}
+                        total={data?.total}
+                        pageSize={body.limit}
+                        onChange={(page, pageSize) => {
+                            setBody(prev => ({
+                                ...prev,
+                                page: page,
+                                limit: pageSize,
+                            }))
+                            window.scrollTo(0, 0)
+                        }}
                     />
                 </div>
             </div>
@@ -201,7 +218,7 @@ const User = () => {
                                 </Form.Item>
                                 <Form.Item
                                     name='birth_date'
-                                    label='Tugilgan sana (yyyy-oo-kk)'
+                                    label="Tug'ilgan sana (yyyy-oo-kk)"
                                     rules={[{required: true, message: 'Toldiring!'}]}
                                 >
                                     <BirthDateInput />

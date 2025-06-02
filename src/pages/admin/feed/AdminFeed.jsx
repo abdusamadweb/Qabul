@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import Title from "../../../components/admin/title/Title.jsx"
-import {Button, Form, Input, Modal, Select, Table, Upload} from "antd"
+import {Button, Form, Input, Modal, Pagination, Select, Table, Upload} from "antd"
 import {formatPhone, uploadProps, validateMessages} from "../../../assets/scripts/global.js"
 import {useMutation, useQuery} from "@tanstack/react-query"
 import {tableCols} from "../../../components/admin/table/columns.js"
@@ -12,7 +12,7 @@ import profileImg from "../../../assets/images/profile.jpeg"
 
 // fetches
 const fetchFilteredData = async (body) => {
-    const { data } = await $adminResp.post('/admission/all-appointment', body)
+    const { data } = await $adminResp.post(`/admission/all-appointment`, body)
     return data
 }
 const fetchOneData = async (id) => {
@@ -73,15 +73,15 @@ const AdminFeed = () => {
     // filter data
     const [body, setBody] = useState({
         page: 1,
-        limit: 1000,
+        limit: 15,
         search: '',
         edu_form_ids: [],
         edu_lang_ids: [],
         edu_direction_ids: []
     })
 
-    const { data, refetch } = useQuery({
-        queryKey: ['feeds', body],
+    const { data, refetch, isLoading } = useQuery({
+        queryKey: ['feeds', JSON.stringify(body)],
         queryFn: () => fetchFilteredData(body),
         keepPreviousData: true,
     })
@@ -365,7 +365,24 @@ const AdminFeed = () => {
                     <Table
                         columns={columns}
                         dataSource={data?.data}
+                        rowKey="id"
+                        pagination={false}
+                        loading={isLoading}
                         scroll={{x: 750}}
+                    />
+                    <Pagination
+                        align='end'
+                        current={body.page}
+                        total={data?.total}
+                        pageSize={body.limit}
+                        onChange={(page, pageSize) => {
+                            setBody(prev => ({
+                                ...prev,
+                                page,
+                                limit: pageSize,
+                            }));
+                            window.scrollTo(0, 0);
+                        }}
                     />
                 </div>
             </div>

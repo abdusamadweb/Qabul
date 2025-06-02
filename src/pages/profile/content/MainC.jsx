@@ -11,7 +11,7 @@ const MainC = ({ me, app, downloadFile }) => {
 
     return (
         <div className="main-c">
-            <p className="content__title">KUAF - { t('Xush kelibsiz!') }</p>
+            <p className="content__title">Sharq - { t('Xush kelibsiz!') }</p>
             <div className="content__diver">
                 <p className="title">{ t('Shaxsiy malumotlar') }</p>
                 <ul className='check'>
@@ -48,7 +48,7 @@ const MainC = ({ me, app, downloadFile }) => {
                     <li className="check__item">
                         <span className='txt'>{ t('Imtixon turi') }</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ me?.offline || t('Yoq') }</span>
+                        <span className='txt font'>Offline</span>
                     </li>
                     <li className="check__item">
                         <span className='txt'>{ t('Qayd varaqasi') }</span>

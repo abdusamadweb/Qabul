@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
 import {Button, Checkbox, Form, Input, Modal, Select, Table} from "antd";
-import {validateMessages} from "../../../assets/scripts/global.js";
+import {formatPrice, validateMessages} from "../../../assets/scripts/global.js";
 import {addOrEdit, deleteData} from "../../../api/crud.js";
 import {useQuery} from "@tanstack/react-query";
 import {tableCols} from "../../../components/admin/table/columns.js";
@@ -81,6 +81,29 @@ const AdminEduDir = () => {
         tableCols.nameRu,
         tableCols.nameEn,
         {
+            title: 'Kontract puli',
+            dataIndex: 'contract_price',
+            key: 'contract_price',
+            render: (_, i) => (
+                <span>{ formatPrice(i?.contract_price || 0) }</span>
+            )
+        },
+        {
+            title: "O'quv yili",
+            dataIndex: 'year',
+            key: 'year'
+        },
+        {
+            title: "Yo'nalish kodi",
+            dataIndex: 'direction_code',
+            key: 'direction_code'
+        },
+        {
+            title: "Imtihon",
+            dataIndex: 'exam_name',
+            key: 'exam_name'
+        },
+        {
             ...tableCols.actions,
             render: (_, i) => <Actions
                 setModal={setModal}
@@ -104,6 +127,10 @@ const AdminEduDir = () => {
         { name: 'name_uz', label: 'Nomi - uz', type: 'text', required: true },
         { name: 'name_ru', label: 'Nomi - ru', type: 'text', required: true },
         { name: 'name_en', label: 'Nomi - en', type: 'text', required: true },
+        { name: 'contract_price', label: 'Kontract puli', type: 'tel', required: true },
+        { name: 'year', label: 'O\'quv yili', type: 'tel', required: true },
+        { name: 'direction_code', label: 'Yo\'nalish kodi', type: 'tel', required: true },
+        { name: 'exam_name', label: 'Imtihon', type: 'text', required: true },
     ]
 
 

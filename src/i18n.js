@@ -8,7 +8,7 @@ import translationRU from './locales/ru.json';
 import translationUZ from './locales/uz.json';
 
 i18n
-    .use(LanguageDetector)
+    // .use(LanguageDetector)
     .use(initReactI18next)
     .init({
         resources: {
@@ -17,6 +17,7 @@ i18n
             uz: { translation: translationUZ },
         },
         supportedLngs: ['en', 'ru', 'uz'],
+        lng: 'uz',
         fallbackLng: 'uz',
 
         load: 'languageOnly',      // ✅ Faqat asosiy til kodi (ru, en, uz)
