@@ -73,7 +73,7 @@ const AdminFeed = () => {
     // filter data
     const [body, setBody] = useState({
         page: 1,
-        limit: 15,
+        limit: 40,
         search: '',
         edu_form_ids: [],
         edu_lang_ids: [],
@@ -187,8 +187,12 @@ const AdminFeed = () => {
             ...values,
             passport_file_id: file ? file?.file.response.files[0].id : null
         }
+        const edit = {
+            ...values,
+            admission_id: selItem?.id
+        }
 
-        muChangeStatus.mutate(body)
+        muChangeStatus.mutate(modal === 'add' ? body : edit)
     }
 
 
@@ -528,8 +532,8 @@ const AdminFeed = () => {
                             </Form.Item>
                             <Form.Item
                                 className='upload'
-                                name='passport_file_id'
-                                label='Passport fayl'
+                                name='certificate_id'
+                                label='Sertifikat fayl'
                             >
                                 <Upload
                                     {...uploadProps}
@@ -616,7 +620,7 @@ const AdminFeed = () => {
                     <div className="item">
                         <span className='title'>Amo status:</span>
                         <span className='dots'/>
-                        <p className="txt">{ one?.amo_status || '{ null }' }</p>
+                        <p className="txt">{ one?.amo_status || "yo'q" }</p>
                     </div>
                     <div className="item">
                         <span className='title'>Shartnoma:</span>
@@ -631,7 +635,7 @@ const AdminFeed = () => {
                                 <i className="fa-solid fa-file-arrow-down"/>
                                 <span>Yuklash</span>
                             </button>
-                        ) : '{ null }'}
+                        ) : "yo'q"}
                     </div>
                     <Button
                         className="mt1"

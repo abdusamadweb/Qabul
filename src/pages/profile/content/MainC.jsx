@@ -40,11 +40,13 @@ const MainC = ({ me, app, downloadFile }) => {
                         <span className='dots'/>
                         <span className='txt font'>{ me?.birth_date || t('Yoq') }</span>
                     </li>
-                    <li className="check__item">
-                        <span className='txt'>{ t('Millati') }</span>
-                        <span className='dots'/>
-                        <span className='txt font'>{ me?.region || t('Yoq') }</span>
-                    </li>
+                    {me?.region && (
+                        <li className="check__item">
+                            <span className='txt'>{ t('Millati') }</span>
+                            <span className='dots'/>
+                            <span className='txt font'>{ me?.region || t('Yoq') }</span>
+                        </li>
+                    )}
                     <li className="check__item">
                         <span className='txt'>{ t('Imtixon turi') }</span>
                         <span className='dots'/>
