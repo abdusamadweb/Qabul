@@ -11,6 +11,7 @@ import {getRequestAdmin, useCrud} from "../../../hooks/useCrud.jsx";
 
 // fetches
 const fetchData = () => getRequestAdmin(`/edu-direction/all`)
+const fetchEduForm = () => getRequestAdmin(`/edu-form/all`)
 const fetchEduLang = () => getRequestAdmin(`/edu-lang/all`)
 
 
@@ -28,10 +29,17 @@ const AdminEduDir = () => {
         queryFn: fetchData,
         keepPreviousData: true,
     })
+    const { data: eduForm } = useQuery({
+        queryKey: ['edu-form'],
+        queryFn: fetchEduForm,
+        keepPreviousData: true,
+        enabled: modal !== 'close',
+    })
     const { data: eduLang } = useQuery({
         queryKey: ['edu-lang'],
         queryFn: fetchEduLang,
         keepPreviousData: true,
+        enabled: modal !== 'close',
     })
 
 
@@ -151,17 +159,34 @@ const AdminEduDir = () => {
                         }))}
                         expandable={{
                             expandedRowRender: (record) => (
-                                <div className='table-in'>
-                                    <p className="title">Ta'lim tili</p>
-                                    <Table
-                                        size="middle"
-                                        columns={columns2}
-                                        dataSource={record?.edu_langs}
-                                        pagination={false}
-                                    />
-                                </div>
+                                <>
+                                    {record?.edu_form_id && (
+                                        <div className='table-in mb1'>
+                                            <p className="title">Ta'lim shakli</p>
+                                            <Table
+                                                size="middle"
+                                                columns={columns2}
+                                                dataSource={[record?.edu_form]}
+                                                pagination={false}
+                                            />
+                                        </div>
+                                    )}
+                                    {
+                                        record?.edu_langs && (
+                                            <div className='table-in'>
+                                                <p className="title">Ta'lim tili</p>
+                                                <Table
+                                                    size="middle"
+                                                    columns={columns2}
+                                                    dataSource={record?.edu_langs}
+                                                    pagination={false}
+                                                />
+                                            </div>
+                                        )
+                                    }
+                                </>
                             ),
-                            rowExpandable: (record) => record.edu_langs,
+                            rowExpandable: (record) => record.edu_langs || record.edu_form_id,
                         }}
                         scroll={{ x: 750 }}
                     />
@@ -197,6 +222,20 @@ const AdminEduDir = () => {
                         </Form.Item>
                     ))}
 
+                    <Form.Item
+                        name='edu_form_id'
+                        label="Ta'lim shakli"
+                        rules={[{ required: true }]}
+                    >
+                        <Select
+                            size="large"
+                            placeholder="Ta'lim shakli"
+                            options={eduForm?.data?.map(i => ({
+                                value: i.id,
+                                label: i.name_uz,
+                            }))}
+                        />
+                    </Form.Item>
                     <Form.Item
                         name='edu_lang_ids'
                         label="Ta'lim tili"

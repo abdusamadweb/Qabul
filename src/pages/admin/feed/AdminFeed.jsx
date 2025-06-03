@@ -51,7 +51,7 @@ const fetchDirection = async () => {
 
 const downloadFile = async (id) => {
     try {
-        const response = await $resp.post(`/admission/download-contract/`, {
+        const response = await $adminResp.get(`/admission/download-contract/${id}`, {
             responseType: 'blob',
         });
 
@@ -67,7 +67,7 @@ const downloadFile = async (id) => {
         window.URL.revokeObjectURL(url);
     } catch (error) {
         console.error('Ошибка при скачивании PDF:', error);
-        toast.error('PDF faylni yuklab bo‘lmadi');
+        toast.error('Shartnoma mavjud emas');
     }
 }
 
@@ -652,7 +652,7 @@ const AdminFeed = () => {
                     <div className="item">
                         <span className='title'>Shartnoma fayl:</span>
                         <span className='dots'/>
-                        <button className="btn" onClick={downloadFile}>Yuklash <i className="fa-solid fa-download"/></button>
+                        <button className="btn" onClick={() => downloadFile(one?.id)}>Yuklash <i className="fa-solid fa-download"/></button>
                     </div>
                     <div className="item">
                         <span className='title'>Sertifikat:</span>
