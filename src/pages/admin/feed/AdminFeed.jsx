@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useState} from 'react'
 import Title from "../../../components/admin/title/Title.jsx"
-import {Button, Form, Input, Modal, Pagination, Select, Table, Upload} from "antd"
+import {Button, Form, Image, Input, Modal, Pagination, Select, Table, Upload} from "antd"
 import {formatPhone, uploadProps, validateMessages} from "../../../assets/scripts/global.js"
 import {useMutation, useQuery} from "@tanstack/react-query"
 import {tableCols} from "../../../components/admin/table/columns.js"
 import Actions from "../../../components/admin/table/Actions.jsx"
-import {$adminResp} from "../../../api/apiResp.js"
+import {$adminResp, $resp} from "../../../api/apiResp.js"
 import toast from "react-hot-toast"
 import profileImg from "../../../assets/images/profile.jpeg"
 
@@ -47,6 +47,28 @@ const fetchLang = async () => {
 const fetchDirection = async () => {
     const { data } = await $adminResp.get('/edu-direction/all')
     return data
+}
+
+const downloadFile = async (id) => {
+    try {
+        const response = await $resp.post(`/admission/download-contract/`, {
+            responseType: 'blob',
+        });
+
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `document-${id}.pdf`); // или любое имя файла
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Ошибка при скачивании PDF:', error);
+        toast.error('PDF faylni yuklab bo‘lmadi');
+    }
 }
 
 
@@ -581,7 +603,7 @@ const AdminFeed = () => {
             >
                 <div className="head row between g1">
                     <div className="row align-center g1">
-                        <img className='img' src={one?.user?.photo ? `data:image/jpegbase64,${one?.user?.photo}` : profileImg} alt="img"/>
+                        <Image className='img' src={one?.user?.photo ? `data:image/jpeg;base64,${one?.user?.photo}` : profileImg} alt="img"/>
                         <div>
                             <span className='name'>{ one?.user?.first_name + ' ' + one?.user?.last_name + ' ' + one?.user?.patron }</span>
                             <p className="phone">{ formatPhone(one?.user?.phone_number) }</p>
@@ -626,6 +648,11 @@ const AdminFeed = () => {
                         <span className='title'>Shartnoma:</span>
                         <span className='dots'/>
                         <p className="txt">{ one?.contracted ? 'Mavjud' : 'Mavjud emas' }</p>
+                    </div>
+                    <div className="item">
+                        <span className='title'>Shartnoma fayl:</span>
+                        <span className='dots'/>
+                        <button className="btn" onClick={downloadFile}>Yuklash <i className="fa-solid fa-download"/></button>
                     </div>
                     <div className="item">
                         <span className='title'>Sertifikat:</span>

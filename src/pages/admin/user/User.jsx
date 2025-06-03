@@ -1,7 +1,7 @@
 import './User.scss'
 import React, {useEffect, useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
-import {Button, Form, Input, Modal, Pagination, Radio, Select, Table, Upload} from "antd";
+import {Button, Form, Image, Input, Modal, Pagination, Radio, Select, Table, Upload} from "antd";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {tableCols} from "../../../components/admin/table/columns.js";
 import Actions from "../../../components/admin/table/Actions.jsx";
@@ -74,9 +74,6 @@ const User = () => {
         const body = {
             ...values,
             passport_file_id: file ? file?.file.response.files[0].id : null,
-            // birth_date: new Date(values?.birth_date).getTime(),
-            // givenDate: new Date(values?.givenDate).getTime(),
-            // passport_expire_date: new Date(values?.passport_expire_date).getTime(),
         }
 
         muAddEdit.mutate(body)
@@ -332,7 +329,7 @@ const User = () => {
             <Modal
                 rootClassName='admin-modal'
                 className='main-modal admin-modal user-modal'
-                width={888}
+                width={777}
                 title="Foydalanuvchini ko'rish"
                 open={modal === 'view'}
                 onCancel={() => {
@@ -343,7 +340,7 @@ const User = () => {
                 <div className="content">
                     <div className="head row between g1">
                         <div className="row align-center g1">
-                            <img className='img' src={selItem?.photo ? `data:image/jpeg;base64,${selItem?.photo}` : profileImg} alt="img"/>
+                            <Image className='img' src={selItem?.photo ? `data:image/jpeg;base64,${selItem?.photo}` : profileImg} alt="img"/>
                             <div>
                                 <span className='name'>{ selItem?.first_name + ' ' + selItem?.last_name + ' ' + selItem?.patron }</span>
                                 <p className="phone">{ formatPhone(selItem?.phone_number) }</p>
@@ -367,8 +364,24 @@ const User = () => {
                             <p className="txt">{ selItem?.passport_id }</p>
                         </div>
                         <div className="item">
+                            <span className='title'>Passport berilgan sana:</span>
+                            <p className="txt">{ new Date(selItem?.givenDate).toLocaleDateString() }</p>
+                        </div>
+                        <div className="item">
+                            <span className='title'>Amal qilish muddati:</span>
+                            <p className="txt">{ new Date(selItem?.passport_expire_date).toLocaleDateString() }</p>
+                        </div>
+                        <div className="item">
+                            <span className='title'>Passport fayl:</span>
+                            <button className="btn">Yuklash <i className="fa-solid fa-download"/></button>
+                        </div>
+                        <div className="item">
                             <span className='title'>Royxatdan otgan sana:</span>
                             <p className="txt">{ new Date(selItem?.created_at).toLocaleDateString() }</p>
+                        </div>
+                        <div className="item">
+                            <span className='title'>Jinsi:</span>
+                            <p className="txt">{ selItem?.gender }</p>
                         </div>
                     </div>
                 </div>

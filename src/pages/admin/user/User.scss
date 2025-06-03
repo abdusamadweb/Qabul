@@ -41,12 +41,15 @@
 
     .item {
       display: flex;
-      gap: 5px;
+      gap: 10px;
       margin-bottom: 10px;
       font-size: 16px;
 
       .title {
         font-weight: 500;
+      }
+      .btn {
+        color: $main-color;
       }
     }
   }
