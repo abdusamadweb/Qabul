@@ -204,7 +204,7 @@ const Profile = () => {
                                 {
                                     title: t(app?.data === null ? 'Ariza topshirilmagan' : 'Ariza topshirildi'),
                                     description:
-                                        <button className='btn d-flex align-center g10' onClick={() => app?.data?.status === 'accepted' ? downloadContract(me?.id) : app?.data ? downloadFile(me?.id) : navigate('/login?count=3')}>
+                                        <button className='btn d-flex align-center g10' onClick={() => app?.data?.status === 'accepted' ? downloadContract(app?.data?.id) : app?.data ? downloadFile(me?.id) : navigate('/login?count=3')}>
                                             { app?.data && <i className="fa-solid fa-download"/> }
                                             <span>{ app?.data?.status === 'accepted' ? 'Shartnomani yuklash' : app?.data ? 'Qayd varaqa' : 'Ariza topshirish' }</span>
                                         </button>
