@@ -272,7 +272,11 @@ const Profile = () => {
                             )}
 
                             {nav === 2 && (
-                                <DealC me={me} />
+                                <DealC
+                                    me={me}
+                                    app={app}
+                                    downloadContract={downloadContract}
+                                />
                             )}
 
                             {nav === 3 && (
