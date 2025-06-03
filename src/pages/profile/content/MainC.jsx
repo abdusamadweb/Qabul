@@ -4,7 +4,7 @@ import {formatPhone} from "../../../assets/scripts/global.js";
 
 // fetch
 
-const MainC = ({ me, app, downloadFile }) => {
+const MainC = ({ me, app, downloadFile, downloadContract }) => {
 
     const { t } = useTranslation()
 
@@ -53,7 +53,7 @@ const MainC = ({ me, app, downloadFile }) => {
                         <span className='txt font'>Offline</span>
                     </li>
                     <li className="check__item">
-                        <span className='txt'>{ t('Qayd varaqasi') }</span>
+                        <span className='txt'>{ t('Qayd varaqa') }</span>
                         <span className='dots'/>
                         {app?.data ? (
                             <button className='txt btn' onClick={() => downloadFile(me?.id)}>
@@ -67,7 +67,14 @@ const MainC = ({ me, app, downloadFile }) => {
                     <li className="check__item">
                     <span className='txt'>{t('Talaba shartnomasi')}</span>
                         <span className='dots'/>
-                        <span className='txt font'>{ t('Yoq') }</span>
+                        {app?.data?.status === 'accepted' ? (
+                            <button className='txt btn' onClick={() => downloadContract(me?.id)}>
+                                <i className="fa-solid fa-download"/>
+                                <span>{t('Yuklash')}</span>
+                            </button>
+                        ) : (
+                            <span className='txt font'>{ t('Yoq') }</span>
+                        )}
                     </li>
                 </ul>
             </div>

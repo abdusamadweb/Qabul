@@ -60,7 +60,7 @@ const downloadFile = async (id) => {
 
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `document-${id}.pdf`); // или любое имя файла
+        link.setAttribute('download', `shartnoma-${id}.pdf`); // или любое имя файла
         document.body.appendChild(link);
         link.click();
         link.remove();

@@ -12,7 +12,7 @@ import ru from "../../assets/images/ru.png";
 import us from "../../assets/images/us.png";
 import uz from "../../assets/images/uz.png";
 import {useQuery} from "@tanstack/react-query";
-import {$resp} from "../../api/apiResp.js";
+import {$adminResp, $resp} from "../../api/apiResp.js";
 import {useNavigate} from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -33,7 +33,7 @@ const downloadFile = async (id) => {
 
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', `document-${id}.pdf`); // или любое имя файла
+        link.setAttribute('download', `qayd-varaqa-${id}.pdf`); // или любое имя файла
         document.body.appendChild(link);
         link.click();
         link.remove();
@@ -41,6 +41,28 @@ const downloadFile = async (id) => {
     } catch (error) {
         console.error('Ошибка при скачивании PDF:', error);
         toast.error('PDF faylni yuklab bo‘lmadi');
+    }
+}
+
+const downloadContract = async (id) => {
+    try {
+        const response = await $adminResp.get(`/admission/download-contract/${id}`, {
+            responseType: 'blob',
+        });
+
+        const blob = new Blob([response.data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `shartnoma-${id}.pdf`); // или любое имя файла
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error('Ошибка при скачивании PDF:', error);
+        toast.error('Shartnoma mavjud emas');
     }
 }
 
@@ -147,6 +169,7 @@ const Profile = () => {
 
         return () => window.removeEventListener('resize', handleResize);
     }, [])
+    console.log(app)
 
 
     return (
@@ -181,9 +204,9 @@ const Profile = () => {
                                 {
                                     title: t(app?.data === null ? 'Ariza topshirilmagan' : 'Ariza topshirildi'),
                                     description:
-                                        <button className='btn d-flex align-center g10' onClick={() => app?.data ? downloadFile(me?.id) : navigate('/login?count=3')}>
+                                        <button className='btn d-flex align-center g10' onClick={() => app?.data?.status === 'accepted' ? downloadContract(me?.id) : app?.data ? downloadFile(me?.id) : navigate('/login?count=3')}>
                                             { app?.data && <i className="fa-solid fa-download"/> }
-                                            <span>{ t(app?.data ? 'Qayd varaqa' : 'Ariza topshirish') }</span>
+                                            <span>{ app?.data?.status === 'accepted' ? 'Shartnomani yuklash' : app?.data ? 'Qayd varaqa' : 'Ariza topshirish' }</span>
                                         </button>
                                 },
                                 {
@@ -191,7 +214,7 @@ const Profile = () => {
                                     description: <span className='s-title s-desc'>{ t('Imtixon vaqti:') } { t('belgilanmagan') }</span>
                                 },
                                 {
-                                    title: t(app?.data?.status === 'accepted' ? '---' : 'Shartnoma mavjud emas'),
+                                    title: t(app?.data?.status === 'accepted' ? 'Shartnoma mavjud' : 'Shartnoma mavjud emas'),
                                 },
                             ]}
                         />
@@ -231,7 +254,12 @@ const Profile = () => {
                         </div>
                         <div className="content">
                             {nav === 0 && (
-                                <MainC me={me} app={app} downloadFile={downloadFile} />
+                                <MainC
+                                    me={me}
+                                    app={app}
+                                    downloadFile={downloadFile}
+                                    downloadContract={downloadContract}
+                                />
                             )}
 
                             {nav === 1 && (

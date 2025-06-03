@@ -89,6 +89,14 @@ const AdminEduDir = () => {
         tableCols.nameRu,
         tableCols.nameEn,
         {
+            title: "Ta'lim shakli",
+            dataIndex: 'edu_form',
+            key: 'edu_form',
+            render: (_, i) => (
+                <span>{ i?.edu_form?.name_uz }</span>
+            )
+        },
+        {
             title: 'Kontract puli',
             dataIndex: 'contract_price',
             key: 'contract_price',
@@ -159,34 +167,17 @@ const AdminEduDir = () => {
                         }))}
                         expandable={{
                             expandedRowRender: (record) => (
-                                <>
-                                    {record?.edu_form_id && (
-                                        <div className='table-in mb1'>
-                                            <p className="title">Ta'lim shakli</p>
-                                            <Table
-                                                size="middle"
-                                                columns={columns2}
-                                                dataSource={[record?.edu_form]}
-                                                pagination={false}
-                                            />
-                                        </div>
-                                    )}
-                                    {
-                                        record?.edu_langs && (
-                                            <div className='table-in'>
-                                                <p className="title">Ta'lim tili</p>
-                                                <Table
-                                                    size="middle"
-                                                    columns={columns2}
-                                                    dataSource={record?.edu_langs}
-                                                    pagination={false}
-                                                />
-                                            </div>
-                                        )
-                                    }
-                                </>
+                                <div className='table-in'>
+                                    <p className="title">Ta'lim tili</p>
+                                    <Table
+                                        size="middle"
+                                        columns={columns2}
+                                        dataSource={record?.edu_langs}
+                                        pagination={false}
+                                    />
+                                </div>
                             ),
-                            rowExpandable: (record) => record.edu_langs || record.edu_form_id,
+                            rowExpandable: (record) => record.edu_langs,
                         }}
                         scroll={{ x: 750 }}
                     />
