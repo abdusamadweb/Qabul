@@ -68,7 +68,7 @@ const MainC = ({ me, app, downloadFile, downloadContract }) => {
                     <span className='txt'>{t('Talaba shartnomasi')}</span>
                         <span className='dots'/>
                         {app?.data?.status === 'accepted' ? (
-                            <button className='txt btn' onClick={() => downloadContract(me?.id)}>
+                            <button className='txt btn' onClick={() => downloadContract(app?.data?.id)}>
                                 <i className="fa-solid fa-download"/>
                                 <span>{t('Yuklash')}</span>
                             </button>
