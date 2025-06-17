@@ -1,6 +1,6 @@
 import './Application.scss'
 import React, {useEffect, useState} from 'react'
-import {Button, Dropdown, Form, Input, Upload} from "antd";
+import {Button, Dropdown, Form, Input, Radio, Upload} from "antd";
 import img from '../../assets/images/hero-img.png'
 import uz from '../../assets/images/uz.png'
 import ru from '../../assets/images/ru.png'
@@ -592,6 +592,18 @@ const Application = () => {
                                                         rules={[{required: true, message: ''}]}
                                                     >
                                                         <BirthDateInput />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name='gender'
+                                                        label='Jins'
+                                                        rules={[{required: true, message: ''}]}
+                                                    >
+                                                        <Radio.Group
+                                                            options={[
+                                                                { label: 'Erkak', value: 'Erkak' },
+                                                                { label: 'Ayol', value: 'Ayol' },
+                                                            ]}
+                                                        />
                                                     </Form.Item>
                                                     <Form.Item
                                                         name='jshir'
