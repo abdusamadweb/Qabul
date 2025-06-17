@@ -319,7 +319,7 @@ const AdminFeed = () => {
     )
 
     const filteredDirections = dir?.data?.filter(dir =>
-        dir.edu_lang_ids.includes(selectedLangId)
+        dir.edu_form_id === selectedFormId
     )
 
 
@@ -545,7 +545,7 @@ const AdminFeed = () => {
                                 <Select
                                     size='large'
                                     placeholder="Ta'lim yonalishini tanlang"
-                                    disabled={!selectedLangId}
+                                    disabled={!selectedFormId}
                                     options={filteredDirections?.map(i => ({
                                         label: i.name_uz,
                                         value: i.id

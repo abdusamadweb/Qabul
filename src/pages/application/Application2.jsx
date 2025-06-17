@@ -314,7 +314,7 @@ const Application2 = () => {
     )
 
     const filteredDirections = options?.edu_directions?.filter(dir =>
-        dir.edu_lang_ids.includes(selectedLangId)
+        dir.edu_form_id === selectedFormId
     )
 
 
@@ -534,7 +534,7 @@ const Application2 = () => {
                                                 <Select
                                                     size='large'
                                                     placeholder={t('Talim yonalishi')}
-                                                    disabled={!selectedLangId}
+                                                    disabled={!selectedFormId}
                                                     options={filteredDirections?.map(i => ({
                                                         label: i[`name_${currentLang}`],
                                                         value: i.id
