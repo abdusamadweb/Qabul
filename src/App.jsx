@@ -2,7 +2,7 @@
 import './assets/styles/global.css'
 import './App.scss'
 
-import {Route, Routes, useLocation} from "react-router-dom"
+import {Route, Routes, useLocation, useSearchParams} from "react-router-dom"
 import {Toaster} from "react-hot-toast"
 import {useLayoutEffect} from "react"
 import Application from "./pages/application/Application.jsx";
@@ -32,10 +32,14 @@ const Wrapper = ({ children }) => {
     return children
 }
 
+
 function App() {
 
-
     const path = window.location.pathname
+
+    const [searchParams] = useSearchParams()
+    const reff = searchParams.get('ref')
+    console.log(reff)
 
     return (
     <div className={`App ${path.includes('admin') ? 'admin' : ''}`}>
@@ -45,12 +49,12 @@ function App() {
 
                 <Routes>
 
-                    <Route path='/login' element={<Application />} />
+                    <Route path='/login' element={<Application reff={reff} />} />
 
-                    <Route element={<Auth />}>
+                    <Route element={<Auth reff={reff} />}>
 
-                        <Route path='/' element={<Profile />} />
                         <Route path='/application' element={<Application2 />} />
+                        <Route path='/' element={<Profile />} />
 
                     </Route>
 

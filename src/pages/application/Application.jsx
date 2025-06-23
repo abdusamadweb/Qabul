@@ -65,7 +65,7 @@ const resetPsw = async (body) => {
 }
 
 
-const Application = () => {
+const Application = ({ reff }) => {
 
     const navigate = useNavigate()
     const { t } = useTranslation()
@@ -244,6 +244,7 @@ const Application = () => {
                 const body = {
                     phone_number: '+998' + val.phone_number,
                     password: val.password,
+                    ref_code: reff || null
                 }
                 muRegister.mutate(body)
             }
