@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Title from "../../../components/admin/title/Title.jsx";
-import {Button, Checkbox, Form, Input, Modal, Select, Table} from "antd";
+import {Button, Form, Input, Modal, Select, Table} from "antd";
 import {formatPrice, validateMessages} from "../../../assets/scripts/global.js";
 import {addOrEdit, deleteData} from "../../../api/crud.js";
 import {useQuery} from "@tanstack/react-query";
@@ -13,6 +13,7 @@ import {getRequestAdmin, useCrud} from "../../../hooks/useCrud.jsx";
 const fetchData = () => getRequestAdmin(`/edu-direction/all`)
 const fetchEduForm = () => getRequestAdmin(`/edu-form/all`)
 const fetchEduLang = () => getRequestAdmin(`/edu-lang/all`)
+const fetchType = () => getRequestAdmin(`/ad-type/all`)
 
 
 const AdminEduDir = () => {
@@ -38,6 +39,12 @@ const AdminEduDir = () => {
     const { data: eduLang } = useQuery({
         queryKey: ['edu-lang'],
         queryFn: fetchEduLang,
+        keepPreviousData: true,
+        enabled: modal !== 'close',
+    })
+    const { data: type } = useQuery({
+        queryKey: ['ad-type'],
+        queryFn: fetchType,
         keepPreviousData: true,
         enabled: modal !== 'close',
     })
@@ -86,8 +93,6 @@ const AdminEduDir = () => {
     const columns = [
         tableCols.id,
         tableCols.nameUz,
-        tableCols.nameRu,
-        tableCols.nameEn,
         {
             title: "Ta'lim shakli",
             dataIndex: 'edu_form',
@@ -101,13 +106,24 @@ const AdminEduDir = () => {
             dataIndex: 'contract_price',
             key: 'contract_price',
             render: (_, i) => (
-                <span>{ formatPrice(i?.contract_price || 0) }</span>
+                <span>{ formatPrice(i?.contract_price || 0) } sum</span>
             )
         },
         {
             title: "O'quv yili",
             dataIndex: 'year',
-            key: 'year'
+            key: 'year',
+            render: (_, i) => (
+                <span>{ i?.year } yil</span>
+            )
+        },
+        {
+            title: "Qabul turi",
+            dataIndex: 'year',
+            key: 'year',
+            render: (_, i) => (
+                <span>{ i?.admission_type?.name_uz || i?.admission_type?.name || '_' }</span>
+            )
         },
         {
             title: "Yo'nalish kodi",
@@ -192,6 +208,7 @@ const AdminEduDir = () => {
                     setModal('close')
                     setSelectedItem(null)
                 }}
+                width={600}
             >
                 <Form
                     onFinish={onFormSubmit}
@@ -199,49 +216,65 @@ const AdminEduDir = () => {
                     validateMessages={validateMessages}
                     form={form}
                 >
-                    {fields.map((item) => (
+                    <div className="edu-dir-form">
+                        {fields.map((item) => (
+                            <Form.Item
+                                key={item.name}
+                                name={item.name}
+                                label={item.label}
+                                rules={[{ required: item.required }]}
+                            >
+                                <Input
+                                    placeholder={item.label}
+                                    type={item.type}
+                                />
+                            </Form.Item>
+                        ))}
+
                         <Form.Item
-                            key={item.name}
-                            name={item.name}
-                            label={item.label}
-                            rules={[{ required: item.required }]}
+                            name='edu_form_id'
+                            label="Ta'lim shakli"
+                            rules={[{ required: true }]}
                         >
-                            <Input
-                                placeholder={item.label}
-                                type={item.type}
+                            <Select
+                                size="large"
+                                placeholder="Ta'lim shakli"
+                                options={eduForm?.data?.map(i => ({
+                                    value: i.id,
+                                    label: i.name_uz,
+                                }))}
                             />
                         </Form.Item>
-                    ))}
-
-                    <Form.Item
-                        name='edu_form_id'
-                        label="Ta'lim shakli"
-                        rules={[{ required: true }]}
-                    >
-                        <Select
-                            size="large"
-                            placeholder="Ta'lim shakli"
-                            options={eduForm?.data?.map(i => ({
-                                value: i.id,
-                                label: i.name_uz,
-                            }))}
-                        />
-                    </Form.Item>
-                    <Form.Item
-                        name='edu_lang_ids'
-                        label="Ta'lim tili"
-                        rules={[{ required: true }]}
-                    >
-                        <Select
-                            size="large"
-                            mode="multiple"
-                            placeholder="Ta'lim tili"
-                            options={eduLang?.data?.map(i => ({
-                                value: i.id,
-                                label: i.name_uz,
-                            }))}
-                        />
-                    </Form.Item>
+                        <Form.Item
+                            name='edu_lang_ids'
+                            label="Ta'lim tili"
+                            rules={[{ required: true }]}
+                        >
+                            <Select
+                                size="large"
+                                mode="multiple"
+                                placeholder="Ta'lim tili"
+                                options={eduLang?.data?.map(i => ({
+                                    value: i.id,
+                                    label: i.name_uz,
+                                }))}
+                            />
+                        </Form.Item>
+                        <Form.Item
+                            name='admission_type_id'
+                            label="Qabul turi"
+                            rules={[{ required: true }]}
+                        >
+                            <Select
+                                size="large"
+                                placeholder="Qabul turi"
+                                options={type?.map(i => ({
+                                    value: i.id,
+                                    label: i.name,
+                                }))}
+                            />
+                        </Form.Item>
+                    </div>
 
                     <div className='end mt1'>
                         <Button

@@ -48,11 +48,6 @@ const checkPassport = async (body) => {
     return data
 }
 
-const fetchType = async () => {
-    const { data } = await $resp.get('/ad-type/all')
-    return data
-}
-
 
 const Application2 = () => {
 
@@ -104,12 +99,6 @@ const Application2 = () => {
     const { data: options } = useQuery({
         queryKey: ['options'],
         queryFn: fetchOptions,
-        keepPreviousData: true,
-        enabled: nav > 2
-    })
-    const { data: type } = useQuery({
-        queryKey: ['ad-type'],
-        queryFn: fetchType,
         keepPreviousData: true,
         enabled: nav > 2
     })
@@ -548,21 +537,6 @@ const Application2 = () => {
                                                     disabled={!selectedFormId}
                                                     options={filteredDirections?.map(i => ({
                                                         label: i[`name_${currentLang}`],
-                                                        value: i.id
-                                                    }))}
-                                                />
-                                            </Form.Item>
-
-                                            <Form.Item
-                                                name='admission_type_id'
-                                                label={t('Qabul turi')}
-                                                rules={[{required: true, message: ''}]}
-                                            >
-                                                <Select
-                                                    size='large'
-                                                    placeholder={t('Qabul turi')}
-                                                    options={type?.map(i => ({
-                                                        label: i.name,
                                                         value: i.id
                                                     }))}
                                                 />

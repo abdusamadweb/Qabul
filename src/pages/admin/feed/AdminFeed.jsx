@@ -48,10 +48,6 @@ const fetchDirection = async () => {
     const { data } = await $adminResp.get('/edu-direction/all')
     return data
 }
-const fetchType = async () => {
-    const { data } = await $adminResp.get('/ad-type/all')
-    return data
-}
 
 const downloadFile = async (id) => {
     try {
@@ -188,11 +184,6 @@ const AdminFeed = () => {
     const { data: dir } = useQuery({
         queryKey: ['edu-dir'],
         queryFn: fetchDirection,
-        keepPreviousData: true,
-    })
-    const { data: type } = useQuery({
-        queryKey: ['ad-type'],
-        queryFn: fetchType,
         keepPreviousData: true,
     })
 
@@ -557,20 +548,6 @@ const AdminFeed = () => {
                                     disabled={!selectedFormId}
                                     options={filteredDirections?.map(i => ({
                                         label: i.name_uz,
-                                        value: i.id
-                                    }))}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                name='admission_type_id'
-                                label="Qabul turi"
-                                rules={[{required: true, message: ''}]}
-                            >
-                                <Select
-                                    size='large'
-                                    placeholder="Qabul turi"
-                                    options={type?.map(i => ({
-                                        label: i.name,
                                         value: i.id
                                     }))}
                                 />
