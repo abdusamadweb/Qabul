@@ -1,7 +1,7 @@
 import './Application.scss'
 import React, {useEffect, useState} from 'react'
 import {Button, Dropdown, Form, Input, Radio, Select, Steps, Upload} from "antd"
-import {Link, useNavigate, useSearchParams} from "react-router-dom"
+import {useNavigate, useSearchParams} from "react-router-dom"
 import {$resp} from "../../api/apiResp.js"
 import {useMutation, useQuery} from "@tanstack/react-query"
 import toast from "react-hot-toast"
@@ -45,6 +45,11 @@ const chooseOptions = async (body) => {
 
 const checkPassport = async (body) => {
     const { data } = await $resp.post("/admission/auto-personal-data", body)
+    return data
+}
+
+const fetchType = async () => {
+    const { data } = await $resp.get('/ad-type/all')
     return data
 }
 
@@ -102,6 +107,12 @@ const Application2 = () => {
         keepPreviousData: true,
         enabled: nav > 2
     })
+    const { data: type } = useQuery({
+        queryKey: ['ad-type'],
+        queryFn: fetchType,
+        keepPreviousData: true,
+        enabled: nav > 2
+    })
 
     // me
     const getMe = () => getRequest('/user/me')
@@ -111,24 +122,24 @@ const Application2 = () => {
         keepPreviousData: true,
     })
 
-    //
+
+    // redirect
     useEffect(() => {
         if (me) {
             setAutoPass(me?.pasport_is_avto);
             localStorage.setItem('me', JSON.stringify(me));
 
-            // redirectni biroz keyinroq bajaramiz
             setTimeout(() => {
                 if (me?.state === 'passed') {
-                    navigate('/');
+                    navigate('/')
                 } else if (me?.state === 'admission-type') {
-                    navigate('/application/?nav=1');
+                    navigate('/application/?nav=1')
                 } else if (me?.state === 'edu-data') {
-                    navigate('/application/?nav=2');
+                    navigate('/application/?nav=2')
                 } else if (me?.state === 'edu-directions') {
-                    navigate('/application/?nav=3');
+                    navigate('/application/?nav=3')
                 }
-            }, 100); // 50ms delay yetarli
+            }, 100)
         }
     }, [me])
 
@@ -382,8 +393,8 @@ const Application2 = () => {
                                                 <span className='txt'>{ t('F.I.O') }</span>
                                                 <span className='dots'/>
                                                 <span className='txt font'>{ passport?.firstName && passport?.lastName
-                                                        ? `${passport.firstName} ${passport.lastName}`
-                                                        : me?.first_name && me?.last_name
+                                                    ? `${passport.firstName} ${passport.lastName}`
+                                                    : me?.first_name && me?.last_name
                                                         ? `${me.first_name} ${me.last_name}` : '' }</span>
                                             </li>
                                             <li className="check__item">
@@ -537,6 +548,21 @@ const Application2 = () => {
                                                     disabled={!selectedLangId}
                                                     options={filteredDirections?.map(i => ({
                                                         label: i[`name_${currentLang}`],
+                                                        value: i.id
+                                                    }))}
+                                                />
+                                            </Form.Item>
+
+                                            <Form.Item
+                                                name='admission_type_id'
+                                                label={t('Qabul turi')}
+                                                rules={[{required: true, message: ''}]}
+                                            >
+                                                <Select
+                                                    size='large'
+                                                    placeholder={t('Qabul turi')}
+                                                    options={type?.map(i => ({
+                                                        label: i.name,
                                                         value: i.id
                                                     }))}
                                                 />

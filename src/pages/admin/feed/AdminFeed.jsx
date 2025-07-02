@@ -5,7 +5,7 @@ import {formatPhone, uploadProps, validateMessages} from "../../../assets/script
 import {useMutation, useQuery} from "@tanstack/react-query"
 import {tableCols} from "../../../components/admin/table/columns.js"
 import Actions from "../../../components/admin/table/Actions.jsx"
-import {$adminResp, $resp} from "../../../api/apiResp.js"
+import {$adminResp} from "../../../api/apiResp.js"
 import toast from "react-hot-toast"
 import profileImg from "../../../assets/images/profile.jpeg"
 
@@ -46,6 +46,10 @@ const fetchLang = async () => {
 }
 const fetchDirection = async () => {
     const { data } = await $adminResp.get('/edu-direction/all')
+    return data
+}
+const fetchType = async () => {
+    const { data } = await $adminResp.get('/ad-type/all')
     return data
 }
 
@@ -184,6 +188,11 @@ const AdminFeed = () => {
     const { data: dir } = useQuery({
         queryKey: ['edu-dir'],
         queryFn: fetchDirection,
+        keepPreviousData: true,
+    })
+    const { data: type } = useQuery({
+        queryKey: ['ad-type'],
+        queryFn: fetchType,
         keepPreviousData: true,
     })
 
@@ -552,6 +561,21 @@ const AdminFeed = () => {
                                     }))}
                                 />
                             </Form.Item>
+                            <Form.Item
+                                name='admission_type_id'
+                                label="Qabul turi"
+                                rules={[{required: true, message: ''}]}
+                            >
+                                <Select
+                                    size='large'
+                                    placeholder="Qabul turi"
+                                    options={type?.map(i => ({
+                                        label: i.name,
+                                        value: i.id
+                                    }))}
+                                />
+                            </Form.Item>
+
                             <Form.Item
                                 className='upload'
                                 name='certificate_id'
